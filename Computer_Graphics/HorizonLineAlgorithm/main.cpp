@@ -19,6 +19,19 @@
 
 #include "CImg.h"
 
-int main()
+using namespace cimg_library;
+
+int main() 
 {
+  // 640x400 color image with 8 BPP.
+  CImg<unsigned char> image(640, 400, 1, 3);
+
+  // Fill with black.
+  image.fill(0); 
+
+  unsigned char const red[] = { 255, 0, 0 };
+
+  image.draw_text(100, 100, "Hello, World!", red);
+
+  image.display("CImg: Hello, World!");
 }

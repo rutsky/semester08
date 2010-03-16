@@ -18,6 +18,19 @@ CC := g++
 
 CFLAGS ?= -W -Wall -std=c++98 -pedantic
 
+# X11
+X11PATH = /usr/X11R6
+
+# CImg flags.
+CIMG_DEBUG_CFLAGS = -Dcimg_verbosity=3 -Dcimg_strict_warnings
+CIMG_VT100_CFLAGS = -Dcimg_use_vt100
+CIMG_OPENMP_CFLAGS = -Dcimg_use_openmp -fopenmp
+CIMG_X11_CFLAGS = -I$(X11PATH)/include
+CIMG_X11_LDFLAGS = -L$(X11PATH)/lib -lpthread -lX11
+
+CFLAGS +=  $(CIMG_DEBUG_CFLAGS) $(CIMG_VT100_CFLAGS) $(CIMG_OPENMP_CFLAGS)
+LDFLAGS += $(CIMG_X11_LDFLAGS)
+
 CFLAGS += -ICImg
 LDFLAGS += 
 
