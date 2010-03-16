@@ -21,7 +21,12 @@
 
 using namespace cimg_library;
 
-int main() 
+#if       cimg_OS == 2
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                    LPSTR lpszCmpParam, int nCmdShow )
+#else  // cimg_OS == 2
+int main()
+#endif // cimg_OS == 2
 {
   // 640x400 color image with 8 BPP.
   CImg<unsigned char> image(640, 400, 1, 3);
