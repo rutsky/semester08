@@ -1,15 +1,6 @@
 # Build script for HLA project.
 # Copyright (C) 2010  Vladimir Rutsky <altsysrq@gmail.com>
 
-SConscript("src/SConscript", variant_dir="build")
-#SConscript("src/SConscript")
-
-"""
-import sys
-
-# debug
-#print sys.version_info
-
 cflags = "-W -Wall"
 
 X11PATH = "/usr/X11R6"
@@ -26,4 +17,3 @@ libs = Split("pthread X11")
 libs_path = X11PATH + "/lib"
 
 Program(target = "hla", source = "main.cpp", CCFLAGS=cflags, LIBS=libs, LIBSPATH=libs_path)
-"""
