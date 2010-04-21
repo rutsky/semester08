@@ -1,6 +1,8 @@
 # Build script for HLA project.
 # Copyright (C) 2010  Vladimir Rutsky <altsysrq@gmail.com>
 
+env = Environment()
+
 cflags = "-W -Wall"
 
 X11PATH = "/usr/X11R6"
@@ -18,4 +20,4 @@ libs_path = X11PATH + "/lib"
 
 source_files = Glob("*.cpp")
 
-Program(target="hla", source=source_files, CCFLAGS=cflags, LIBS=libs, LIBSPATH=libs_path)
+env.Program(target="hla", source=source_files, CCFLAGS=cflags, LIBS=libs, LIBSPATH=libs_path)
