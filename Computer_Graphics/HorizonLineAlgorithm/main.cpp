@@ -17,7 +17,7 @@
  *  along with HLA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CImg.h"
+#include <CImg.h>
 
 using namespace cimg_library;
 
