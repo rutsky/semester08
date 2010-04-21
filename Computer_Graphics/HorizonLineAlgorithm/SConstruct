@@ -1,6 +1,7 @@
 # Build script for HLA project.
 # Copyright (C) 2010  Vladimir Rutsky <altsysrq@gmail.com>
 
-env = Environment()
+env = Environment(tools=["default", "gch"])
+Export('env')
 
 SConscript("src/SConscript", variant_dir="build")

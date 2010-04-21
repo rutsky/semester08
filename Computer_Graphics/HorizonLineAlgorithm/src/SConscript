@@ -1,7 +1,9 @@
 # Build script for HLA project.
 # Copyright (C) 2010  Vladimir Rutsky <altsysrq@gmail.com>
 
-env = Environment()
+Import('env')
+
+env['Gch'] = env.Gch('precompiled.hpp')[0]
 
 cflags = "-W -Wall"
 
@@ -15,6 +17,8 @@ cflags += " " + str(" ").join([CIMG_DEBUG_CFLAGS, CIMG_VT100_CFLAGS, CIMG_OPENMP
 
 cflags += " -ICImg -Ieigen2"
 
+env['CPPFLAGS'] = cflags
+
 libs = Split("pthread X11")
 libs_path = X11PATH + "/lib"
 
@@ -26,6 +30,6 @@ env.Program(
     target="hla",
     source=source_files,
     CPPPATH=cpp_path,
-    CCFLAGS=cflags,
+    #CCFLAGS=cflags,
     LIBS=libs,
     LIBSPATH=libs_path)
