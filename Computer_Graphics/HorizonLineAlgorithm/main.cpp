@@ -17,7 +17,13 @@
  *  along with HLA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
+
+#include <Eigen/Core>
 #include <CImg.h>
+
+// import most common Eigen types 
+USING_PART_OF_NAMESPACE_EIGEN
 
 using namespace cimg_library;
 
@@ -39,4 +45,15 @@ int main()
   image.draw_text(100, 100, "Hello, World!", red);
 
   image.display("CImg: Hello, World!");
+  
+  {
+    // Basic Eigen test (from Eigen's documentation).
+    int rows=5, cols=5;
+    MatrixXf m(rows,cols);
+    m << (Matrix3f() << 1, 2, 3, 4, 5, 6, 7, 8, 9).finished(),
+      MatrixXf::Zero(3,cols-3),
+      MatrixXf::Zero(rows-3,3),
+      MatrixXf::Identity(rows-3,cols-3);
+    std::cout << m << "\n";
+  }
 }

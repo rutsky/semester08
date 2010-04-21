@@ -16,7 +16,9 @@ STATIC ?= 0
 
 CC := g++
 
-CFLAGS ?= -W -Wall -std=c++98 -pedantic
+# Due to use of foreign libraries we can't enforce compiling with straight C++ standart.
+#CFLAGS ?= -W -Wall -std=c++98 -pedantic
+CFLAGS ?= -W -Wall
 
 # X11
 X11PATH = /usr/X11R6
@@ -31,7 +33,7 @@ CIMG_X11_LDFLAGS = -L$(X11PATH)/lib -lpthread -lX11
 CFLAGS +=  $(CIMG_DEBUG_CFLAGS) $(CIMG_VT100_CFLAGS) $(CIMG_OPENMP_CFLAGS)
 LDFLAGS += $(CIMG_X11_LDFLAGS)
 
-CFLAGS += -ICImg
+CFLAGS += -ICImg -Ieigen2
 LDFLAGS += 
 
 CFLAGS += $(OPTIM)
