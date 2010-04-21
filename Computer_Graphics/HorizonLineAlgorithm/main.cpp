@@ -1,7 +1,7 @@
 /*
  *  This file is part of HLA - Horizon Line Algorithm implementation.
  *
- *  Copyright (C) 2010  Vladimir Rutsky
+ *  Copyright (C) 2010  Vladimir Rutsky <altsysrq@gmail.com>
  *
  *  HLA is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

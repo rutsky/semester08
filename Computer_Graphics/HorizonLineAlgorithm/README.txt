@@ -1,6 +1,6 @@
 HLA - Horizon Line Algorithm implementation.
 
-Copyright (C) 2010  Vladimir Rutsky
+Copyright (C) 2010  Vladimir Rutsky <altsysrq@gmail.com>
 
 
 Foreign libraries included in project:
