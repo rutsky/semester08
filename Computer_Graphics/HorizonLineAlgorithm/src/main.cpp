@@ -17,6 +17,10 @@
  *  along with HLA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* 
+ * Main.
+ */
+
 #include "precompiled.hpp"
 
 #include <iostream>
@@ -24,17 +28,14 @@
 #include <Eigen/Core>
 #include <CImg.h>
 
+#include "platform.h"
+
 // import most common Eigen types 
 USING_PART_OF_NAMESPACE_EIGEN
 
 using namespace cimg_library;
 
-#if       cimg_OS == 2
-int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                    LPSTR lpszCmpParam, int nCmdShow )
-#else  // cimg_OS == 2
-int main()
-#endif // cimg_OS == 2
+MAIN_FUNCTION
 {
   // 640x400 color image with 8 BPP.
   CImg<unsigned char> image(640, 400, 1, 3);

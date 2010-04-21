@@ -17,6 +17,10 @@
  *  along with HLA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* 
+ * Precompiled header.
+ */
+
 #ifndef PRECOMPILED_H
 #define PRECOMPILED_H
 
