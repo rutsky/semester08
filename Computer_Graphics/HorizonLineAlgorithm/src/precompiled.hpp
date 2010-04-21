@@ -17,7 +17,12 @@
  *  along with HLA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef PRECOMPILED_H
+#define PRECOMPILED_H
+
 #include <iostream>
 
 #include <Eigen/Core>
 #include <CImg.h>
+
+#endif // PRECOMPILED_H
