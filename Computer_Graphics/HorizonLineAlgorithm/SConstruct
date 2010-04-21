@@ -1,0 +1,24 @@
+# Build script for HLA project.
+# Copyright (C) 2010  Vladimir Rutsky <altsysrq@gmail.com>
+
+import sys
+
+# debug
+#print sys.version_info
+
+cflags = "-W -Wall"
+
+X11PATH = "/usr/X11R6"
+CIMG_DEBUG_CFLAGS = "-Dcimg_verbosity=3 -Dcimg_strict_warnings"
+CIMG_VT100_CFLAGS = "-Dcimg_use_vt100"
+CIMG_OPENMP_CFLAGS = "-Dcimg_use_openmp -fopenmp"
+CIMG_X11_CFLAGS = "-I" + X11PATH + "/include"
+
+cflags += " " + str(" ").join([CIMG_DEBUG_CFLAGS, CIMG_VT100_CFLAGS, CIMG_OPENMP_CFLAGS])
+
+cflags += " -ICImg -Ieigen2"
+
+libs = Split("pthread X11")
+libs_path = X11PATH + "/lib"
+
+Program(target = "hla", source = "main.cpp", CCFLAGS=cflags, LIBS=libs, LIBSPATH=libs_path)
