@@ -18,6 +18,14 @@ cflags += " -ICImg -Ieigen2"
 libs = Split("pthread X11")
 libs_path = X11PATH + "/lib"
 
+cpp_path = "."
+
 source_files = Glob("*.cpp")
 
-env.Program(target="hla", source=source_files, CCFLAGS=cflags, LIBS=libs, LIBSPATH=libs_path)
+env.Program(
+    target="hla",
+    source=source_files,
+    CPPPATH=cpp_path,
+    CCFLAGS=cflags,
+    LIBS=libs,
+    LIBSPATH=libs_path)
