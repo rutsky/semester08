@@ -54,7 +54,8 @@ def static_pch_emitter(target,source,env):
     deps = scanner(source[0], env, path)
 
     if env.get('Gch'):
-        if env['Gch'].path.strip('.gch') in [x.path for x in deps]:
+        #if env['Gch'].path.strip('.gch') in [x.path for x in deps]:
+        if str(env['Gch'].sources[0]) in [str(x) for x in deps]:
             env.Depends(target, env['Gch'])
 
     return (target, source)
@@ -67,7 +68,8 @@ def shared_pch_emitter(target,source,env):
     deps = scanner(source[0], env, path)
 
     if env.get('GchSh'):
-        if env['GchSh'].path.strip('.gch') in [x.path for x in deps]:
+        #if env['GchSh'].path.strip('.gch') in [x.path for x in deps]:
+        if str(env['GchSh'].sources[0]) in [str(x) for x in deps]:
             env.Depends(target, env['GchSh'])
     return (target, source)
 
