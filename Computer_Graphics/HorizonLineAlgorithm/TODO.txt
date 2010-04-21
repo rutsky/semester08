@@ -1,3 +1,4 @@
 TODO:
  * Generate .sln/.vcproj files through SCons
- * Update CImg version
+ + Update CImg version
+ * Use precompiled header files
