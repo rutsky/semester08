@@ -14,4 +14,4 @@ which should be compatible with GNU GPL v3.
  * Eigen
 C++ template library for linear algebra.
 http://eigen.tuxfamily.org/
-Used under terms of GNU GPL v3 (see eigen/COPYING).
+Used under terms of GNU GPL v3 (see eigen2/COPYING).
