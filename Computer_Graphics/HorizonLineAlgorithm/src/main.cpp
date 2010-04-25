@@ -47,7 +47,15 @@ MAIN_FUNCTION
 
   image.draw_text(100, 100, "Hello, World!", red);
 
-  image.display("CImg: Hello, World!");
+  //image.display("CImg: Hello, World!");
+  
+  CImgDisplay mainDisp(image, "HLA - Vladimir Rutsky, 2010");
+  while (!mainDisp.is_closed())
+  {
+    mainDisp.wait();
+    if (mainDisp.is_keyQ())
+      break;
+  }
   
   {
     // Basic Eigen test (from Eigen's documentation).
