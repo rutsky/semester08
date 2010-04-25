@@ -38,11 +38,13 @@ using namespace cimg_library;
 MAIN_FUNCTION
 {
   // 640x400 color image with 8 BPP.
-  CImg<unsigned char> image(640, 400, 1, 3);
+  CImg<unsigned char> image(640, 400, 1, 3), frameBuffer(320, 200, 1, 3);
 
   // Fill with black.
   image.fill(0); 
-
+  
+  frameBuffer.fill(127);
+  
   unsigned char const red[] = { 255, 0, 0 }, white[] = {255, 255, 255};
 
   image.draw_text(100, 100, "Hello, World!", red);
@@ -57,6 +59,8 @@ MAIN_FUNCTION
       break;
     
     image.draw_text(100, 130, "test", white);
+    
+    image.draw_point(cimg::rand() * image.width(), cimg::rand() * image.height(), white);
     
     image.display(mainDisp);
   }
