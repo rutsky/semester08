@@ -43,7 +43,7 @@ MAIN_FUNCTION
   // Fill with black.
   image.fill(0); 
 
-  unsigned char const red[] = { 255, 0, 0 };
+  unsigned char const red[] = { 255, 0, 0 }, white[] = {255, 255, 255};
 
   image.draw_text(100, 100, "Hello, World!", red);
 
@@ -55,6 +55,10 @@ MAIN_FUNCTION
     mainDisp.wait();
     if (mainDisp.is_keyQ())
       break;
+    
+    image.draw_text(100, 130, "test", white);
+    
+    image.display(mainDisp);
   }
   
   {
