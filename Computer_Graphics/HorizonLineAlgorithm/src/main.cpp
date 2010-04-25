@@ -59,6 +59,7 @@ MAIN_FUNCTION
       break;
     
     image.draw_text(100, 130, "test", white);
+    image.draw_image(100, 150, frameBuffer);
     
     image.draw_point(cimg::rand() * image.width(), cimg::rand() * image.height(), white);
     
