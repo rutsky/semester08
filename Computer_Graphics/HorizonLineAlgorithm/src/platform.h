@@ -24,6 +24,7 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
+// TODO: Not needed because FLTK provides such wrapper.
 #if defined(WIN32)
 // Windows platform.
 #define MAIN_FUNCTION \
