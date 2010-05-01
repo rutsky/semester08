@@ -27,6 +27,5 @@
 #include <iostream>
 
 #include <Eigen/Core>
-#include <CImg.h>
 
 #endif // PRECOMPILED_H

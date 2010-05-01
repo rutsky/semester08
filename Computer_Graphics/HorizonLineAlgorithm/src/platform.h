@@ -24,8 +24,6 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
-#include <CImg.h>
-
 #if defined(WIN32)
 // Windows platform.
 #define MAIN_FUNCTION \

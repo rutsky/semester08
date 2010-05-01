@@ -19,35 +19,18 @@ Import('env')
 
 env['Gch'] = env.Gch('precompiled.hpp')[0]
 
-cflags = "-W -Wall"
+# Compilation warnings.
+env.MergeFlags(env.ParseFlags("-W -Wall -I#eigen2"))
 
-X11PATH = "/usr/X11R6"
-CIMG_DEBUG_CFLAGS = "-Dcimg_verbosity=3 -Dcimg_strict_warnings"
-CIMG_VT100_CFLAGS = "-Dcimg_use_vt100"
-CIMG_OPENMP_CFLAGS = "-Dcimg_use_openmp -fopenmp"
-CIMG_X11_CFLAGS = "-I" + X11PATH + "/include"
+# Eigen library.
+env.MergeFlags(env.ParseFlags("-I#eigen2"))
 
-cflags += " " + str(" ").join([CIMG_DEBUG_CFLAGS, CIMG_VT100_CFLAGS, CIMG_OPENMP_CFLAGS])
-
-cflags += " -ICImg -Ieigen2"
-
-env['CPPFLAGS'] = cflags
-
-libs = Split("pthread X11")
-libs_path = X11PATH + "/lib"
-
-cpp_path = "."
+# FLTK library.
+env.ParseConfig("fltk-config --cxxflags --ldflags")
 
 source_files = Glob("*.cpp")
-
-env.ParseConfig("fltk-config --cxxflags --ldflags")
-#env.ParseConfig("fltk-config --ldflags")
 
 env.Program(
     target="hla",
     source=source_files,
-    CPPPATH=cpp_path,
-    #CCFLAGS=cflags,
-    #LIBS=libs,
-    #LIBSPATH=libs_path
     )

@@ -17,7 +17,7 @@
  *  along with HLA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* 
+/*
  * Main.
  */
 
@@ -35,8 +35,6 @@
 
 // import most common Eigen types 
 USING_PART_OF_NAMESPACE_EIGEN
-
-using namespace cimg_library;
 
 MAIN_FUNCTION
 {
