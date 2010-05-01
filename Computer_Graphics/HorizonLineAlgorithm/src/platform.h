@@ -26,12 +26,13 @@
 
 #include <CImg.h>
 
-#if       cimg_OS == 2
+#if defined(WIN32)
+// Windows platform.
 #define MAIN_FUNCTION \
     int WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR, int )
-#else  // cimg_OS == 2
+#else  // POSIX platform.
 #define MAIN_FUNCTION \
     int main()
-#endif // cimg_OS == 2
+#endif
 
 #endif // PLATFORM_H

@@ -40,10 +40,14 @@ cpp_path = "."
 
 source_files = Glob("*.cpp")
 
+env.ParseConfig("fltk-config --cxxflags --ldflags")
+#env.ParseConfig("fltk-config --ldflags")
+
 env.Program(
     target="hla",
     source=source_files,
     CPPPATH=cpp_path,
     #CCFLAGS=cflags,
-    LIBS=libs,
-    LIBSPATH=libs_path)
+    #LIBS=libs,
+    #LIBSPATH=libs_path
+    )

@@ -26,7 +26,10 @@
 #include <iostream>
 
 #include <Eigen/Core>
-#include <CImg.h>
+
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Box.H>
 
 #include "platform.h"
 
@@ -37,35 +40,19 @@ using namespace cimg_library;
 
 MAIN_FUNCTION
 {
-  // 640x400 color image with 8 BPP.
-  CImg<unsigned char> image(640, 400, 1, 3), frameBuffer(320, 200, 1, 3);
-
-  // Fill with black.
-  image.fill(0); 
-  
-  frameBuffer.fill(127);
-  
-  unsigned char const red[] = { 255, 0, 0 }, white[] = {255, 255, 255};
-
-  image.draw_text(100, 100, "Hello, World!", red);
-
-  //image.display("CImg: Hello, World!");
-  
-  CImgDisplay mainDisp(image, "HLA - Vladimir Rutsky, 2010");
-  while (!mainDisp.is_closed())
   {
-    mainDisp.wait();
-    if (mainDisp.is_keyQ())
-      break;
-    
-    image.draw_text(100, 130, "test", white);
-    image.draw_image(100, 150, frameBuffer);
-    
-    image.draw_point(cimg::rand() * image.width(), cimg::rand() * image.height(), white);
-    
-    image.display(mainDisp);
+    Fl_Window *window = new Fl_Window(300,180);
+    Fl_Box *box = new Fl_Box(20,40,260,100,"Hello, World!");
+    box->box(FL_UP_BOX);
+    box->labelsize(36);
+    box->labelfont(FL_BOLD+FL_ITALIC);
+    box->labeltype(FL_SHADOW_LABEL);
+    window->end();
+    //window->show(argc, argv);
+    window->show();
+    std::cout << Fl::run() << "\n";
   }
-  
+
   {
     // Basic Eigen test (from Eigen's documentation).
     int rows=5, cols=5;
