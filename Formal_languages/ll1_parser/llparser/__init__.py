@@ -5,9 +5,10 @@ import sys
 import pygraph
 from itertools import chain, ifilter
 from ordereddict import OrderedDict
+import prettytable
 
 __author__ = "Vladimir Rutsky <altsysrq@gmail.com>"
-__copyright__ = "Copyright  2006, Vladimir Rutsky"
+__copyright__ = "Copyright  2010, Vladimir Rutsky"
 
 # TODO: Rename to ll1parser.py
 
@@ -104,8 +105,7 @@ class Productions(OrderedDict):
     def __str__(self):
         result = ""
         for left, rights in self.iteritems():
-            result += "%s -> "%(left,)
-            result += " | ".join(" ".join([str(symb) for symb in right]) for right in rights)
+            result += format_production(left, rights)
             result += "\n"
         return result
     
@@ -114,7 +114,12 @@ class Productions(OrderedDict):
         left = self.keys()[prod_idx]
         rights = self[left]
         assert subprod_idx < len(rights)
-        return rights[subprod_idx]
+        return left, rights[subprod_idx]
+
+def format_production(left, rights):
+    result = "%s -> "%(left,)
+    result += " | ".join(" ".join([str(symb) for symb in right]) for right in rights)
+    return result
         
 def _productions_graph_edges(prods):
     edges = list()
@@ -232,20 +237,50 @@ def _follow(prods, cur_nonterm, start_nonterm):
 def follow(prods, nonterm):
     return _follow(prods, nonterm, nonterm)
 
-def parsing_table(prods):
+def parse_table(prods):
     """Return dictionary: {(stack_nonterm, input_symbol): (prod_idx, subprod_idx)}."""
     result = dict()
     
-    def safe_add(stack_nonterm, input_dymbol, prod_idx, subprod_idx):
-        key = (stack_nonterm, input_dymbol)
+    def safe_add(stack_nonterm, input_symbol, prod_idx, subprod_idx):
+        assert input_symbol != empty_symbol
+        key = (stack_nonterm, input_symbol)
         value = (prod_idx, subprod_idx)
         if key not in result:
             result[key] = value
         else:
             assert result[key] != value
-            raise UnsupportedGrammarException("Parsing table have multiple entries in cell.")
+            ex = "Duplicate items for cell (%s, %s): %s"%(
+                stack_nonterm, input_symbol, 
+                format_production(*tuple(prods.with_number(result[key]))),
+                format_production(*tuple(prods.with_number(value))))
+            raise UnsupportedGrammarException(ex)
     
-    for left, rights in prods:
-        for right in rights:
-            firsts = first(prods, right)
-            # TODO
+    for prod_idx, (left, rights) in enumerate(prods.items()):
+        for subprod_idx, right in enumerate(rights):
+            # Production N -> s1 s2 ...
+            firsts = set(first(prods, *right))
+            # Add FIRST(N).
+            for firsts_prod_term in firsts.difference([empty_symbol]):
+                safe_add(left, firsts_prod_term, prod_idx, subprod_idx)
+            if empty_symbol in firsts:
+                # Add FOLLOW(N).
+                follows = set(follow(prods, left))
+                for follow_prod_term in follows.difference([empty_symbol]):
+                    safe_add(left, follow_prod_term, prod_idx, subprod_idx)
+    return result
+    
+def format_parse_table(prods, ptable):
+    input_terms = list(prods.terms()) + [word_end]
+    render_table = prettytable.PrettyTable([""] + list(map(str, input_terms)))
+    for nonterm in prods.nonterms():
+        render_column = [str(nonterm)]
+        for input_term in input_terms:
+            key = (nonterm, input_term)
+            if key in ptable:
+                left, right = prods.with_number(*tuple(ptable[key]))
+                production_str = format_production(left, [right])
+                render_column.append(production_str)
+            else:
+                render_column.append("")
+        render_table.add_row(render_column)
+    return str(render_table)

@@ -11,7 +11,7 @@ import gv
 from llparser import *
 
 __author__ = "Vladimir Rutsky <altsysrq@gmail.com>"
-__copyright__ = "Copyright  2006, Vladimir Rutsky"
+__copyright__ = "Copyright  2010, Vladimir Rutsky"
 
 """
 E = NonTerm('E')
@@ -66,9 +66,11 @@ def main(args):
     print "Non-terminals: %s."%(', '.join(map(str, prods.nonterms())))
     print "Terminals: %s."%(', '.join(map(str, prods.terms())))
     for nonterm in prods.nonterms():
-        print "FIRST(%s) = {  %s  }."%(nonterm, ', '.join(map(str, first(prods, nonterm))))
+        print "FIRST(%s) = {%s}."%(nonterm, ', '.join(map(str, first(prods, nonterm))))
     for nonterm in prods.nonterms():
-        print "FOLLOW(%s) = {  %s  }."%(nonterm, ', '.join(map(str, follow(prods, nonterm))))
+        print "FOLLOW(%s) = {%s}."%(nonterm, ', '.join(map(str, follow(prods, nonterm))))
+    ptable = parse_table(prods)
+    print format_parse_table(prods, ptable)
 
 if __name__ == "__main__":
     main(sys.argv)
