@@ -57,8 +57,8 @@ def main(args):
     print prods
     prods.check()
 
-    if False:
-        gvv = gv.readstring(pygraph.readwrite.dot.write(prods.graph()))
+    if True:
+        gvv = gv.readstring(pygraph.readwrite.dot.write(productions_graph(prods)))
         #for layout in "circo dot fdp neato nop nop1 nop2 twopi".split():
         for layout in "circo dot fdp neato twopi".split():
             gv.layout(gvv, layout)
@@ -66,9 +66,9 @@ def main(args):
     print "Non-terminals: %s."%(', '.join(map(str, prods.nonterms())))
     print "Terminals: %s."%(', '.join(map(str, prods.terms())))
     for nonterm in prods.nonterms():
-        print "FIRST(%s) = {  %s  }."%(nonterm, ', '.join(map(str, prods.first(nonterm))))
+        print "FIRST(%s) = {  %s  }."%(nonterm, ', '.join(map(str, first(prods, nonterm))))
     for nonterm in prods.nonterms():
-        print "FOLLOW(%s) = {  %s  }."%(nonterm, ', '.join(map(str, prods.follow(nonterm))))
+        print "FOLLOW(%s) = {  %s  }."%(nonterm, ', '.join(map(str, follow(prods, nonterm))))
 
 if __name__ == "__main__":
     main(sys.argv)
