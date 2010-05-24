@@ -57,7 +57,7 @@ def main(args):
     print prods
     prods.check()
 
-    if True:
+    if False:
         gvv = gv.readstring(pygraph.readwrite.dot.write(productions_graph(prods)))
         #for layout in "circo dot fdp neato nop nop1 nop2 twopi".split():
         for layout in "circo dot fdp neato twopi".split():

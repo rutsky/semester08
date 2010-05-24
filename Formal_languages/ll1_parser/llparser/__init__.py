@@ -9,6 +9,8 @@ from ordereddict import OrderedDict
 __author__ = "Vladimir Rutsky <altsysrq@gmail.com>"
 __copyright__ = "Copyright  2006, Vladimir Rutsky"
 
+# TODO: Rename to ll1parser.py
+
 class Symbol(object):
     pass
 
@@ -222,3 +224,5 @@ def _follow(prods, cur_nonterm, start_nonterm):
     
 def follow(prods, nonterm):
     return _follow(prods, nonterm, nonterm)
+
+
