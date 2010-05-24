@@ -65,12 +65,23 @@ def main(args):
             gv.render(gvv, 'png', 'output/input_productions_%s.png'%(layout,))
     print "Non-terminals: %s."%(', '.join(map(str, prods.nonterms())))
     print "Terminals: %s."%(', '.join(map(str, prods.terms())))
+    
     for nonterm in prods.nonterms():
         print "FIRST(%s) = {%s}."%(nonterm, ', '.join(map(str, first(prods, nonterm))))
     for nonterm in prods.nonterms():
         print "FOLLOW(%s) = {%s}."%(nonterm, ', '.join(map(str, follow(prods, nonterm))))
+        
     ptable = parse_table(prods)
+    print "Grammar parse table:"
     print format_parse_table(prods, ptable)
+    
+    input_terms = [var, add, var, mult, var, word_end]
+    print "Input terminals: %s."%(", ".join(map(str, input_terms)),)
+    
+    prod_idxs = parse_word(prods, ptable, input_terms)
+    
+    print "Productions that generates input:"
+    print format_productions_idxs(prods, prod_idxs)
 
 if __name__ == "__main__":
     main(sys.argv)

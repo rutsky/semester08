@@ -31,9 +31,9 @@ class _EmptySymbol(Symbol):
     def __str__(self):
         return "e"
 
-class _WordEnd(Symbol):
-    def __str__(self):
-        return "$"
+class _WordEnd(Term):
+    def __init__(self):
+        Term.__init__(self, "$")
 
 empty_symbol = _EmptySymbol()
 word_end = _WordEnd()
@@ -109,7 +109,7 @@ class Productions(OrderedDict):
             result += "\n"
         return result
     
-    def with_number(self, prod_idx, subprod_idx = 0):
+    def with_number(self, prod_idx, subprod_idx):
         assert prod_idx < len(self)
         left = self.keys()[prod_idx]
         rights = self[left]
@@ -251,8 +251,8 @@ def parse_table(prods):
             assert result[key] != value
             ex = "Duplicate items for cell (%s, %s): %s"%(
                 stack_nonterm, input_symbol, 
-                format_production(*tuple(prods.with_number(result[key]))),
-                format_production(*tuple(prods.with_number(value))))
+                format_production(*tuple(prods.with_number(*result[key]))),
+                format_production(*tuple(prods.with_number(*value))))
             raise UnsupportedGrammarException(ex)
     
     for prod_idx, (left, rights) in enumerate(prods.items()):
@@ -268,8 +268,9 @@ def parse_table(prods):
                 for follow_prod_term in follows.difference([empty_symbol]):
                     safe_add(left, follow_prod_term, prod_idx, subprod_idx)
     return result
-    
+
 def format_parse_table(prods, ptable):
+    """Return string with grammar parse table rendered in ASCII."""
     input_terms = list(prods.terms()) + [word_end]
     render_table = prettytable.PrettyTable([""] + list(map(str, input_terms)))
     for nonterm in prods.nonterms():
@@ -284,3 +285,73 @@ def format_parse_table(prods, ptable):
                 render_column.append("")
         render_table.add_row(render_column)
     return str(render_table)
+    
+class ParserErrorException(Exception):
+    def __init__(self, message):
+        self.message = message
+    def __str__(self):
+        return self.message
+
+def parse_word(prods, ptable, input_terms):
+    """Parse input terminals list according to productions rules and built 
+    parse table.
+    Return list of productions indices which produces input terminals list,
+    or raises exception, if input syntax isn't correct.
+    """
+    input_terms = list(input_terms)
+    assert len(input_terms) >= 1 and input_terms[-1] == word_end
+    
+    result = []
+    
+    stack = [word_end, prods.start_nonterm()]
+    input_terms_idx = 0
+    while len(stack) > 1:
+        stack_top = stack.pop()
+        observe_term = input_terms[input_terms_idx]
+        if isinstance(stack_top, Term):
+            if stack_top == observe_term:
+                # Skip terminal.
+                input_terms_idx += 1
+            else:
+                # Unexpected terminal.
+                if observe_term == word_end:
+                    ex = "Unexpected end of input. "
+                else:
+                    ex = "Unexpected terminal #%d: %s. "%(input_terms_idx, observe_term)
+                ex += "Expected terminal %s."%(stack_top,)
+                raise ParserErrorException(ex)
+        else:
+            assert isinstance(stack_top, NonTerm)
+            key = (stack_top, observe_term)
+            if key in ptable:
+                prod_idx, subprod_idx = ptable[key]
+                result.append((prod_idx, subprod_idx))
+                left, right = prods.with_number(prod_idx, subprod_idx)
+                if right[0] != empty_symbol:
+                    stack.extend(reversed(right))
+            else:
+                ex = "Unexpected terminal #%d: %s."%(input_terms_idx, observe_term)
+                firsts = set(first(prods, stack_top))
+                expected_terms = firsts.difference([empty_word])
+                if empty_word in firsts:
+                    follows = set(follow(prods, [stack_top] + list(reversed(stack[1:]))))
+                    expected_terms.update(follows)
+                ex += "Expected terminals: "
+                ex += ", ".join(map(str, expected_terms))
+                ex += "."
+                raise ParserErrorException(ex)
+        
+    if input_terms_idx != len(input_terms) - 1:
+        ex = "Unexpected terminals starting from #%d: "%(input_terms_idx,)
+        ex += ", ".join(map(str, input_terms[input_terms_idx:-1]))
+        ex += "."
+        raise ParserErrorException(ex)
+        
+    return result
+
+def format_productions_idxs(prods, prod_idxs):
+    result = ""
+    for prod_idx, subprod_idx in prod_idxs:
+        left, right = prods.with_number(prod_idx, subprod_idx)
+        result += format_production(left, [right]) + "\n"
+    return result
