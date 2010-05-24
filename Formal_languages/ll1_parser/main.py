@@ -8,7 +8,7 @@ import pygraph
 sys.path.append('/usr/lib/pyshared/python2.6')
 import gv
 
-from llparser import *
+from ll1parser import *
 
 __author__ = "Vladimir Rutsky <altsysrq@gmail.com>"
 __copyright__ = "Copyright  2010, Vladimir Rutsky"
