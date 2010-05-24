@@ -2,9 +2,10 @@
 """
 
 import sys
-import pygraph
 from itertools import chain, ifilter
+import copy
 from ordereddict import OrderedDict
+import pygraph
 import prettytable
 
 __author__ = "Vladimir Rutsky <altsysrq@gmail.com>"
@@ -355,3 +356,30 @@ def format_productions_idxs(prods, prod_idxs):
         left, right = prods.with_number(prod_idx, subprod_idx)
         result += format_production(left, [right]) + "\n"
     return result
+
+def productions_idxs_graph(prods, prod_idxs):
+    graph = pygraph.digraph()
+    
+    start_nonterm_str = "1.1 " + str(prods.start_nonterm())
+    graph.add_node(start_nonterm_str)
+    symbols_stack = [(prods.start_nonterm(), start_nonterm_str)]
+    prods_stack = list(reversed(prod_idxs))
+    prod_number = 1
+    while len(symbols_stack) != 0:
+        symbol, symbol_str = symbols_stack.pop()
+        if isinstance(symbol, NonTerm):
+            assert len(prods_stack) != 0
+            prod_idx, subprod_idx = prods_stack.pop()
+            prod_number += 1
+            left, right = prods.with_number(prod_idx, subprod_idx)
+            for right_symb_idx, right_symb in enumerate(reversed(right)):
+                right_symb_str = "%d.%d %s"%(prod_number, len(right) - right_symb_idx, right_symb)
+                graph.add_node(right_symb_str)
+                graph.add_edge(symbol_str, right_symb_str)
+                symbols_stack.append((right_symb, right_symb_str))
+        else:
+            # Skip terminals.
+            pass
+    
+    return graph
+
