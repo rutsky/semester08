@@ -108,6 +108,13 @@ class Productions(OrderedDict):
             result += " | ".join(" ".join([str(symb) for symb in right]) for right in rights)
             result += "\n"
         return result
+    
+    def with_number(self, prod_idx, subprod_idx = 0):
+        assert prod_idx < len(self)
+        left = self.keys()[prod_idx]
+        rights = self[left]
+        assert subprod_idx < len(rights)
+        return rights[subprod_idx]
         
 def _productions_graph_edges(prods):
     edges = list()
@@ -225,4 +232,20 @@ def _follow(prods, cur_nonterm, start_nonterm):
 def follow(prods, nonterm):
     return _follow(prods, nonterm, nonterm)
 
-
+def parsing_table(prods):
+    """Return dictionary: {(stack_nonterm, input_symbol): (prod_idx, subprod_idx)}."""
+    result = dict()
+    
+    def safe_add(stack_nonterm, input_dymbol, prod_idx, subprod_idx):
+        key = (stack_nonterm, input_dymbol)
+        value = (prod_idx, subprod_idx)
+        if key not in result:
+            result[key] = value
+        else:
+            assert result[key] != value
+            raise UnsupportedGrammarException("Parsing table have multiple entries in cell.")
+    
+    for left, rights in prods:
+        for right in rights:
+            firsts = first(prods, right)
+            # TODO
