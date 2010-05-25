@@ -84,7 +84,9 @@ def main(args):
     print format_productions_idxs(prods, prod_idxs)
     
     prod_idxs_graph = productions_idxs_graph(prods, prod_idxs)
-    if True:
+    with open("output/syntax_tree.dot", "w") as f:
+        f.write(pygraph.readwrite.dot.write(prod_idxs_graph))
+    if False:
         gvv = gv.readstring(pygraph.readwrite.dot.write(prod_idxs_graph))
         #for layout in "circo dot fdp neato nop nop1 nop2 twopi".split():
         for layout in "circo dot fdp neato twopi".split():

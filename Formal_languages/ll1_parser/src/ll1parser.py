@@ -357,6 +357,26 @@ def format_productions_idxs(prods, prod_idxs):
         result += format_production(left, [right]) + "\n"
     return result
 
+def productions_idxs_edges(prods, prod_idxs):
+    """Return list of tuples (from, to) - directed edges of symbols instances.
+    """
+    result = []
+    
+    symbols_stack = [prods.start_nonterm()]
+    prods_stack = list(reversed(prod_idxs))
+    while len(symbols_stack) != 0:
+        symbol = symbols_stack.pop()
+        if isinstance(symbol, NonTerm):
+            assert len(prods_stack) != 0
+            prod_idx, subprod_idx = prods_stack.pop()
+            left, right = prods.with_number(prod_idx, subprod_idx)
+            for right_symb in right:
+                result.append((symbol, right_symb))
+            symbols.extend(reversed(right))
+        else:
+            # Skip terminals.
+            pass
+
 def productions_idxs_graph(prods, prod_idxs):
     graph = pygraph.digraph()
     
