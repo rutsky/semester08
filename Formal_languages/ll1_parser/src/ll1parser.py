@@ -370,12 +370,41 @@ def productions_idxs_edges(prods, prod_idxs):
             assert len(prods_stack) != 0
             prod_idx, subprod_idx = prods_stack.pop()
             left, right = prods.with_number(prod_idx, subprod_idx)
-            for right_symb in right:
+            right_clone = [copy.copy(r) for r in right]
+            for right_symb in right_clone:
                 result.append((symbol, right_symb))
-            symbols.extend(reversed(right))
+            symbols_stack.extend(reversed(right_clone))
         else:
             # Skip terminals.
             pass
+    return result
+
+def _symbol_to_dot(symbol, with_label=False):
+    result = "N%d"%(id(symbol),)
+    if with_label:
+        result += '[label="%s"]'%(symbol,)
+    return result
+
+def _symbol_to_dot_node(symbol):
+    return _symbol_to_dot(symbol, True) + ";\n"
+
+def _edge_to_dot_edge(from_symb, to_symb):
+    return _symbol_to_dot(from_symb) + " -> " + _symbol_to_dot(to_symb) + ";\n"
+
+def productions_idxs_dot_graph(prods, prod_idxs):
+    """Return string with .dot representation of productions graph."""
+
+    result = """digraph productions_tree {
+ordering=out;
+"""
+
+    prods_edges = list(productions_idxs_edges(prods, prod_idxs))
+    nodes = set(chain(*prods_edges))
+    result += "".join(map(_symbol_to_dot_node, nodes))
+    result += "".join(map(lambda t: _edge_to_dot_edge(*t), prods_edges))
+  
+    result += "}\n"
+    return result
 
 def productions_idxs_graph(prods, prod_idxs):
     graph = pygraph.digraph()

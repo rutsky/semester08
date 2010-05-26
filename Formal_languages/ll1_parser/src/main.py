@@ -82,16 +82,13 @@ def main(args):
     
     print "Productions that generates input:"
     print format_productions_idxs(prods, prod_idxs)
-    
-    prod_idxs_graph = productions_idxs_graph(prods, prod_idxs)
+
+    prods_dot = productions_idxs_dot_graph(prods, prod_idxs)
     with open("output/syntax_tree.dot", "w") as f:
-        f.write(pygraph.readwrite.dot.write(prod_idxs_graph))
-    if False:
-        gvv = gv.readstring(pygraph.readwrite.dot.write(prod_idxs_graph))
-        #for layout in "circo dot fdp neato nop nop1 nop2 twopi".split():
-        for layout in "circo dot fdp neato twopi".split():
-            gv.layout(gvv, layout)
-            gv.render(gvv, 'png', 'output/syntax_tree_%s.png'%(layout,))
+        f.write(prods_dot)
+    gvv = gv.readstring(prods_dot)
+    gv.layout(gvv, "dot")
+    gv.render(gvv, 'png', 'output/syntax_tree.png')
 
 if __name__ == "__main__":
     main(sys.argv)
