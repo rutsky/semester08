@@ -57,12 +57,14 @@ def main(args):
     print prods
     prods.check()
 
+    gvv = gv.readstring(pygraph.readwrite.dot.write(productions_graph(prods)))
+    gv.layout(gvv, "dot")
+    gv.render(gvv, "svg", "input_productions.svg")
     if False:
-        gvv = gv.readstring(pygraph.readwrite.dot.write(productions_graph(prods)))
         #for layout in "circo dot fdp neato nop nop1 nop2 twopi".split():
         for layout in "circo dot fdp neato twopi".split():
             gv.layout(gvv, layout)
-            gv.render(gvv, 'png', 'output/input_productions_%s.png'%(layout,))
+            gv.render(gvv, "png", "input_productions_%s.png"%(layout,))
     print "Non-terminals: %s."%(', '.join(map(str, prods.nonterms())))
     print "Terminals: %s."%(', '.join(map(str, prods.terms())))
     
@@ -84,11 +86,11 @@ def main(args):
     print format_productions_idxs(prods, prod_idxs)
 
     prods_dot = productions_idxs_dot_graph(prods, prod_idxs)
-    with open("output/syntax_tree.dot", "w") as f:
-        f.write(prods_dot)
+    #with open("syntax_tree.dot", "w") as f:
+    #    f.write(prods_dot)
     gvv = gv.readstring(prods_dot)
     gv.layout(gvv, "dot")
-    gv.render(gvv, 'png', 'output/syntax_tree.png')
+    gv.render(gvv, "svg", "syntax_tree.svg")
 
 if __name__ == "__main__":
     main(sys.argv)
