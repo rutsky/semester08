@@ -5,7 +5,7 @@
         <data xmlns="http://nbpython.dev.java.net/ns/php-project/1">
             <name>ll1parser</name>
             <sources>
-                <root id="src.src.dir"/>
+                <root id="src.src.dir" name="Sources"/>
             </sources>
             <tests/>
         </data>
