@@ -1,3 +1,8 @@
 # Compiled Python
 *.pyc
 output/*
+
+# NetBeans
+build/
+dist/
+nbproject/private/
