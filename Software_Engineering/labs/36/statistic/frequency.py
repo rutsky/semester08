@@ -5,7 +5,7 @@ import locale
 import collections
 
 def main(args):
-    full_contents = unicode(sys.stdin.read(), locale.getdefaultlocale()[1])
+    full_contents = sys.stdin.read().decode(locale.getdefaultlocale()[1])
     unicode_contents = filter(lambda x: len(x.encode("utf-8")) >= 2, full_contents)
     counters = collections.defaultdict(int) # dict(character: count)
     for ch in unicode_contents:
