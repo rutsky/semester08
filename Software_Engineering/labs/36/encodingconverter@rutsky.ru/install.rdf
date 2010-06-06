@@ -26,6 +26,14 @@
     
     <em:localized>
       <Description>
+        <em:locale>en-US</em:locale>
+        <em:name>Encoding Converter</em:name>
+        <em:description>Character encoding converter suite</em:description>
+        <em:creator>Vladimir Rutsky</em:creator>
+      </Description>
+    </em:localized>
+    <em:localized>
+      <Description>
         <em:locale>ru-RU</em:locale>
         <em:name>Encoding Converter</em:name>
         <em:description>Инструмент для изменения кодировки текста</em:description>
