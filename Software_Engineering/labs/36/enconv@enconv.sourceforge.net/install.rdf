@@ -23,6 +23,7 @@
     <em:description>Character encoding converter suite</em:description>
     <em:creator>Vladimir Rutsky</em:creator>
     <em:homepageURL>http://enconv.sourceforge.net</em:homepageURL>
+    <em:iconURL>chrome://enconv/skin/icon.png</em:iconURL>
     
     <em:localized>
       <Description>
