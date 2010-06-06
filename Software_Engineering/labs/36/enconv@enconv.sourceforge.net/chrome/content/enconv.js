@@ -25,9 +25,7 @@ net.sourceforge.enconv = {
   init: function() {
     },
   onStatusBarPanelClick: function() {
-      var nse = net.sourceforge.enconv;
-      
-      alert(nse.strbundle().getString("msg.alert_hello"));
+      alert(this.strbundle().getString("msg.alert_hello"));
     },
   
   strbundle: function() document.getElementById("enconv-strings")
