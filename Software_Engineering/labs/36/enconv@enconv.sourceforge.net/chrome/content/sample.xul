@@ -4,6 +4,11 @@
 
 <overlay id="sample" 
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="enconv-strings" src="chrome://sample/locale/sample.properties"/>
+  </stringbundleset>
+  
   <script type="application/x-javascript"
     src="chrome://sample/content/sample.js"/>
 

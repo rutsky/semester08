@@ -22,7 +22,15 @@ if (!net.sourceforge) net.sourceforge = {};
 if (!net.sourceforge.enconv) net.sourceforge.enconv = {};
 
 net.sourceforge.enconv = {
+  init: function() {
+    },
   onStatusBarPanelClick: function() {
-      alert("Hello, World!");
-    }
-}
+      var nse = net.sourceforge.enconv;
+      
+      alert(nse.strbundle().getString("msg.alert_hello"));
+    },
+  
+  strbundle: function() document.getElementById("enconv-strings")
+};
+
+net.sourceforge.enconv.init()
