@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 
-<!DOCTYPE overlay SYSTEM "chrome://sample/locale/sample.dtd">
+<!DOCTYPE overlay SYSTEM "chrome://enconv/locale/enconv.dtd">
 
-<overlay id="sample" 
+<overlay id="enconv"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
   <stringbundleset id="stringbundleset">
-    <stringbundle id="enconv-strings" src="chrome://sample/locale/sample.properties"/>
+    <stringbundle id="enconv-strings" src="chrome://enconv/locale/enconv.properties"/>
   </stringbundleset>
   
   <script type="application/x-javascript"
-    src="chrome://sample/content/sample.js"/>
+    src="chrome://enconv/content/enconv.js"/>
 
   <statusbar id="status-bar">
     <statusbarpanel id="my-panel" 

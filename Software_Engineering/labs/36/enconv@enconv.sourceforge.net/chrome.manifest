@@ -1,4 +1,4 @@
-content     sample    chrome/content/
-overlay     chrome://browser/content/browser.xul chrome://sample/content/sample.xul
-locale      sample en-US chrome/locale/en-US/
-locale      sample ru-RU chrome/locale/ru-RU/
+content     enconv    chrome/content/
+overlay     chrome://browser/content/browser.xul chrome://enconv/content/enconv.xul
+locale      enconv en-US chrome/locale/en-US/
+locale      enconv ru-RU chrome/locale/ru-RU/
