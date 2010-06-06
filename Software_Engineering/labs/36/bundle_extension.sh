@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pushd encodingconverter@rutsky.ru
+pushd encodingconverter@enconv.sourceforge.net
 FILE="../encodingconverter.xpi"
 [ -f $FILE ] && rm $FILE
 zip -r $FILE .
