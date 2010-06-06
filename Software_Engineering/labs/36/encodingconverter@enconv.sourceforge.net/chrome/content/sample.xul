@@ -1,8 +1,16 @@
 <?xml version="1.0"?>
-<!DOCTYPE window SYSTEM "chrome://sample/locale/sample.dtd">
+
+<!DOCTYPE overlay SYSTEM "chrome://sample/locale/sample.dtd">
+
 <overlay id="sample" 
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
- <statusbar id="status-bar">
-  <statusbarpanel id="my-panel" label="&msg.hello;"/>
- </statusbar>
+  <script type="application/x-javascript"
+    src="chrome://sample/content/sample.js"/>
+
+  <statusbar id="status-bar">
+    <statusbarpanel id="my-panel" 
+      label="&msg.hello;"
+      onclick="net.sourceforge.enconv.onStatusBarPanelClick()"
+    />
+  </statusbar>
 </overlay>
