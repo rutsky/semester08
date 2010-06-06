@@ -22,8 +22,9 @@ if (!net.sourceforge) net.sourceforge = {};
 if (!net.sourceforge.enconv) net.sourceforge.enconv = {};
 
 net.sourceforge.enconv = {
-  init: function() {
+  onLoad: function() {
     },
+  
   onStatusBarPanelClick: function() {
       alert(this.strbundle().getString("msg.alert_hello"));
     },
@@ -31,4 +32,4 @@ net.sourceforge.enconv = {
   strbundle: function() document.getElementById("enconv-strings")
 };
 
-net.sourceforge.enconv.init()
+window.addEventListener("load", net.sourceforge.enconv.onLoad, false);
