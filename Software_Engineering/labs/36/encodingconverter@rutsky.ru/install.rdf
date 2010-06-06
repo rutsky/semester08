@@ -14,7 +14,7 @@
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id><!-- Firefox application ID -->
         <em:minVersion>3.5</em:minVersion><!-- TODO -->
-        <em:maxVersion>3.5.*</em:maxVersion>
+        <em:maxVersion>3.6.*</em:maxVersion>
       </Description>
     </em:targetApplication>
     
@@ -23,5 +23,15 @@
     <em:description>Character encoding converter suite</em:description>
     <em:creator>Vladimir Rutsky</em:creator>
     <em:homepageURL>http://rutsky.ru</em:homepageURL><!-- TODO! -->
+    
+    <em:localized>
+      <Description>
+        <em:locale>ru-RU</em:locale>
+        <em:name>Encoding Converter</em:name>
+        <em:description>Инструмент для изменения кодировки текста</em:description>
+        <em:creator>Владимир Руцкий</em:creator>
+      </Description>
+    </em:localized>
+    
   </Description>
 </RDF>
