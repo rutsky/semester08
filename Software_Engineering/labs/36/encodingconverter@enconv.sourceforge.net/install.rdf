@@ -4,7 +4,7 @@
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
   <Description about="urn:mozilla:install-manifest">
-    <em:id>encodingconverter@rutsky.ru</em:id>
+    <em:id>encodingconverter@enconv.sourceforge.net</em:id>
     <em:version>0.1</em:version>
     <em:type>2</em:type><!-- type=extension -->
     
@@ -22,7 +22,7 @@
     <em:name>Encoding Converter</em:name>
     <em:description>Character encoding converter suite</em:description>
     <em:creator>Vladimir Rutsky</em:creator>
-    <em:homepageURL>http://rutsky.ru</em:homepageURL><!-- TODO! -->
+    <em:homepageURL>http://enconv.sourceforge.net</em:homepageURL>
     
     <em:localized>
       <Description>
