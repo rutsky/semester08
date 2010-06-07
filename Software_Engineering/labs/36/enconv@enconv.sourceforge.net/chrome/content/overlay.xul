@@ -5,17 +5,26 @@
 <overlay id="enconv-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+  <!-- Localization strings -->
   <stringbundleset id="stringbundleset">
     <stringbundle id="enconv-strings" src="chrome://enconv/locale/enconv.properties"/>
   </stringbundleset>
   
+  <!-- JavaScript import -->
   <script type="application/x-javascript"
     src="chrome://enconv/content/overlay.js"/>
 
+  <!-- For test statusbar item -->
   <statusbar id="status-bar">
     <statusbarpanel id="my-panel"
       label="&msg.hello;"
       onclick="net.sourceforge.enconv.onStatusBarPanelClick()"
     />
   </statusbar>
+  
+  <!-- For right click menu. -->
+  <popup id="contentAreaContextMenu">
+    <menuitem id="enconv-context-menu" label="&menu.context;"/>
+  </popup>
+
 </overlay>
