@@ -133,7 +133,7 @@
         </hbox>
         <hbox>
           <spacer flex="1"/>
-          <button label="Apply conversion to selection"/>
+          <button label="Apply conversion to selection" onclick="window.close();"/>
           <button label="Apply conversion to whole page"/>
         </hbox>
       </groupbox>
