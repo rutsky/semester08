@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://enconv/locale/main-window.dtd">
+
+<window id="enconv-main-window"
+  title="Encoding Converter"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<!-- TODO: Mess with sizes -->
+<!-- TODO: Localize -->
+<vbox flex="1">
+  <vbox flex="3" height="200">
+    <hbox flex="3">
+      <groupbox flex="3">
+        <caption label="Input text"/>
+        <checkbox label="Use document selection" checked="false"/>
+        <textbox id="input-text" multiline="true" flex="1"/>
+      </groupbox>
+      <splitter/>
+      <groupbox flex="1">
+        <caption label="Applied conversions"/>
+        <tree flex="1" hidecolumnpicker="true" treelines="true" seltype="single">
+          <treecols>
+              <treecol id="conversion" label="From->To" primary="true" fixed="false" flex="3"/>
+              <treecol id="view-as" label="View As" fixed="false" flex="1"/>
+          </treecols>
+
+          <treechildren>
+            <treeitem container="true" open="true">
+              <treerow>
+                <treecell label="cp1251->koi8r"/>
+                <treecell label="UTF-8"/>
+              </treerow>
+
+              <treechildren>
+                <treeitem>
+                  <treerow>
+                    <treecell label="Bob"/>
+                    <treecell label="Carpenter"/>
+                  </treerow>
+                </treeitem>
+                <treeitem container="true" open="true">
+                  <treerow>
+                    <treecell label="Jerry1"/>
+                    <treecell label="Hodge1"/>
+                  </treerow>
+                  <treechildren>
+                    <treeitem>
+                      <treerow>
+                        <treecell label="Jerry2"/>
+                        <treecell label="Hodge2"/>
+                      </treerow>
+                    </treeitem>
+                  </treechildren>
+                </treeitem>
+                <treeitem>
+                  <treerow>
+                    <treecell label="Jerry"/>
+                    <treecell label="Hodge"/>
+                  </treerow>
+                </treeitem>
+              </treechildren>
+            </treeitem>
+          </treechildren>
+        </tree>
+      </groupbox>
+    </hbox>
+  </vbox>
+  <splitter resizeafter="farthest"/>
+  <groupbox flex="1" height="80">
+    <caption label="Apply conversion"/>
+    <hbox flex="1">
+      <vbox flex="1">
+        <hbox flex="1">
+          <listbox flex="1">
+            <listhead>
+              <listheader label="From"/>
+            </listhead>
+
+            <listitem label="koi8-r"/>
+            <listitem label="cp1251"/>
+          </listbox>
+          <splitter />
+          <listbox flex="1">
+            <listhead>
+              <listheader label="To"/>
+            </listhead>
+
+            <listitem label="koi8-r"/>
+            <listitem label="cp1251"/>
+          </listbox>
+        </hbox>
+        <!--<hbox align="right">
+          <spacer flex="1"/>
+          <button label="Add encoding to list"/>
+          <spacer flex="1"/>
+        </hbox>-->
+      </vbox>
+      <vbox>
+        <button label="Add"/>
+        <button label="Delete"/>
+        <spacer flex="1"/>
+        <button label="Add encoding to list"/>
+      </vbox>
+    </hbox>
+  </groupbox>
+  <splitter/>
+  <vbox flex="3" height="200">
+    <groupbox flex="3">
+      <caption label="Result"/>
+      <hbox flex="1">
+        <hbox flex="3">
+          <textbox id="result-text" multiline="true" flex="1"/>
+          </hbox>
+          <splitter />
+          <vbox flex="1">
+            <listbox flex="1">
+              <listhead>
+                <listheader label="View As"/>
+              </listhead>
+            </listbox>
+          </vbox>
+        </hbox>
+        <hbox>
+          <spacer flex="1"/>
+          <button label="Apply conversion to selection"/>
+        </hbox>
+      </groupbox>
+    </vbox>
+  </vbox>
+</window>
+
