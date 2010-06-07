@@ -17,6 +17,10 @@
  *  along with enconv.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Note: don't use unique namespace since this JS is loaded only in 
+// enconv's window.
+
+/*
 if (!net) var net = {};
 if (!net.sourceforge) net.sourceforge = {};
 if (!net.sourceforge.enconv) net.sourceforge.enconv = {};
@@ -39,7 +43,7 @@ net.sourceforge.enconv = {
     function()
     {
       //window.open("chrome://enconv/content/main-window.xul", null, "chrome,width=600,height=500");
-      window.openDialog("chrome://enconv/content/main-window.xul", null, "chrome,modal=yes,width=600,height=500", "Test!");
+      window.openDialog("chrome://enconv/content/main-window.xul", null, "chrome,modal=yes,width=600,height=500");
     },
   
   strbundle:
@@ -48,3 +52,11 @@ net.sourceforge.enconv = {
 };
 
 window.addEventListener("load", function(){ net.sourceforge.enconv.onLoad(); }, false);
+*/
+
+function onLoad()
+{
+  document.getElementById("input-text").value = window.arguments[0];
+}
+
+window.addEventListener("load", onLoad, false);

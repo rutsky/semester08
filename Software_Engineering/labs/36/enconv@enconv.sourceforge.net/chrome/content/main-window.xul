@@ -4,8 +4,17 @@
 <!DOCTYPE window SYSTEM "chrome://enconv/locale/main-window.dtd">
 
 <window id="enconv-main-window"
-  title="Encoding Converter"
-  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    title="Encoding Converter"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <!-- Localization strings -->
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="enconv-main-window-strings" src="chrome://enconv/locale/main-window.properties"/>
+  </stringbundleset>
+..
+  <!-- JavaScript import -->
+  <script type="application/x-javascript"
+      src="chrome://enconv/content/main-window.js"/>
 
 <!-- TODO: Mess with sizes -->
 <!-- TODO: Localize -->
