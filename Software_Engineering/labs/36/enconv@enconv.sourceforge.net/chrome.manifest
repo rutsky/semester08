@@ -1,5 +1,5 @@
 content     enconv    chrome/content/
-overlay     chrome://browser/content/browser.xul chrome://enconv/content/enconv.xul
+overlay     chrome://browser/content/browser.xul chrome://enconv/content/overlay.xul
 skin        enconv classic/1.0 chrome/skin/default
 locale      enconv en-US chrome/locale/en-US/
 locale      enconv ru-RU chrome/locale/ru-RU/

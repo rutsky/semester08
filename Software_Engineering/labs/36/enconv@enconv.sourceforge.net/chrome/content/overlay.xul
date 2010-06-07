@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
-<!DOCTYPE overlay SYSTEM "chrome://enconv/locale/enconv.dtd">
+<!DOCTYPE overlay SYSTEM "chrome://enconv/locale/overlay.dtd">
 
-<overlay id="enconv"
+<overlay id="enconv-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
   <stringbundleset id="stringbundleset">
@@ -10,10 +10,10 @@
   </stringbundleset>
   
   <script type="application/x-javascript"
-    src="chrome://enconv/content/enconv.js"/>
+    src="chrome://enconv/content/overlay.js"/>
 
   <statusbar id="status-bar">
-    <statusbarpanel id="my-panel" 
+    <statusbarpanel id="my-panel"
       label="&msg.hello;"
       onclick="net.sourceforge.enconv.onStatusBarPanelClick()"
     />
