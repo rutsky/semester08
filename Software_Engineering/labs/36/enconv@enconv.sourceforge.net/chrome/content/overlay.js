@@ -22,14 +22,28 @@ if (!net.sourceforge) net.sourceforge = {};
 if (!net.sourceforge.enconv) net.sourceforge.enconv = {};
 
 net.sourceforge.enconv = {
-  onLoad: function() {
+  onLoad:
+    function()
+    {
+      var contextMenuItem = document.getElementById("enconv-context-menu");
+      contextMenuItem.addEventListener("command", this.openConverter, false);
     },
   
-  onStatusBarPanelClick: function() {
+  onStatusBarPanelClick:
+    function()
+    {
       alert(this.strbundle().getString("msg.alert_hello"));
     },
+    
+  openConverter:
+    function()
+    {
+      window.open("chrome://enconv/content/main-window.xul", null, "chrome,width=600,height=300");
+    },
   
-  strbundle: function() document.getElementById("enconv-strings")
+  strbundle:
+    function() 
+      document.getElementById("enconv-strings")
 };
 
 window.addEventListener("load", net.sourceforge.enconv.onLoad, false);
