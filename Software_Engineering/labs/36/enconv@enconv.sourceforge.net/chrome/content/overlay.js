@@ -38,7 +38,7 @@ net.sourceforge.enconv = {
   openConverter:
     function()
     {
-      window.open("chrome://enconv/content/main-window.xul", null, "chrome,width=600,height=300");
+      window.open("chrome://enconv/content/main-window.xul", null, "chrome,width=600,height=500");
     },
   
   strbundle:
