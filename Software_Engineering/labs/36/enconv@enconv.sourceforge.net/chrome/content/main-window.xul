@@ -125,6 +125,7 @@
         <hbox>
           <spacer flex="1"/>
           <button label="Apply conversion to selection"/>
+          <button label="Apply conversion to whole page"/>
         </hbox>
       </groupbox>
     </vbox>
