@@ -46,4 +46,4 @@ net.sourceforge.enconv = {
       document.getElementById("enconv-strings")
 };
 
-window.addEventListener("load", net.sourceforge.enconv.onLoad, false);
+window.addEventListener("load", function(){ net.sourceforge.enconv.onLoad(); }, false);
