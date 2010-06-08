@@ -15,6 +15,11 @@
   <!-- JavaScript import -->
   <script type="application/x-javascript"
       src="chrome://enconv/content/main-window.js"/>
+  
+  <keyset>
+    <key id="cancel-key" keycode="VK_ESCAPE" oncommand="window.close();"/>
+  </keyset>
+
 
 <!-- TODO: Mess with sizes -->
 <!-- TODO: Localize -->
