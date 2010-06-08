@@ -23,6 +23,7 @@
 
 <!-- TODO: Mess with sizes -->
 <!-- TODO: Localize -->
+<!-- TODO: Tab order -->
 <vbox flex="1">
   <vbox flex="3" height="200">
     <hbox flex="3">
