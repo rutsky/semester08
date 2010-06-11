@@ -34,116 +34,153 @@
 #include "function.h"
 #include "hla.h"
 
-STATIC_ASSERT(sizeof(Fl_Color) == 4);
-
-class RenderFrame
+namespace viewport
 {
-public:
-  RenderFrame()
-    : w_(0)
-    , h_(0)
-  {
-  }
+  USING_PART_OF_NAMESPACE_EIGEN
   
-  void resize( size_t w, size_t h )
-  {
-    w_ = w;
-    h_ = h;
-    size_t const newSize = lineSize() * height();
-    if (newSize > buffer_.size())
-      buffer_.resize(newSize);
-  }
-  
-  size_t width() const { return w_; }
-  size_t height() const { return h_; }
-  
-  void putPixel( size_t x, size_t y, Fl_Color color )
-  {
-    (*this)(x, y) = color;
-  }
-  
-  size_t pixelSize() const { return sizeof(Fl_Color); }
-  size_t lineSize() const { return pixelSize() * width(); }
-  uchar const * buffer() const { return (uchar const *)&buffer_[0]; };
-  
-  void clear( uchar byte = 0 )
-  {
-    std::memset(&buffer_[0], byte, buffer_.size());
-  }
-  
-private:
-  Fl_Color & operator () ( size_t x, size_t y )
-  {
-    return buffer_[lineSize() * y + x];
-  }
-  
-  Fl_Color const & operator () ( size_t x, size_t y ) const
-  {
-    return buffer_[lineSize() * y + x];
-  }
+  STATIC_ASSERT(sizeof(Fl_Color) == 4); // TODO
 
-private:
-  size_t w_, h_;
-  std::vector<Fl_Color> buffer_;
-};
+  class RenderFrame
+  {
+  public:
+    RenderFrame()
+      : w_(0)
+      , h_(0)
+    {
+    }
+    
+    void resize( size_t w, size_t h )
+    {
+      w_ = w;
+      h_ = h;
+      size_t const newSize = lineSize() * height();
+      if (newSize > buffer_.size())
+        buffer_.resize(newSize);
+    }
+    
+    size_t width() const { return w_; }
+    size_t height() const { return h_; }
+    
+    void putPixel( size_t x, size_t y, Fl_Color color )
+    {
+      (*this)(x, y) = color;
+    }
+    
+    size_t pixelSize() const { return sizeof(Fl_Color); }
+    size_t lineSize() const { return pixelSize() * width(); }
+    uchar const * buffer() const { return (uchar const *)&buffer_[0]; };
+    
+    void clear( uchar byte = 0 )
+    {
+      std::memset(&buffer_[0], byte, buffer_.size());
+    }
+    
+  private:
+    Fl_Color & operator () ( size_t x, size_t y )
+    {
+      return buffer_[lineSize() * y + x];
+    }
+    
+    Fl_Color const & operator () ( size_t x, size_t y ) const
+    {
+      return buffer_[lineSize() * y + x];
+    }
 
-class Viewport : public Fl_Box
-{
-public:
-  Viewport( int x, int y, int w, int h, char const *l = 0 )
-    : Fl_Box(x, y, w, h, l)
-    , funcIdx_(0)
-  {
-  }
-  
-  void setFunction( size_t idx )
-  {
-    std::cout << "setFunction(" << idx << ")\n"; // debug
-    if (idx < function::nFunctions)
-      funcIdx_ = idx;
-    else
-      std::cerr << "Error: idx >= function::nFunctions!";
-  }
-  
-  void setXCells( size_t xCells )
-  {
-    std::cout << "setXCells(" << xCells << ")\n"; // debug
-    if (xCells >= 1)
-      xCells_ = xCells;
-    else
-      std::cerr << "Error: xCells < 1";
-  }
-  
-  void setYCells( size_t yCells )
-  {
-    std::cout << "setYCells(" << yCells << ")\n"; // debug
-    if (yCells >= 1)
-      yCells_ = yCells;
-    else
-      std::cerr << "Error: yCells < 1";
-  }
-  
-  void draw()
-  {
-    // Prepare frame to drawing.
-    frame_.resize(w(), h());
-    frame_.clear();
-    
-    std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // DEBUG
-    
-    // Prepare data for drawing.
-    
-    // Draw to frame.
-    
-    
-    // Flush frame to window.
-    fl_draw_image(frame_.buffer(), x(), y(), frame_.width(), frame_.height(), frame_.pixelSize(), frame_.lineSize());
-  }
-  
-private:
-  RenderFrame frame_;
-  size_t funcIdx_;
-  size_t xCells_, yCells_;
-};
+  private:
+    size_t w_, h_;
+    std::vector<Fl_Color> buffer_;
+  };
 
+  class Viewport : public Fl_Box
+  {
+  public:
+    Viewport( int x, int y, int w, int h, char const *l = 0 )
+      : Fl_Box(x, y, w, h, l)
+      , funcIdx_(0)
+      , xCells_(appconf::startXCells)
+      , yCells_(appconf::startYCells)
+      , xDomain_(appconf::startXDomain)
+      , yDomain_(appconf::startYDomain)
+    {
+    }
+    
+    void setFunction( size_t idx )
+    {
+      std::cout << "setFunction(" << idx << ")\n"; // debug
+      if (idx < function::nFunctions)
+        funcIdx_ = idx;
+      else
+        std::cerr << "Error: idx >= function::nFunctions!\n";
+    }
+    
+    void setXCells( size_t xCells )
+    {
+      std::cout << "setXCells(" << xCells << ")\n"; // debug
+      if (xCells >= 1)
+        xCells_ = xCells;
+      else
+        std::cerr << "Error: xCells < 1\n";
+    }
+    
+    void setYCells( size_t yCells )
+    {
+      std::cout << "setYCells(" << yCells << ")\n"; // debug
+      if (yCells >= 1)
+        yCells_ = yCells;
+      else
+        std::cerr << "Error: yCells < 1\n";
+    }
+    
+    void setXDomain( double xDomain )
+    {
+      std::cout << "setXDomain(" << xDomain << ")\n"; // debug
+      if (xDomain > 0)
+        xDomain_ = xDomain;
+      else
+        std::cerr << "Error: xDomain <= 0\n";
+    }
+    
+    void setYDomain( double yDomain )
+    {
+      std::cout << "setYDomain(" << yDomain << ")\n"; // debug
+      if (yDomain > 0)
+        yDomain_ = yDomain;
+      else
+        std::cerr << "Error: yDomain <= 0\n";
+    }
+    
+    void draw()
+    {
+      // Prepare frame to drawing.
+      frame_.resize(w(), h());
+      frame_.clear();
+      
+      std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // debug
+      
+      // Prepare data for drawing.
+      Vector2d const origin(0.0, 0.0);
+      Vector2i const extent((int)xCells_ + 1, (int)yCells_ + 1);
+      Vector2d const domain(xDomain_, yDomain_);
+      std::cout << domain << "\n" << extent << "\n";
+      Vector2d const unit = domain.cwise() / extent.cast<double>();
+      hla::FuncValuesGrid funcGrid(function::functions[funcIdx_], 
+                                   origin, unit, extent);
+      
+      // Draw to frame.
+      
+      
+      // Flush frame to window.
+      fl_draw_image(frame_.buffer(), x(), y(), 
+                    frame_.width(), frame_.height(), 
+                    frame_.pixelSize(), frame_.lineSize());
+    }
+    
+  private:
+    RenderFrame frame_;
+    size_t funcIdx_;
+    size_t xCells_, yCells_;
+    double xDomain_, yDomain_;
+  };
+}
+  
 #endif // VIEWPORT_H
