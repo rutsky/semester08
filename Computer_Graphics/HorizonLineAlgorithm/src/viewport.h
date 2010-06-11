@@ -28,6 +28,62 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Box.H>
 #include <FL/fl_draw.H>
+#include <FL/Enumerations.H>
+
+#include "hla.h"
+
+STATIC_ASSERT(sizeof(Fl_Color) == 4);
+
+class RenderFrame
+{
+public:
+  RenderFrame()
+    : w_(0)
+    , h_(0)
+  {
+  }
+  
+  void resize( size_t w, size_t h )
+  {
+    w_ = w;
+    h_ = h;
+    size_t const newSize = lineSize() * height();
+    if (newSize > buffer_.size())
+      buffer_.resize(newSize);
+  }
+  
+  size_t width() const { return w_; }
+  size_t height() const { return h_; }
+  
+  void putPixel( size_t x, size_t y, Fl_Color color )
+  {
+    (*this)(x, y) = color;
+  }
+  
+  size_t pixelSize() const { return sizeof(Fl_Color); }
+  size_t lineSize() const { return pixelSize() * width(); }
+  uchar const * buffer() const { return (uchar const *)&buffer_[0]; };
+  
+  void clear( uchar byte = 0 )
+  {
+    std::memset(&buffer_[0], byte, buffer_.size());
+  }
+  
+private:
+  Fl_Color & operator () ( size_t x, size_t y )
+  {
+    return buffer_[lineSize() * y + x];
+  }
+  
+  Fl_Color const & operator () ( size_t x, size_t y ) const
+  {
+    return buffer_[lineSize() * y + x];
+  }
+
+private:
+  size_t w_, h_;
+  std::vector<Fl_Color> buffer_;
+};
 
 class Viewport : public Fl_Box
 {
@@ -39,25 +95,16 @@ public:
   
   void draw()
   {
-    std::cout << "Don't have GL\n";
+    frame.resize(w(), h());
+    frame.clear();
     
-    std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n";
-    size_t const size = w() * h() * 3;
-    if (buffer_.size() < size)
-      buffer_.resize(size);
+    std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // DEBUG
     
-    std::cout << buffer_.size() << "\n";
-    for (size_t i = 0; i < size; ++i)
-    {
-      //std::cout << i << "\n";
-      buffer_[i] = (uchar)std::rand(); 
-    }
-    
-    fl_draw_image(&buffer_[0], x(), y(), w(), h(), 3, 0);
+    fl_draw_image(frame.buffer(), x(), y(), frame.width(), frame.height(), frame.pixelSize(), frame.lineSize());
   }
   
 private:
-  std::vector<uchar> buffer_;
+  RenderFrame frame;
 };
 
 #endif // VIEWPORT_H

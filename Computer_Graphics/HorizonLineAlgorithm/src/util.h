@@ -48,4 +48,6 @@ namespace util
   }
 }
 
+#define STATIC_ASSERT(x) typedef int static_assert_stuff##__FILE__##__LINE__[(int)x]
+
 #endif // UTIL_H
