@@ -2,8 +2,9 @@
 version 1.0109 
 header_name {.h} 
 code_name {.cxx}
-widget_class MainWindow {open
-  xywh {527 129 640 480} type Double align 0
+widget_class MainWindow {
+  label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open selected
+  xywh {527 129 640 480} type Double labeltype NORMAL_LABEL align 0 resizable
   code0 {\#include <FL/Fl_Window.H>}
   class Fl_Window visible
 } {
@@ -13,7 +14,7 @@ widget_class MainWindow {open
   } {}
   Fl_Button {} {
     label button
-    callback {viewport_->redraw();} selected
+    callback {viewport_->redraw();}
     xywh {25 25 70 20}
   }
   Fl_Group {} {open
