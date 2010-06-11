@@ -11,7 +11,18 @@ widget_class MainWindow {open
     xywh {25 25 410 295}
   } {}
   Fl_Choice {} {
-    label {Function:} open selected
+    label {Function:} open
     xywh {550 30 72 15} down_box BORDER_BOX
   } {}
+  Fl_Box viewport_ {
+    label label selected
+    private xywh {145 118 220 197}
+    code0 {\#include "viewport.h"}
+    class Viewport
+  }
+  Fl_Button {} {
+    label button
+    callback {viewport_->redraw();}
+    xywh {25 25 70 20}
+  }
 } 
