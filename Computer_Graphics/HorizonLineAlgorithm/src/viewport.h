@@ -30,6 +30,7 @@
 #include <FL/fl_draw.H>
 #include <FL/Enumerations.H>
 
+#include "appconf.h"
 #include "function.h"
 #include "hla.h"
 
@@ -97,26 +98,52 @@ public:
   
   void setFunction( size_t idx )
   {
-    std::cout << "setFunction(" << idx << ")\n";
-    assert(idx < function::nFunctions);
-    funcIdx_ = idx;
+    std::cout << "setFunction(" << idx << ")\n"; // debug
+    if (idx < function::nFunctions)
+      funcIdx_ = idx;
+    else
+      std::cerr << "Error: idx >= function::nFunctions!";
+  }
+  
+  void setXCells( size_t xCells )
+  {
+    std::cout << "setXCells(" << xCells << ")\n"; // debug
+    if (xCells >= 1)
+      xCells_ = xCells;
+    else
+      std::cerr << "Error: xCells < 1";
+  }
+  
+  void setYCells( size_t yCells )
+  {
+    std::cout << "setYCells(" << yCells << ")\n"; // debug
+    if (yCells >= 1)
+      yCells_ = yCells;
+    else
+      std::cerr << "Error: yCells < 1";
   }
   
   void draw()
   {
+    // Prepare frame to drawing.
     frame_.resize(w(), h());
     frame_.clear();
     
     std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // DEBUG
     
+    // Prepare data for drawing.
+    
+    // Draw to frame.
     
     
+    // Flush frame to window.
     fl_draw_image(frame_.buffer(), x(), y(), frame_.width(), frame_.height(), frame_.pixelSize(), frame_.lineSize());
   }
   
 private:
   RenderFrame frame_;
-  int funcIdx_;
+  size_t funcIdx_;
+  size_t xCells_, yCells_;
 };
 
 #endif // VIEWPORT_H
