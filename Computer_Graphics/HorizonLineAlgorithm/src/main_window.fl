@@ -4,7 +4,7 @@ header_name {.h}
 code_name {.cpp}
 widget_class MainWindow {
   label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open
-  xywh {491 189 695 455} type Double align 0 resizable
+  xywh {427 175 695 455} type Double align 0 resizable
   code0 {\#include <FL/Fl_Window.H>}
   code1 {\#include <iostream>}
   code2 {\#include "appconf.h"}
@@ -14,11 +14,11 @@ widget_class MainWindow {
     xywh {15 11 670 424}
   } {
     Fl_Group {} {open
-      xywh {15 16 375 382}
+      xywh {15 13 375 385}
     } {
       Fl_Box viewport_ {
-        label label
-        private xywh {15 16 375 382}
+        label label selected
+        private xywh {15 13 375 385}
         code0 {\#include "viewport.h"}
         class {viewport::Viewport}
       }
@@ -33,7 +33,7 @@ widget_class MainWindow {
       Fl_Choice {} {
         label {z=}
         callback {viewport_->setFunction(o->value());
-viewport_->redraw();} open selected
+viewport_->redraw();} open
         xywh {455 50 225 30} down_box BORDER_BOX when 1
         code0 {o->value(appconf::startFuncIdx);}
       } {
@@ -151,6 +151,14 @@ viewport_->redraw();}
           code0 {o->value(appconf::startYDomain);}
         }
       }
+    }
+    Fl_Value_Slider {} {
+      label yaw
+      xywh {15 399 375 32} type {Horz Knob} minimum -180 maximum 180 step 0.1 textsize 14
+    }
+    Fl_Value_Slider {} {
+      label pitch
+      xywh {390 14 40 386} type {Vert Knob} align 8 minimum 90 maximum -90 step 0.1 value 45 textsize 14
     }
   }
 } 
