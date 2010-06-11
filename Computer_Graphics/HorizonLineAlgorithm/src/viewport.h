@@ -30,6 +30,7 @@
 #include <FL/fl_draw.H>
 #include <FL/Enumerations.H>
 
+#include "function.h"
 #include "hla.h"
 
 STATIC_ASSERT(sizeof(Fl_Color) == 4);
@@ -94,9 +95,10 @@ public:
   {
   }
   
-  void setFunction( int idx )
+  void setFunction( size_t idx )
   {
     std::cout << "setFunction(" << idx << ")\n";
+    assert(idx < function::nFunctions);
     funcIdx_ = idx;
   }
   

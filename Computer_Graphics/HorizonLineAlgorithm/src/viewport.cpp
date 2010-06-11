@@ -17,49 +17,5 @@
  *  along with HLA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UTIL_H
-#define UTIL_H
+#include "viewport.h"
 
-namespace util
-{
-  template< class T >
-  inline 
-  int sign( T v )
-  {
-    return (v >= 0) ? (v > 0 ? +1 : 0) : -1; 
-  }
-  
-  template< class T >
-  inline
-  T & make_max( T &v, T const &x )
-  {
-    if (v < x)
-      v = x;
-    return v;
-  }
-  
-  template< class T >
-  inline
-  T & make_min( T &v, T const &x )
-  {
-    if (v > x)
-      v = x;
-    return v;
-  }
-  
-  template< class T >
-  inline
-  T sqr( T v )
-  {
-    return v * v;
-  }
-  
-  inline double pi()
-  {
-    return 3.1415926535897932384626433832795;
-  }
-}
-
-#define STATIC_ASSERT(x) typedef int static_assert_stuff##__FILE__##__LINE__[(int)x]
-
-#endif // UTIL_H

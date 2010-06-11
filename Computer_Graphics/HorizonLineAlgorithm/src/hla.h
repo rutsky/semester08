@@ -31,6 +31,7 @@
 #include <Eigen/Geometry>
 
 #include "bresenham.h"
+#include "function.h"
 
 namespace hla
 {
@@ -108,13 +109,11 @@ namespace hla
       }
     }
   }
-  
-  typedef double (*func_t)( double x, double y );
-  
+    
   class FuncValuesGrid
   {
   public:
-    FuncValuesGrid( func_t func, 
+    FuncValuesGrid( function::func_t func, 
                     Vector2d const &origin, Vector2d const &unit, 
                     Vector2i const &extent )
       : func_(func)
@@ -144,7 +143,7 @@ namespace hla
     }
     
   private:
-    func_t   func_; 
+    function::func_t func_; 
     Vector2d origin_;
     Vector2d unit_;
     Vector2i extent_;
