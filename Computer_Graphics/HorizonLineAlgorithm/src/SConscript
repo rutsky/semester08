@@ -29,7 +29,7 @@ env.MergeFlags(env.ParseFlags("-W -Wall -I#eigen2"))
 env.MergeFlags(env.ParseFlags("-I#eigen2"))
 
 # FLTK library.
-env.ParseConfig("fltk-config --cxxflags --ldflags")
+env.ParseConfig("fltk-config --cxxflags --ldflags --use-gl")
 
 # Fluid stuff
 def fluid_generate_actions(source, target, env, for_signature):

@@ -23,25 +23,57 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <cstdlib>
 
 #include <FL/Fl.H>
-#include <FL/Fl_Box.H>
+
+#define HAVE_GL 1
+
+#if HAVE_GL
+#  include <FL/Fl_Gl_Window.H>
+#  include <FL/gl.h>
+#else
+#  include <FL/Fl_Box.H>
+#endif // HAVE_GL
+
 #include <FL/fl_draw.H>
 
-class Viewport : public Fl_Box 
+#if HAVE_GL
+class Viewport : public Fl_Gl_Window
+#else
+class Viewport : public Fl_Box
+#endif // HAVE_GL
 {
 public:
   Viewport( int x, int y, int w, int h, char const *l = 0 )
+#if HAVE_GL
+    : Fl_Gl_Window(x, y, w, h, l)
+#else
     : Fl_Box(x, y, w, h, l)
+#endif // HAVE_GL
   {
   }
   
   void draw()
   {
+#if HAVE_GL
+    std::cout << "Have GL\n";
+#else
+    std::cout << "Don't have GL\n";
+#endif // HAVE_GL
+    
     std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n";
     size_t const size = w() * h() * 3;
     if (buffer_.size() < size)
       buffer_.resize(size);
+    
+    std::cout << buffer_.size() << "\n";
+    for (size_t i = 0; i < size; ++i)
+    {
+      //std::cout << i << "\n";
+      buffer_[i] = (uchar)std::rand(); 
+    }
+    
     fl_draw_image(&buffer_[0], x(), y(), w(), h(), 3, 0);
   }
   
