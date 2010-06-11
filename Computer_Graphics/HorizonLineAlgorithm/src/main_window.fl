@@ -7,22 +7,23 @@ widget_class MainWindow {open
   code0 {\#include <FL/Fl_Window.H>}
   class Fl_Window visible
 } {
-  Fl_Pack {} {open
-    xywh {25 25 410 295}
-  } {}
   Fl_Choice {} {
     label {Function:} open
     xywh {550 30 72 15} down_box BORDER_BOX
   } {}
-  Fl_Box viewport_ {
-    label label selected
-    private xywh {145 118 220 197}
-    code0 {\#include "viewport.h"}
-    class Viewport
-  }
   Fl_Button {} {
     label button
-    callback {viewport_->redraw();}
+    callback {viewport_->redraw();} selected
     xywh {25 25 70 20}
+  }
+  Fl_Group {} {open
+    xywh {130 109 340 273}
+  } {
+    Fl_Box viewport_ {
+      label label
+      private xywh {145 121 305 249}
+      code0 {\#include "viewport.h"}
+      class Viewport
+    }
   }
 } 
