@@ -29,10 +29,13 @@
 #include <FL/Fl_Box.H>
 #include <FL/fl_draw.H>
 #include <FL/Enumerations.H>
+#include <FL/Fl_Group.H>
 
 #include "appconf.h"
 #include "function.h"
 #include "hla.h"
+
+class MainWindow;
 
 namespace viewport
 {
@@ -102,6 +105,7 @@ namespace viewport
       , xDomain_(appconf::startXDomain)
       , yDomain_(appconf::startYDomain)
     {
+      frame_.resize(w, h);
     }
     
     void setFunction( size_t idx )
@@ -139,7 +143,7 @@ namespace viewport
       else
         std::cerr << "Error: xDomain <= 0\n";
     }
-    
+        
     void setYDomain( double yDomain )
     {
       std::cout << "setYDomain(" << yDomain << ")\n"; // debug
@@ -149,10 +153,35 @@ namespace viewport
         std::cerr << "Error: yDomain <= 0\n";
     }
     
+    void setXViewVolume( double xViewVolume )
+    {
+      std::cout << "setXViewVolume(" << xViewVolume << ")\n"; // debug
+      if (xViewVolume > 0)
+        xViewVolume_ = xViewVolume;
+      else
+        std::cerr << "Error: xViewVolume <= 0\n";
+    }
+    
+    void setYViewVolume( double yViewVolume )
+    {
+      std::cout << "setYViewVolume(" << yViewVolume << ")\n"; // debug
+      if (yViewVolume > 0)
+        yViewVolume_ = yViewVolume;
+      else
+        std::cerr << "Error: yViewVolume <= 0\n";
+    }
+
+    void setKeepAspectRatio( bool keep )
+    {
+      std::cout << "setKeepAspectRatio(" << keep << ")\n"; // debug
+      keepAspectRatio_ = keep;
+    }
+    
+    void resize( int x, int y, int w, int h );
+
     void draw()
     {
       // Prepare frame to drawing.
-      frame_.resize(w(), h());
       frame_.clear();
       
       std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // debug
@@ -161,7 +190,7 @@ namespace viewport
       Vector2d const origin(0.0, 0.0);
       Vector2i const extent((int)xCells_ + 1, (int)yCells_ + 1);
       Vector2d const domain(xDomain_, yDomain_);
-      std::cout << domain << "\n" << extent << "\n";
+      //std::cout << domain << "\n" << extent << "\n";
       Vector2d const unit = domain.cwise() / extent.cast<double>();
       
       // Build grid.
@@ -185,6 +214,8 @@ namespace viewport
     size_t funcIdx_;
     size_t xCells_, yCells_;
     double xDomain_, yDomain_;
+    double xViewVolume_, yViewVolume_;
+    bool keepAspectRatio_;
   };
 }
   

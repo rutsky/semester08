@@ -27,6 +27,8 @@ namespace appconf
   extern size_t const startFuncIdx;
   extern size_t const startXCells, startYCells;
   extern double const startXDomain, startYDomain;
+  extern double const startXViewVolume, startYViewVolume;
+  extern bool const startKeepAspectRatio;
 }
 
 #endif // APPCONF_H

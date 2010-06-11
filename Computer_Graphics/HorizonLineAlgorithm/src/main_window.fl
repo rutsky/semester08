@@ -3,8 +3,8 @@ version 1.0109
 header_name {.h} 
 code_name {.cpp}
 widget_class MainWindow {
-  label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open
-  xywh {445 168 745 515} type Double align 0 resizable
+  label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open selected
+  xywh {589 165 745 515} type Double align 0 resizable
   code0 {\#include <FL/Fl_Window.H>}
   code1 {\#include <iostream>}
   code2 {\#include "appconf.h"}
@@ -13,137 +13,6 @@ widget_class MainWindow {
   Fl_Group {} {open
     xywh {-11 11 746 509}
   } {
-    Fl_Group {} {open
-      xywh {-11 11 696 429}
-    } {
-      Fl_Choice {} {
-        label {Function: z=}
-        callback {viewport_->setFunction(o->value());
-viewport_->redraw();}
-        xywh {290 15 225 30} down_box BORDER_BOX when 1
-        code0 {o->value(appconf::startFuncIdx);}
-      } {
-        MenuItem {} {
-          label {((1 - R^2 + |1 - R^2|) / 2)^0.5} user_data_type {void*}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {10*x^2+5*y^2} user_data_type {void*}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {sin(x+y)/(1+(x-y)^2)}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {cos(x)*cos(y)}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {cos((x+2*y)/R)}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {-sin(R)/R}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {cos(x-y)/cos(R^2)}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {sin(x*y)/R^2}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {(cos(x)^2+ch(y)^2)^0.5}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {arctg(R)}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {cos(x*y/R)}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {sin(x*y/R)}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {cos(3*x*y)}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {x^2+cos(12.5*pi*y)}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {(sin(x)^2+sh(y)^2)^0.5}
-          xywh {10 10 36 21}
-        }
-        MenuItem {} {
-          label {sin(R)} user_data_type {void *}
-          xywh {10 10 36 21}
-        }
-      }
-      Fl_Group {} {
-        label {Number of cells:} open
-        xywh {25 58 160 78} box ENGRAVED_FRAME align 5
-      } {
-        Fl_Value_Input {} {
-          label {by X:}
-          callback {viewport_->setXCells(o->value());
-viewport_->redraw();}
-          xywh {101 72 35 25} minimum 1 maximum 128 step 1 value 16
-          code0 {o->value(appconf::startXCells);}
-        }
-        Fl_Value_Input {} {
-          label {by Y:}
-          callback {viewport_->setYCells(o->value());
-viewport_->redraw();}
-          xywh {101 101 35 25} minimum 1 maximum 128 step 1 value 16
-          code0 {o->value(appconf::startYCells);}
-        }
-      }
-      Fl_Group {} {
-        label {Function domain:} open
-        xywh {25 170 160 74} box ENGRAVED_FRAME align 5
-      } {
-        Fl_Value_Input {} {
-          label {X size:}
-          callback {viewport_->setXDomain(o->value());
-viewport_->redraw();}
-          xywh {100 180 50 25} minimum 0.1 maximum 100 step 0.1 value 5
-          code0 {o->value(appconf::startXDomain);}
-        }
-        Fl_Value_Input {} {
-          label {Y size:}
-          callback {viewport_->setYDomain(o->value());
-viewport_->redraw();}
-          xywh {100 209 50 25} minimum 0.1 maximum 100 step 0.1 value 5
-          code0 {o->value(appconf::startYDomain);}
-        }
-      }
-      Fl_Group {} {
-        label {View volume:} open
-        xywh {26 278 159 108} box ENGRAVED_BOX align 5
-      } {
-        Fl_Value_Input {} {
-          label {X size:}
-          xywh {100 292 50 25} minimum 0.1 maximum 100 step 0.1 value 5
-        }
-        Fl_Value_Input {} {
-          label {Y size:} selected
-          xywh {100 323 50 25} minimum 0.1 maximum 100 step 0.1 value 5 deactivate
-        }
-        Fl_Check_Button {} {
-          label {Keep aspect ratio}
-          xywh {34 358 145 15} down_box DOWN_BOX value 1
-        }
-      }
-    }
     Fl_Group {} {open
       xywh {220 48 515 470}
     } {
@@ -166,5 +35,162 @@ viewport_->redraw();}
         }
       }
     }
+    Fl_Group {} {open
+      xywh {-6 16 696 429}
+    } {
+      Fl_Choice {} {
+        label {Function: z=}
+        callback {viewport_->setFunction(o->value());
+viewport_->redraw();}
+        xywh {295 20 225 30} down_box BORDER_BOX when 1
+        code0 {o->value(appconf::startFuncIdx);}
+      } {
+        MenuItem {} {
+          label {((1 - R^2 + |1 - R^2|) / 2)^0.5} user_data_type {void*}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {10*x^2+5*y^2} user_data_type {void*}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {sin(x+y)/(1+(x-y)^2)}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {cos(x)*cos(y)}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {cos((x+2*y)/R)}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {-sin(R)/R}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {cos(x-y)/cos(R^2)}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {sin(x*y)/R^2}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {(cos(x)^2+ch(y)^2)^0.5}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {arctg(R)}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {cos(x*y/R)}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {sin(x*y/R)}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {cos(3*x*y)}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {x^2+cos(12.5*pi*y)}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {(sin(x)^2+sh(y)^2)^0.5}
+          xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label {sin(R)} user_data_type {void *}
+          xywh {15 15 36 21}
+        }
+      }
+      Fl_Group {} {
+        label {Number of cells:} open
+        xywh {30 63 160 78} box ENGRAVED_FRAME align 5
+      } {
+        Fl_Value_Input {} {
+          label {by X:}
+          callback {viewport_->setXCells(o->value());
+viewport_->redraw();}
+          xywh {106 77 35 25} minimum 1 maximum 128 step 1 value 16
+          code0 {o->value(appconf::startXCells);}
+        }
+        Fl_Value_Input {} {
+          label {by Y:}
+          callback {viewport_->setYCells(o->value());
+viewport_->redraw();}
+          xywh {106 106 35 25} minimum 1 maximum 128 step 1 value 16
+          code0 {o->value(appconf::startYCells);}
+        }
+      }
+      Fl_Group {} {
+        label {Function domain:} open
+        xywh {30 175 160 74} box ENGRAVED_FRAME align 5
+      } {
+        Fl_Value_Input {} {
+          label {X size:}
+          callback {viewport_->setXDomain(o->value());
+viewport_->redraw();}
+          xywh {105 185 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          code0 {o->value(appconf::startXDomain);}
+        }
+        Fl_Value_Input {} {
+          label {Y size:}
+          callback {viewport_->setYDomain(o->value());
+viewport_->redraw();}
+          xywh {105 214 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          code0 {o->value(appconf::startYDomain);}
+        }
+      }
+      Fl_Group {} {
+        label {View volume:} open
+        xywh {31 283 159 108} box ENGRAVED_BOX align 5
+      } {
+        Fl_Value_Input xViewVolume {
+          label {X size:}
+          callback {viewport_->setXViewVolume(o->value());
+updateYViewVolume();
+viewport_->redraw();}
+          xywh {105 297 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          code0 {o->value(appconf::startXViewVolume);}
+        }
+        Fl_Value_Input yViewVolume {
+          label {Y size:}
+          callback {viewport_->setXViewVolume(o->value());
+viewport_->redraw();}
+          xywh {105 328 50 25} minimum 0.1 maximum 100 step 0.1 value 5 deactivate
+          code0 {o->value(appconf::startYViewVolume);}
+          code1 {if (!appconf::startKeepAspectRatio) o->activate(); else { o->deactivate(); double const newYViewVolume = (double)appconf::startXViewVolume * viewport_->h() / viewport_->w(); o->value(newYViewVolume); viewport_->setYViewVolume(newYViewVolume); std::cout << viewport_->h() << " / " << viewport_->w(); }}
+        }
+        Fl_Check_Button keepAspectRatio {
+          label {Keep aspect ratio}
+          callback {if (o->value())
+  yViewVolume->deactivate();
+else
+  yViewVolume->activate();
+viewport_->setKeepAspectRatio(o->value());
+updateYViewVolume();
+viewport_->redraw();}
+          xywh {39 363 145 15} down_box DOWN_BOX value 1
+          code0 {o->value(appconf::startKeepAspectRatio);}
+        }
+      }
+    }
+  }
+  Function {updateYViewVolume()} {open
+  } {
+    code {if (keepAspectRatio->value())
+{
+  double const newYViewVolume = 
+    (double)xViewVolume->value() * viewport_->h() / viewport_->w();
+  yViewVolume->value(newYViewVolume);
+  viewport_->setYViewVolume(newYViewVolume);
+}} {}
   }
 } 
