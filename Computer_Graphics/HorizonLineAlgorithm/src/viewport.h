@@ -90,21 +90,31 @@ class Viewport : public Fl_Box
 public:
   Viewport( int x, int y, int w, int h, char const *l = 0 )
     : Fl_Box(x, y, w, h, l)
+    , funcIdx_(0)
   {
+  }
+  
+  void setFunction( int idx )
+  {
+    std::cout << "setFunction(" << idx << ")\n";
+    funcIdx_ = idx;
   }
   
   void draw()
   {
-    frame.resize(w(), h());
-    frame.clear();
+    frame_.resize(w(), h());
+    frame_.clear();
     
     std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // DEBUG
     
-    fl_draw_image(frame.buffer(), x(), y(), frame.width(), frame.height(), frame.pixelSize(), frame.lineSize());
+    
+    
+    fl_draw_image(frame_.buffer(), x(), y(), frame_.width(), frame_.height(), frame_.pixelSize(), frame_.lineSize());
   }
   
 private:
-  RenderFrame frame;
+  RenderFrame frame_;
+  int funcIdx_;
 };
 
 #endif // VIEWPORT_H
