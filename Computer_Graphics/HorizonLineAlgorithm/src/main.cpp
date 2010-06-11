@@ -58,7 +58,7 @@ MAIN_FUNCTION
   
   {
     std::auto_ptr<MainWindow> mainWindow(
-      new MainWindow(640, 480, "Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010"));
+      new MainWindow(710, 480, "Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010"));
     
     Fl::visual(FL_DOUBLE | FL_INDEX | FL_RGB);
 
