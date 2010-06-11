@@ -33,8 +33,9 @@ widget_class MainWindow {
       Fl_Choice {} {
         label {z=}
         callback {viewport_->setFunction(o->value());
-viewport_->redraw();} open
+viewport_->redraw();} open selected
         xywh {455 50 225 30} down_box BORDER_BOX when 1
+        code0 {o->value(appconf::startFuncIdx);}
       } {
         MenuItem {} {
           label {((1 - R^2 + |1 - R^2|) / 2)^0.5} user_data_type {void*}
@@ -145,7 +146,7 @@ viewport_->redraw();}
         Fl_Value_Input {} {
           label {Y size:}
           callback {viewport_->setYDomain(o->value());
-viewport_->redraw();} selected
+viewport_->redraw();}
           xywh {565 220 50 25} minimum 0.1 maximum 100 step 0.1 value 5
           code0 {o->value(appconf::startYDomain);}
         }

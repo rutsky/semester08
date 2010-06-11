@@ -96,7 +96,7 @@ namespace viewport
   public:
     Viewport( int x, int y, int w, int h, char const *l = 0 )
       : Fl_Box(x, y, w, h, l)
-      , funcIdx_(0)
+      , funcIdx_(appconf::startFuncIdx)
       , xCells_(appconf::startXCells)
       , yCells_(appconf::startYCells)
       , xDomain_(appconf::startXDomain)
@@ -157,14 +157,19 @@ namespace viewport
       
       std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // debug
       
-      // Prepare data for drawing.
+      // Calcule domain.
       Vector2d const origin(0.0, 0.0);
       Vector2i const extent((int)xCells_ + 1, (int)yCells_ + 1);
       Vector2d const domain(xDomain_, yDomain_);
       std::cout << domain << "\n" << extent << "\n";
       Vector2d const unit = domain.cwise() / extent.cast<double>();
+      
+      // Build grid.
       hla::FuncValuesGrid funcGrid(function::functions[funcIdx_], 
                                    origin, unit, extent);
+      
+      // Build transformed grid.
+      //TransformedFuncValuesGrid transformed(funcGrid, Eigen::Transform3d const &transform);
       
       // Draw to frame.
       

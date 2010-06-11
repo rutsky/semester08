@@ -24,6 +24,7 @@
 
 namespace appconf
 {
+  extern size_t const startFuncIdx;
   extern size_t const startXCells, startYCells;
   extern double const startXDomain, startYDomain;
 }
