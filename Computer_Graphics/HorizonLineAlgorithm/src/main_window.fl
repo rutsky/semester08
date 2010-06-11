@@ -4,37 +4,23 @@ header_name {.h}
 code_name {.cpp}
 widget_class MainWindow {
   label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open
-  xywh {427 175 695 455} type Double align 0 resizable
+  xywh {445 168 745 515} type Double align 0 resizable
   code0 {\#include <FL/Fl_Window.H>}
   code1 {\#include <iostream>}
   code2 {\#include "appconf.h"}
   class Fl_Window visible
 } {
   Fl_Group {} {open
-    xywh {15 11 670 424}
+    xywh {-11 11 746 509}
   } {
     Fl_Group {} {open
-      xywh {15 13 375 385}
+      xywh {-11 11 696 429}
     } {
-      Fl_Box viewport_ {
-        label label selected
-        private xywh {15 13 375 385}
-        code0 {\#include "viewport.h"}
-        class {viewport::Viewport}
-      }
-    }
-    Fl_Group {} {open
-      xywh {450 11 235 424}
-    } {
-      Fl_Box {} {
-        label {Function:}
-        xywh {455 11 225 39}
-      }
       Fl_Choice {} {
-        label {z=}
+        label {Function: z=}
         callback {viewport_->setFunction(o->value());
-viewport_->redraw();} open
-        xywh {455 50 225 30} down_box BORDER_BOX when 1
+viewport_->redraw();}
+        xywh {290 15 225 30} down_box BORDER_BOX when 1
         code0 {o->value(appconf::startFuncIdx);}
       } {
         MenuItem {} {
@@ -102,63 +88,83 @@ viewport_->redraw();} open
           xywh {10 10 36 21}
         }
       }
-      Fl_Button {} {
-        label button
-        callback {viewport_->redraw();}
-        xywh {455 96 225 22}
-      }
-      Fl_Group {} {open
-        xywh {450 275 235 130} align 0
+      Fl_Group {} {
+        label {Number of cells:} open
+        xywh {25 58 160 86} box ENGRAVED_FRAME align 5
       } {
-        Fl_Value_Slider {} {
+        Fl_Value_Input {} {
           label {by X:}
           callback {viewport_->setXCells(o->value());
 viewport_->redraw();}
-          xywh {490 315 165 30} type {Horz Knob} align 4 minimum 1 maximum 128 step 1 value 16
+          xywh {101 72 35 25} minimum 1 maximum 128 step 1 value 16
           code0 {o->value(appconf::startXCells);}
         }
-        Fl_Value_Slider {} {
+        Fl_Value_Input {} {
           label {by Y:}
           callback {viewport_->setYCells(o->value());
 viewport_->redraw();}
-          xywh {490 345 165 30} type {Horz Knob} align 4 minimum 1 maximum 128 step 1 value 16
+          xywh {101 101 35 25} minimum 1 maximum 128 step 1 value 16
           code0 {o->value(appconf::startYCells);}
         }
-        Fl_Box {} {
-          label {Numer of cells:}
-          xywh {450 290 235 25}
-        }
       }
-      Fl_Group {} {open
-        xywh {460 145 210 125}
+      Fl_Group {} {
+        label {Function domain:} open
+        xywh {25 178 160 79} box ENGRAVED_FRAME align 5
       } {
-        Fl_Box {} {
-          label {Domain:}
-          xywh {500 160 120 25}
-        }
         Fl_Value_Input {} {
           label {X size:}
           callback {viewport_->setXDomain(o->value());
 viewport_->redraw();}
-          xywh {565 190 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          xywh {100 188 50 25} minimum 0.1 maximum 100 step 0.1 value 5
           code0 {o->value(appconf::startXDomain);}
         }
         Fl_Value_Input {} {
           label {Y size:}
           callback {viewport_->setYDomain(o->value());
 viewport_->redraw();}
-          xywh {565 220 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          xywh {100 217 50 25} minimum 0.1 maximum 100 step 0.1 value 5
           code0 {o->value(appconf::startYDomain);}
         }
       }
+      Fl_Group {} {
+        label {View volume:} open selected
+        xywh {26 301 167 108} box ENGRAVED_BOX align 5
+      } {
+        Fl_Value_Input {} {
+          label {X size:}
+          xywh {100 315 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+        }
+        Fl_Value_Input {} {
+          label {Y size:}
+          xywh {100 346 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+        }
+        Fl_Check_Button {} {
+          label {Keep aspect ratio}
+          xywh {40 381 148 15} down_box DOWN_BOX
+        }
+      }
     }
-    Fl_Value_Slider {} {
-      label yaw
-      xywh {15 399 375 32} type {Horz Knob} minimum -180 maximum 180 step 0.1 textsize 14
-    }
-    Fl_Value_Slider {} {
-      label pitch
-      xywh {390 14 40 386} type {Vert Knob} align 8 minimum 90 maximum -90 step 0.1 value 45 textsize 14
+    Fl_Group {} {open
+      xywh {220 48 515 470}
+    } {
+      Fl_Value_Slider {} {
+        label yaw
+        xywh {280 454 415 34} type {Horz Knob} minimum -180 maximum 180 step 0.1
+      }
+      Fl_Value_Slider {} {
+        label pitch
+        xywh {695 65 39 390} type {Vert Knob} align 1 minimum 90 maximum -90 step 0.1 value 45
+      }
+      Fl_Group {} {open
+        xywh {240 58 455 425}
+      } {
+        Fl_Box viewport_ {
+          label label
+          private xywh {275 64 420 391}
+          code0 {\#include "viewport.h"}
+          class {viewport::Viewport}
+        }
+      }
     }
   }
 } 
