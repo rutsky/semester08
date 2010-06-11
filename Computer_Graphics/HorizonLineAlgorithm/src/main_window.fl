@@ -127,7 +127,7 @@ viewport_->redraw();}
         }
       }
       Fl_Group {} {
-        label {View volume:} open selected
+        label {View volume:} open
         xywh {26 278 159 108} box ENGRAVED_BOX align 5
       } {
         Fl_Value_Input {} {
@@ -135,12 +135,12 @@ viewport_->redraw();}
           xywh {100 292 50 25} minimum 0.1 maximum 100 step 0.1 value 5
         }
         Fl_Value_Input {} {
-          label {Y size:}
-          xywh {100 323 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          label {Y size:} selected
+          xywh {100 323 50 25} minimum 0.1 maximum 100 step 0.1 value 5 deactivate
         }
         Fl_Check_Button {} {
           label {Keep aspect ratio}
-          xywh {34 358 145 15} down_box DOWN_BOX
+          xywh {34 358 145 15} down_box DOWN_BOX value 1
         }
       }
     }
