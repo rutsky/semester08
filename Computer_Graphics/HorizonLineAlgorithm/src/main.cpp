@@ -32,6 +32,7 @@
 #include <FL/Fl_Box.H>
 
 #include "platform.h"
+#include "hla.h"
 
 // import most common Eigen types 
 USING_PART_OF_NAMESPACE_EIGEN
