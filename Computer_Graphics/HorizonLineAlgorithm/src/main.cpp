@@ -31,6 +31,8 @@
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Box.H>
 
+#include "main_window.h"
+
 #include "platform.h"
 #include "hla.h"
 
@@ -39,6 +41,7 @@ USING_PART_OF_NAMESPACE_EIGEN
 
 MAIN_FUNCTION
 {
+  if (0)
   {
     Fl_Window *window = new Fl_Window(300,180);
     Fl_Box *box = new Fl_Box(20,40,260,100,"Hello, World!");
@@ -50,6 +53,18 @@ MAIN_FUNCTION
     //window->show(argc, argv);
     window->show();
     std::cout << Fl::run() << "\n";
+  }
+  
+  {
+    MainWindow *mainWindow = new MainWindow(640, 480, "Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010");
+  
+    Fl::visual(FL_DOUBLE | FL_INDEX);
+
+    mainWindow->show();
+
+    Fl::run();
+    
+    delete mainWindow;
   }
 
   {
