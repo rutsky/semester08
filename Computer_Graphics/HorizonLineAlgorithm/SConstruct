@@ -16,6 +16,8 @@
 #  along with HLA.  If not, see <http://www.gnu.org/licenses/>.
 
 env = Environment(tools=["default", "gch"])
+#env = Environment(tools=["default"])
 Export('env')
 
-SConscript("src/SConscript", variant_dir="build")
+#SConscript("src/SConscript", variant_dir="build")
+SConscript("src/SConscript")

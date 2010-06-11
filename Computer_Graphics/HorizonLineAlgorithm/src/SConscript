@@ -15,6 +15,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with HLA.  If not, see <http://www.gnu.org/licenses/>.
 
+import os.path
+import itertools
+
 Import('env')
 
 env['Gch'] = env.Gch('precompiled.hpp')[0]
@@ -27,6 +30,21 @@ env.MergeFlags(env.ParseFlags("-I#eigen2"))
 
 # FLTK library.
 env.ParseConfig("fltk-config --cxxflags --ldflags")
+
+# Fluid stuff
+def fluid_generate_actions(source, target, env, for_signature):
+    assert len(source) == 1
+    source_base_name = os.path.splitext(str(source[0]))[0]
+    return 'cd src; fluid -o ../%s.cpp -h ../%s.h -c ../%s.fl; cd ..' % ((source_base_name,) * 3)
+
+fluid_builder = \
+    Builder(generator = fluid_generate_actions,
+            suffix = "",
+            src_suffix = ".fl")
+env.Append(BUILDERS = {'Fluid': fluid_builder})
+
+env.Fluid('main_window.fl')
+                                                        
 
 source_files = Glob("*.cpp")
 
