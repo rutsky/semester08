@@ -90,7 +90,7 @@ viewport_->redraw();}
       }
       Fl_Group {} {
         label {Number of cells:} open
-        xywh {25 58 160 86} box ENGRAVED_FRAME align 5
+        xywh {25 58 160 78} box ENGRAVED_FRAME align 5
       } {
         Fl_Value_Input {} {
           label {by X:}
@@ -109,38 +109,38 @@ viewport_->redraw();}
       }
       Fl_Group {} {
         label {Function domain:} open
-        xywh {25 178 160 79} box ENGRAVED_FRAME align 5
+        xywh {25 170 160 74} box ENGRAVED_FRAME align 5
       } {
         Fl_Value_Input {} {
           label {X size:}
           callback {viewport_->setXDomain(o->value());
 viewport_->redraw();}
-          xywh {100 188 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          xywh {100 180 50 25} minimum 0.1 maximum 100 step 0.1 value 5
           code0 {o->value(appconf::startXDomain);}
         }
         Fl_Value_Input {} {
           label {Y size:}
           callback {viewport_->setYDomain(o->value());
 viewport_->redraw();}
-          xywh {100 217 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          xywh {100 209 50 25} minimum 0.1 maximum 100 step 0.1 value 5
           code0 {o->value(appconf::startYDomain);}
         }
       }
       Fl_Group {} {
         label {View volume:} open selected
-        xywh {26 301 167 108} box ENGRAVED_BOX align 5
+        xywh {26 278 159 108} box ENGRAVED_BOX align 5
       } {
         Fl_Value_Input {} {
           label {X size:}
-          xywh {100 315 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          xywh {100 292 50 25} minimum 0.1 maximum 100 step 0.1 value 5
         }
         Fl_Value_Input {} {
           label {Y size:}
-          xywh {100 346 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          xywh {100 323 50 25} minimum 0.1 maximum 100 step 0.1 value 5
         }
         Fl_Check_Button {} {
           label {Keep aspect ratio}
-          xywh {40 381 148 15} down_box DOWN_BOX
+          xywh {34 358 145 15} down_box DOWN_BOX
         }
       }
     }
