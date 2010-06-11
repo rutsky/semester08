@@ -3,8 +3,8 @@ version 1.0109
 header_name {.h} 
 code_name {.cxx}
 widget_class MainWindow {
-  label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open selected
-  xywh {527 129 640 480} type Double labeltype NORMAL_LABEL align 0 resizable
+  label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open
+  xywh {418 119 640 480} type Double align 0 resizable
   code0 {\#include <FL/Fl_Window.H>}
   class Fl_Window visible
 } {
@@ -15,14 +15,14 @@ widget_class MainWindow {
   Fl_Button {} {
     label button
     callback {viewport_->redraw();}
-    xywh {25 25 70 20}
+    xywh {530 85 70 20}
   }
   Fl_Group {} {open
-    xywh {130 109 340 273}
+    xywh {10 8 410 385}
   } {
     Fl_Box viewport_ {
-      label label
-      private xywh {145 121 305 249}
+      label label selected
+      private xywh {10 8 410 385}
       code0 {\#include "viewport.h"}
       class Viewport
     }
