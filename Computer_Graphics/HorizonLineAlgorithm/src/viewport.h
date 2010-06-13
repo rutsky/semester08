@@ -236,7 +236,7 @@ namespace viewport
         // Prepare frame to drawing.
         frame_.clear(255);
         
-        frame_.putPixel(0, 1, FL_WHITE);
+        //frame_.putPixel(0, 1, FL_WHITE);
         
         std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // debug
         
@@ -244,7 +244,9 @@ namespace viewport
         Vector2d const origin(xDomainCenter_ - xDomain_ / 2.0, yDomainCenter_ - yDomain_ / 2.0);
         Vector2i const extent((int)xCells_ + 1, (int)yCells_ + 1);
         Vector2d const domain(xDomain_, yDomain_);
-        Vector2d const unit = domain.cwise() / extent.cast<double>();
+        Vector2d const unit(
+          static_cast<double>(xDomain_) / xCells_, 
+          static_cast<double>(yDomain_) / yCells_);
         
         // Build grid.
         hla::FuncValuesGrid 
@@ -275,8 +277,8 @@ namespace viewport
         // Scale CS so that X view will contain exactly X domain (similar with Y).
         Eigen::Transform3d const scaleTf(
           Eigen::Scaling3d(
-            static_cast<double>(frame_.width()) / xViewVolume_,
-            static_cast<double>(frame_.height()) / yViewVolume_,
+            static_cast<double>(frame_.width() - 1) / xViewVolume_,
+            static_cast<double>(frame_.height() - 1) / yViewVolume_,
             1.0));
         
         /*
