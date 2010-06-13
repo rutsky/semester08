@@ -29,4 +29,5 @@ namespace appconf
   bool const startDrawXEdges = true, startDrawYEdges = true;
   double const startYaw = 0.0, startPitch = 45.0;
   double const startXDomainCenter = 0.0, startYDomainCenter = 0.0;
+  double const startXViewVolumeCenter = 0.0, startYViewVolumeCenter = 0.0;
 }

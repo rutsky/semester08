@@ -32,6 +32,7 @@ namespace appconf
   extern bool const startDrawXEdges, startDrawYEdges;
   extern double const startYaw, startPitch;
   extern double const startXDomainCenter, startYDomainCenter;
+  extern double const startXViewVolumeCenter, startYViewVolumeCenter;
 }
 
 #endif // APPCONF_H

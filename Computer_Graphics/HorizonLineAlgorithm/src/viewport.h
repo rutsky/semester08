@@ -118,6 +118,8 @@ namespace viewport
       , drawYEdges_(appconf::startDrawYEdges)
       , xDomainCenter_(appconf::startXDomainCenter)
       , yDomainCenter_(appconf::startYDomainCenter)
+      , xViewVolumeCenter_(appconf::startXViewVolumeCenter)
+      , yViewVolumeCenter_(appconf::startYViewVolumeCenter)
     {
       frame_.resize(w, h);
     }
@@ -227,6 +229,18 @@ namespace viewport
       yDomainCenter_ = yDomainCenter;
     }
     
+    void setXViewVolumeCenter( double xViewVolumeCenter )
+    {
+      std::cout << "setXViewVolumeCenter(" << xViewVolumeCenter << ")\n"; // debug
+      xViewVolumeCenter_ = xViewVolumeCenter;
+    }
+    
+    void setYViewVolumeCenter( double yViewVolumeCenter )
+    {
+      std::cout << "setYViewVolumeCenter(" << yViewVolumeCenter << ")\n"; // debug
+      yViewVolumeCenter_ = yViewVolumeCenter;
+    }
+    
     void resize( int x, int y, int w, int h );
 
     void draw()
@@ -274,19 +288,18 @@ namespace viewport
               1,  0,  0,
               0,  0,  1,
               0, -1,  0).finished()));
+        // Move CS center to view volume center.
+        Eigen::Transform3d const viewVolumeTranslateTf(
+          Eigen::Translation3d(
+            static_cast<double>(xViewVolumeCenter_) / 2.0,
+            static_cast<double>(yViewVolumeCenter_) / 2.0,
+            0.0));
         // Scale CS so that X view will contain exactly X domain (similar with Y).
         Eigen::Transform3d const scaleTf(
           Eigen::Scaling3d(
             static_cast<double>(frame_.width() - 1) / xViewVolume_,
             static_cast<double>(frame_.height() - 1) / yViewVolume_,
             1.0));
-        
-        /*
-        std::cout << "Scale: (" << static_cast<double>(xViewVolume_) * frame_.width() / xDomain_ << ", " <<
-          static_cast<double>(yViewVolume_) * frame_.height() / yDomain_ << ", " <<
-          1.0 << ")\n";
-        std::cout << "xViewVolume_" << xViewVolume_ << "\n";*/
-        
         // Move CS center to screen center.
         Eigen::Transform3d const translateTf(
           Eigen::Translation3d(
@@ -294,11 +307,8 @@ namespace viewport
             static_cast<double>(frame_.height()) / 2.0,
             0.0));
         
-        /*
         Eigen::Transform3d const totalTf = 
-          yawTf * pitchTf * replaceAxesTf * translateTf * scaleTf;*/
-        Eigen::Transform3d const totalTf = 
-          translateTf * scaleTf * replaceAxesTf * pitchTf * yawTf ;
+          translateTf * scaleTf * replaceAxesTf * pitchTf * yawTf * viewVolumeTranslateTf;
         
         // Build transformed grid.
         hla::TransformedFuncValuesGrid transformedFuncGrid(funcGrid, totalTf);
@@ -353,6 +363,7 @@ namespace viewport
     double yaw_, pitch_;
     bool drawXEdges_, drawYEdges_;
     double xDomainCenter_, yDomainCenter_;
+    double xViewVolumeCenter_, yViewVolumeCenter_;
   };
 }
   
