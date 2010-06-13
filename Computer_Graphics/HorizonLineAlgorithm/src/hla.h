@@ -33,6 +33,8 @@
 #include "bresenham.h"
 #include "function.h"
 
+// TODO: Divide on hla.h, grid.h end edge.h.
+
 namespace hla
 {
   USING_PART_OF_NAMESPACE_EIGEN
@@ -40,10 +42,11 @@ namespace hla
   class baseRenderingEdge
   {
   public:
-    baseRenderingEdge( Vector3d p0, Vector3d p1, bool fake )
+    baseRenderingEdge( Vector3d p0, Vector3d p1, bool fake, int axesIdx = -1 )
       : p0_(p0)
       , p1_(p1)
       , fake_(fake)
+      , axesIdx_(axesIdx)
     {
     }
     
@@ -54,9 +57,12 @@ namespace hla
     // buffer).
     bool fake() const { return fake_; }
     
+    int axesIdx() const { return axesIdx_; }
+    
   private:
     Vector3d p0_, p1_;
     bool fake_;
+    int axesIdx_;
   };
 
   namespace details
@@ -169,18 +175,32 @@ namespace hla
   };
   
   // TODO: Not standart iterator.
-  template< class GridType >
+  template< class EdgeType > 
   class EdgesGenerator
   {
+  public:
+    typedef EdgeType edge_t;
+
   private:
-    typedef std::vector<baseRenderingEdge> edges_t;
+    typedef std::vector<edge_t> edges_t;
     
   public:
-    typedef edges_t::const_iterator const_iterator;
+    typedef typename edges_t::const_iterator const_iterator;
     
   public:
+    EdgesGenerator()
+    {
+    }
+    
+    template< class GridType >
     EdgesGenerator( GridType grid, 
                     bool hEdges = true, bool vEdges = true )
+    {
+      addGridEdges(grid, hEdges, vEdges);
+    }
+    
+    template< class GridType >
+    void addGridEdges( GridType grid, bool hEdges = true, bool vEdges = true )
     {
       if (hEdges)
       {
@@ -188,7 +208,7 @@ namespace hla
         for (size_t y = 0; y < grid.ySize(); ++y)
           for (size_t x = 0; x + 1 < grid.xSize(); ++x)
           {
-            baseRenderingEdge edge(grid(x, y), grid(x + 1, y), false);
+            edge_t edge(grid(x, y), grid(x + 1, y), false);
             edges_.push_back(edge);
           }
       }
@@ -199,7 +219,7 @@ namespace hla
         for (size_t y = 0; y + 1 < grid.ySize(); ++y)
           for (size_t x = 0; x < grid.xSize(); ++x)
           {
-            baseRenderingEdge edge(grid(x, y), grid(x, y + 1), false);
+            edge_t edge(grid(x, y), grid(x, y + 1), false);
             edges_.push_back(edge);
           }
       }
@@ -212,7 +232,7 @@ namespace hla
         {
           for (size_t y = 0; y + 1 < grid.ySize(); ++y)
           {
-            baseRenderingEdge leftEdge(grid(0, y), grid(0, y + 1), true);
+            edge_t leftEdge(grid(0, y), grid(0, y + 1), true);
             edges_.push_back(leftEdge);
             
             baseRenderingEdge rightEdge(grid(grid.xSize() - 1, y), grid(grid.xSize() - 1, y + 1), true);
@@ -223,14 +243,19 @@ namespace hla
         {
           for (size_t x = 0; x + 1 < grid.xSize(); ++x)
           {
-            baseRenderingEdge bottomEdge(grid(x, 0), grid(x + 1, 0), true);
+            edge_t bottomEdge(grid(x, 0), grid(x + 1, 0), true);
             edges_.push_back(bottomEdge);
             
-            baseRenderingEdge topEdge(grid(x, grid.ySize() - 1), grid(x + 1, grid.ySize() - 1), true);
+            edge_t topEdge(grid(x, grid.ySize() - 1), grid(x + 1, grid.ySize() - 1), true);
             edges_.push_back(topEdge);
           }
         }
       }
+    }
+    
+    void addEdge( edge_t const &edge )
+    {
+      edges_.push_back(edge);
     }
     
     void sort( Vector3d const &sortDir )
@@ -250,8 +275,7 @@ namespace hla
       {
       }
       
-      template< class EdgeType >
-      bool operator () ( EdgeType const &a, EdgeType const &b )
+      bool operator () ( edge_t const &a, edge_t const &b )
       {
         double const aMin = std::min(dir_.dot(a.p0()), dir_.dot(a.p1()));
         double const bMin = std::min(dir_.dot(b.p0()), dir_.dot(b.p1()));

@@ -281,8 +281,8 @@ namespace viewport
       if (frame_.width() >= 1 && frame_.height() >= 1)
       {
         // Prepare frame to drawing.
-        //frame_.clear(255);
-        frame_.fill(details::colors::black());
+        frame_.clear(255);
+        //frame_.fill(details::colors::black());
         
         //frame_.putPixel(0, 1, FL_WHITE);
         
@@ -351,9 +351,9 @@ namespace viewport
         Vector3d sortDir(0.0, 0.0, 1.0);
         
         // Build and sort drawing segments list.
-        typedef hla::EdgesGenerator<hla::TransformedFuncValuesGrid> edges_gen_t;
-        edges_gen_t edgesGen(transformedFuncGrid, 
-                      drawXEdges_, drawYEdges_);
+        typedef hla::EdgesGenerator<hla::baseRenderingEdge> edges_gen_t;
+        edges_gen_t edgesGen(transformedFuncGrid, drawXEdges_, drawYEdges_);
+        
         edgesGen.sort(sortDir);
         
         // debug
@@ -377,8 +377,8 @@ namespace viewport
         // Draw to frame.
         hla::renderFrame(frame_, 
           edgesGen.begin(), edgesGen.end(), 
-          FL_GREEN, 
-          FL_RED);
+          details::make_rgb(0, 100, 0), 
+          details::make_rgb(22, 44, 165));
         
         // Flush frame to window.
         fl_draw_image(frame_.buffer(), x(), y(), 

@@ -26,7 +26,6 @@ namespace function
 {
   typedef double (*func_t)( double x, double y );
 
-  
   //
   // Input functions.
   //
