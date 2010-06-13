@@ -177,6 +177,18 @@ namespace viewport
       keepAspectRatio_ = keep;
     }
     
+    void setYaw( double yaw )
+    {
+      std::cout << "setYaw(" << yaw << ")\n"; // debug
+      yaw_ = yaw;
+    }
+    
+    void setPitch( double pitch )
+    {
+      std::cout << "setPitch(" << pitch << ")\n"; // debug
+      pitch_ = pitch;
+    }
+    
     void resize( int x, int y, int w, int h );
 
     void draw()
@@ -187,18 +199,50 @@ namespace viewport
       std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // debug
       
       // Calcule domain.
-      Vector2d const origin(0.0, 0.0);
+      Vector2d const origin(0.0, 0.0); // TODO: Set origin center from GUI.
       Vector2i const extent((int)xCells_ + 1, (int)yCells_ + 1);
       Vector2d const domain(xDomain_, yDomain_);
       //std::cout << domain << "\n" << extent << "\n";
       Vector2d const unit = domain.cwise() / extent.cast<double>();
       
       // Build grid.
-      hla::FuncValuesGrid funcGrid(function::functions[funcIdx_], 
-                                   origin, unit, extent);
+      hla::FuncValuesGrid 
+        funcGrid(function::functions[funcIdx_], origin, unit, extent);
+                                   
+      // Build view transformation.
+      // Function in right-handed CS where:
+      //   OX looks right,
+      //   OY looks from us,
+      //   OZ looks up.
+      
+      // Yaw transformation.
+      Eigen::Transform3d const yawTf(
+        Eigen::AngleAxisd(util::deg2rad(yaw_), Vector3d::UnitZ()));
+      // Pitch transformation.
+      Eigen::Transform3d const pitchTf(
+        Eigen::AngleAxisd(util::deg2rad(pitch_), Vector3d::UnitX()));
+      // Rename axes so
+      //   OX looks right,
+      //   OY looks up,
+      //   OZ looks on us.
+      Eigen::Transform3d const replaceAxesTf(
+        Eigen::AngleAxisd(
+          (Matrix3d() << 
+            1,  0,  0,
+            0,  0,  1,
+            0, -1,  0).finished()));
+      // Scale CS so that X view will contain exactly X domain (similar with Y).
+      Eigen::Transform3d const scaleTf(
+        Eigen::Scaling3d(
+          xViewVolume_ / xDomain_,
+          yViewVolume_ / yDomain_,
+          1.0));
+      
+      Eigen::Transform3d const totalTf = 
+        yawTf * pitchTf * replaceAxesTf * scaleTf;
       
       // Build transformed grid.
-      //TransformedFuncValuesGrid transformed(funcGrid, Eigen::Transform3d const &transform);
+      hla::TransformedFuncValuesGrid transformedFuncGrid(funcGrid, totalTf);
       
       // Draw to frame.
       
@@ -216,6 +260,7 @@ namespace viewport
     double xDomain_, yDomain_;
     double xViewVolume_, yViewVolume_;
     bool keepAspectRatio_;
+    double yaw_, pitch_;
   };
 }
   

@@ -55,8 +55,17 @@ namespace util
   }
   
   inline double pi()
+  { 
+    return 3.1415926535897932384626433832795; 
+  }
+  
+  inline double rad2deg( double a )
   {
-    return 3.1415926535897932384626433832795;
+    return a * 180.0 / pi();
+  }
+  inline double deg2rad( double a )
+  {
+    return a * pi() / 180.0;
   }
 }
 

@@ -29,8 +29,7 @@ namespace viewport
     frame_.resize(w, h);
     
     // TODO
-    //static_cast<MainWindow *>(parent()->parent()->parent()->parent())->updateYViewVolume();
-    ((MainWindow *)(parent()->parent()->parent()->parent()))->updateYViewVolume();
+    static_cast<MainWindow *>(parent()->parent()->parent()->parent())->updateYViewVolume();
     // debug
     //std::cout << "parent 4: " << parent()->parent()->parent()->parent() << "\n";
   }

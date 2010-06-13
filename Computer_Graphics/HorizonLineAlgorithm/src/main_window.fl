@@ -3,7 +3,7 @@ version 1.0109
 header_name {.h} 
 code_name {.cpp}
 widget_class MainWindow {
-  label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open selected
+  label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open
   xywh {589 165 745 515} type Double align 0 resizable
   code0 {\#include <FL/Fl_Window.H>}
   code1 {\#include <iostream>}
@@ -17,12 +17,16 @@ widget_class MainWindow {
       xywh {220 48 515 470}
     } {
       Fl_Value_Slider {} {
-        label yaw
+        label yaw selected
         xywh {280 454 415 34} type {Horz Knob} minimum -180 maximum 180 step 0.1
+        code0 {o->value(appconf::startYaw);}
+        code1 {viewport_->setPitch(appconf::startYaw);}
       }
       Fl_Value_Slider {} {
         label pitch
         xywh {695 65 39 390} type {Vert Knob} align 1 minimum 90 maximum -90 step 0.1 value 45
+        code0 {o->value(appconf::startPitch);}
+        code1 {viewport_->setPitch(appconf::startPitch);}
       }
       Fl_Group {} {open
         xywh {240 58 455 425}
