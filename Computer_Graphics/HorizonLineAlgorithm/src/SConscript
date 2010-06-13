@@ -23,7 +23,7 @@ Import('env')
 env['Gch'] = env.Gch('precompiled.hpp')[0]
 
 # Compilation warnings.
-env.MergeFlags(env.ParseFlags("-W -Wall -I#eigen2"))
+env.MergeFlags(env.ParseFlags("-W -Wall -g -I#eigen2"))
 
 # Eigen library.
 env.MergeFlags(env.ParseFlags("-I#eigen2"))

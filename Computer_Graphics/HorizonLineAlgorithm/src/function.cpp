@@ -82,22 +82,34 @@ namespace function
   
   double f5( double x, double y )
   {
-    return cos((x + 2 * y) / R(x, y));
+    if (std::abs(R(x, y)) >= 1e-6)
+      return cos((x + 2 * y) / R(x, y));
+    else
+      return 0;
   }
   
   double f6( double x, double y )
   {
-    return -sin(R(x, y)) / R(x, y);
+    if (std::abs(R(x, y)) >= 1e-6)
+      return -sin(R(x, y)) / R(x, y);
+    else
+      return 0;
   }
   
   double f7( double x, double y )
   {
-    return cos(x - y) / cos(R2(x, y));
+    if (std::abs(cos(R2(x, y))) >= 1e-6)
+      return cos(x - y) / cos(R2(x, y));
+    else
+      return 0;
   }
   
   double f8( double x, double y )
   {
-    return sin(x * y) / R2(x, y);
+    if (std::abs(R2(x, y)) >= 1e-6)
+      return sin(x * y) / R2(x, y);
+    else
+      return 0;
   }
   
   double f9( double x, double y )
@@ -112,12 +124,18 @@ namespace function
   
   double f11( double x, double y )
   {
-    return cos(x * y / R(x, y));
+    if (std::abs(R(x, y)) >= 1e-6)
+      return cos(x * y / R(x, y));
+    else
+      return 0;
   }
   
   double f12( double x, double y )
   {
-    return sin(x * y / R(x, y));
+    if (std::abs(R(x, y)) >= 1e-6)
+      return sin(x * y / R(x, y));
+    else
+      return 0;
   }
   
   double f13( double x, double y )

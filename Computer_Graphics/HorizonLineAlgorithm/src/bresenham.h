@@ -37,10 +37,11 @@ namespace bresenham
     PointsIterator( Vector2i const &p0, Vector2i const &p1 )
       : valid_(true)
       , p_(p0)
+      , pStart_(p0)
       , pEnd_(p1)
       , error_(0.0)
     {
-      if (std::abs(p1.y() - p0.y()) <= std::abs(p1.x() - p0.x()))
+      if (std::abs(p1.x() - p0.x()) >= std::abs(p1.y() - p0.y()))
       {
         // Line angle is less or equal to 45 degrees (absolute).
         // Moving along OX axis.
@@ -89,9 +90,7 @@ namespace bresenham
     
     PointsIterator & operator ++ ()
     {
-      if (p_ == pEnd_)
-        valid_ = false;
-      else
+      if (valid_)
         step();
       
       return *this;
@@ -107,19 +106,37 @@ namespace bresenham
   private:
     void step()
     {
-      p_[baseMovingCoord_] += baseMovingStep_;
+      std::cout << "(" << pStart_.x() << "," << pStart_.y() << ") -> (" << pEnd_.x() << "," << pEnd_.y() << ")\n";
+      std::cout << "cur. pos: (" << p_.x() << "," << p_.y() << ")\n";
+      std::cout << "base coord: " << baseMovingCoord_ << ", slave coord: " << slaveMovingCoord_ << "\n";
+      std::cout << "base step: " << baseMovingStep_ << ", slave step: " << slaveMovingStep_ << "\n";
+      std::cout << "error: " << error_ << "\n";
+      
+      assert(valid_);
       if (p_[baseMovingCoord_] == pEnd_[baseMovingCoord_])
       {
-        // Reach last point.
+        // At last point
         p_[slaveMovingCoord_] = pEnd_[slaveMovingCoord_];
+        valid_ = false;
       }
       else
       {
-        error_ += dError_;
-        if (abs(error_) >= 0.5)
+        assert(baseMovingStep_ != 0);
+        p_[baseMovingCoord_] += baseMovingStep_;
+        if (p_[baseMovingCoord_] == pEnd_[baseMovingCoord_])
         {
-          p_[slaveMovingCoord_] += slaveMovingStep_;
-          error_ -= slaveMovingStep_;
+          // Reach last point.
+          p_[slaveMovingCoord_] = pEnd_[slaveMovingCoord_];
+          valid_ = false;
+        }
+        else
+        {
+          error_ += dError_;
+          if (abs(error_) >= 0.5)
+          {
+            p_[slaveMovingCoord_] += slaveMovingStep_;
+            error_ -= slaveMovingStep_;
+          }
         }
       }
     }
@@ -128,6 +145,7 @@ namespace bresenham
     bool valid_;
     
     Vector2i p_;            // current point
+    Vector2i pStart_;       // start point (for debugging purposes)
     Vector2i pEnd_;         // end point
     
     int baseMovingCoord_, slaveMovingCoord_;

@@ -72,15 +72,14 @@ namespace hla
   inline
   void renderFrame( FrameAdapterType &frame, 
                     SegmentsIt firstSeg, SegmentsIt beyondSeg, 
-                    ColorType const &topEdgesColor, 
-                    ColorType const &bottomEdgesColor )
+                    ColorType topEdgesColor, 
+                    ColorType bottomEdgesColor )
   {
     details::horizon_type 
       topHorizon   (frame.width(), std::numeric_limits<int>::min()), 
       bottomHorizon(frame.width(), std::numeric_limits<int>::max());
       
-    SegmentsIt segIt = firstSeg;
-    while (segIt != beyondSeg)
+    for (SegmentsIt segIt = firstSeg; segIt != beyondSeg; ++segIt)
     {
       Vector2i const p0(std::floor(segIt->p0().x()), std::floor(segIt->p0().y()));
       Vector2i const p1(std::floor(segIt->p1().x()), std::floor(segIt->p1().y()));
@@ -128,20 +127,15 @@ namespace hla
       assert(extent_.x() >= 2 && extent_.y() >= 2);
     }
     
-    size_t nRows() const
-    { 
-      return extent_.y();
-    }
-    
-    size_t nCols() const
-    { 
-      return extent_.x();
-    }
+    size_t xSize() const { return extent_.x(); }
+    size_t ySize() const { return extent_.y(); }
     
     Vector3d operator () ( size_t x, size_t y ) const
     {
+      assert(x < xSize() && y < ySize());
       Vector2d const v = origin_ + 
         unit_.cwise() * Vector2d(static_cast<double>(x), static_cast<double>(y));
+      std::cout << "FuncValuesGrid(" << x << "," << y << ") = (" << v.x() << ", " << v.y() << ", " << func_(v.x(), v.y()) << ")\n";
       return Vector3d(v.x(), v.y(), func_(v.x(), v.y()));
     }
     
@@ -161,9 +155,9 @@ namespace hla
     {
     }
     
-    size_t nRows() const { return grid_.nRows(); }
-    size_t nCols() const { return grid_.nCols(); }
-   
+    size_t xSize() const { return grid_.xSize(); }
+    size_t ySize() const { return grid_.ySize(); }
+    
     Vector3d operator () ( size_t x, size_t y ) const
     {
       return transform_ * grid_(x, y);
@@ -191,10 +185,10 @@ namespace hla
       if (hEdges)
       {
         // Add horizontal edges.
-        for (size_t r = 0; r < grid.nRows(); ++r)
-          for (size_t c = 0; c + 1 < grid.nCols(); ++c)
+        for (size_t y = 0; y < grid.ySize(); ++y)
+          for (size_t x = 0; x + 1 < grid.xSize(); ++x)
           {
-            baseRenderingEdge edge(grid(r, c), grid(r, c + 1), false);
+            baseRenderingEdge edge(grid(x, y), grid(x + 1, y), false);
             edges_.push_back(edge);
           }
       }
@@ -202,10 +196,10 @@ namespace hla
       if (vEdges)
       {
         // Add vertical edges.
-        for (size_t c = 0; c < grid.nCols(); ++c)
-          for (size_t r = 0; r + 1 < grid.nRows(); ++r)
+        for (size_t y = 0; y + 1 < grid.ySize(); ++y)
+          for (size_t x = 0; x < grid.xSize(); ++x)
           {
-            baseRenderingEdge edge(grid(r, c), grid(r + 1, c), false);
+            baseRenderingEdge edge(grid(x, y), grid(x, y + 1), false);
             edges_.push_back(edge);
           }
       }
@@ -216,23 +210,23 @@ namespace hla
         // Add fake edges.
         if (hEdges)
         {
-          for (size_t r = 0; r + 1 < grid.nRows(); ++r)
+          for (size_t y = 0; y + 1 < grid.ySize(); ++y)
           {
-            baseRenderingEdge leftEdge(grid(r, 0), grid(r + 1, 0), true);
+            baseRenderingEdge leftEdge(grid(0, y), grid(0, y + 1), true);
             edges_.push_back(leftEdge);
             
-            baseRenderingEdge rightEdge(grid(r, grid.nCols() - 1), grid(r + 1, grid.nCols() - 1), true);
+            baseRenderingEdge rightEdge(grid(grid.xSize() - 1, y), grid(grid.xSize() - 1, y + 1), true);
             edges_.push_back(rightEdge);
           }
         }
         else // vEdges
         {
-          for (size_t c = 0; c + 1 < grid.nCols(); ++c)
+          for (size_t x = 0; x + 1 < grid.xSize(); ++x)
           {
-            baseRenderingEdge bottomEdge(grid(0, c), grid(0, c + 1), true);
+            baseRenderingEdge bottomEdge(grid(x, 0), grid(x + 1, 0), true);
             edges_.push_back(bottomEdge);
             
-            baseRenderingEdge topEdge(grid(grid.nRows() - 1, c), grid(grid.nRows() - 1, c + 1), true);
+            baseRenderingEdge topEdge(grid(x, grid.ySize() - 1), grid(x + 1, grid.ySize() - 1), true);
             edges_.push_back(topEdge);
           }
         }

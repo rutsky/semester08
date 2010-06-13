@@ -58,7 +58,7 @@ namespace viewport
       {
         w_ = w;
         h_ = h;
-        size_t const newSize = lineSize() * height();
+        size_t const newSize = w_ * h_;
         if (newSize > buffer_.size())
           buffer_.resize(newSize);
       }
@@ -77,18 +77,18 @@ namespace viewport
       
       void clear( uchar byte = 0 )
       {
-        std::memset(&buffer_[0], byte, buffer_.size());
+        std::memset(&buffer_[0], byte, buffer_.size() * sizeof(buffer_[0]));
       }
       
     private:
       Fl_Color & operator () ( size_t x, size_t y )
       {
-        return buffer_[lineSize() * y + x];
+        return buffer_[w_ * y + x];
       }
       
       Fl_Color const & operator () ( size_t x, size_t y ) const
       {
-        return buffer_[lineSize() * y + x];
+        return buffer_[w_ * y + x];
       }
 
     private:
@@ -213,7 +213,9 @@ namespace viewport
     void draw()
     {
       // Prepare frame to drawing.
-      frame_.clear();
+      frame_.clear(255);
+      
+      frame_.putPixel(0, 1, FL_WHITE);
       
       std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // debug
       
@@ -253,9 +255,11 @@ namespace viewport
       // Scale CS so that X view will contain exactly X domain (similar with Y).
       Eigen::Transform3d const scaleTf(
         Eigen::Scaling3d(
-          xViewVolume_ / xDomain_,
-          yViewVolume_ / yDomain_,
+          static_cast<double>(xViewVolume_) / xDomain_ * frame_.width(),
+          static_cast<double>(yViewVolume_) / yDomain_ * frame_.height(),
           1.0));
+      
+      // 
       
       Eigen::Transform3d const totalTf = 
         yawTf * pitchTf * replaceAxesTf * scaleTf;
