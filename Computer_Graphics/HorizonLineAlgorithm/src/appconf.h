@@ -29,6 +29,7 @@ namespace appconf
   extern double const startXDomain, startYDomain;
   extern double const startXViewVolume, startYViewVolume;
   extern bool const startKeepAspectRatio;
+  extern bool const startDrawXEdges, startDrawYEdges;
   extern double const startYaw, startPitch;
 }
 

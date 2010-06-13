@@ -109,6 +109,8 @@ namespace viewport
       , yDomain_(appconf::startYDomain)
       , yaw_(appconf::startYaw)
       , pitch_(appconf::startPitch)
+      , drawXEdges_(appconf::startDrawXEdges)
+      , drawYEdges_(appconf::startDrawYEdges)
     {
       frame_.resize(w, h);
     }

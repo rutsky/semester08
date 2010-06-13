@@ -196,13 +196,15 @@ viewport_->redraw();}
           label {draw X edges}
           callback {viewport_->setDrawXEdges(o->value());
 viewport_->redraw();}
-          xywh {47 434 120 15} down_box DOWN_BOX
+          xywh {47 434 120 15} down_box DOWN_BOX value 1
+          code0 {o->value(appconf::startDrawXEdges);}
         }
         Fl_Check_Button {} {
           label {draw Y edges}
           callback {viewport_->setDrawYEdges(o->value());
-viewport_->redraw();}
-          xywh {47 454 120 15} down_box DOWN_BOX
+viewport_->redraw();} selected
+          xywh {47 454 120 15} down_box DOWN_BOX value 1
+          code0 {o->value(appconf::startDrawXEdges);}
         }
       }
     }
@@ -215,7 +217,6 @@ viewport_->redraw();}
     (double)xViewVolume->value() * viewport_->h() / viewport_->w();
   yViewVolume->value(newYViewVolume);
   viewport_->setYViewVolume(newYViewVolume);
-}} {selected
-    }
+}} {}
   }
 } 
