@@ -107,6 +107,8 @@ namespace viewport
       , yCells_(appconf::startYCells)
       , xDomain_(appconf::startXDomain)
       , yDomain_(appconf::startYDomain)
+      , yaw_(appconf::startYaw)
+      , pitch_(appconf::startPitch)
     {
       frame_.resize(w, h);
     }
@@ -270,9 +272,9 @@ namespace viewport
       
       // Draw to frame.
       hla::renderFrame(frame_, 
-                    edgesGen.begin(), edgesGen.end(), 
-                    FL_GREEN, 
-                    FL_RED);
+        edgesGen.begin(), edgesGen.end(), 
+        FL_GREEN, 
+        FL_RED);
       
       // Flush frame to window.
       fl_draw_image(frame_.buffer(), x(), y(), 

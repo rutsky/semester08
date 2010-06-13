@@ -18,15 +18,17 @@ widget_class MainWindow {
     } {
       Fl_Value_Slider {} {
         label yaw
+        callback {viewport_->setYaw(o->value());
+viewport_->redraw();}
         xywh {280 454 415 34} type {Horz Knob} minimum -180 maximum 180 step 0.1
         code0 {o->value(appconf::startYaw);}
-        code1 {viewport_->setPitch(appconf::startYaw);}
       }
       Fl_Value_Slider {} {
         label pitch
+        callback {viewport_->setPitch(o->value());
+viewport_->redraw();}
         xywh {695 65 39 390} type {Vert Knob} align 1 minimum 90 maximum -90 step 0.1 value 45
         code0 {o->value(appconf::startPitch);}
-        code1 {viewport_->setPitch(appconf::startPitch);}
       }
       Fl_Group {} {open
         xywh {240 58 455 425}
@@ -170,7 +172,8 @@ viewport_->redraw();}
 viewport_->redraw();}
           xywh {105 328 50 25} minimum 0.1 maximum 100 step 0.1 value 5 deactivate
           code0 {o->value(appconf::startYViewVolume);}
-          code1 {if (!appconf::startKeepAspectRatio) o->activate(); else { o->deactivate(); double const newYViewVolume = (double)appconf::startXViewVolume * viewport_->h() / viewport_->w(); o->value(newYViewVolume); viewport_->setYViewVolume(newYViewVolume); std::cout << viewport_->h() << " / " << viewport_->w(); }}
+          code1 {if (!appconf::startKeepAspectRatio) o->activate(); else o->deactivate();}
+          code2 {updateYViewVolume();}
         }
         Fl_Check_Button keepAspectRatio {
           label {keep aspect ratio}
@@ -191,12 +194,14 @@ viewport_->redraw();}
       } {
         Fl_Check_Button {} {
           label {draw X edges}
-          callback {viewport_->setDrawXEdges(o->value());}
+          callback {viewport_->setDrawXEdges(o->value());
+viewport_->redraw();}
           xywh {47 434 120 15} down_box DOWN_BOX
         }
         Fl_Check_Button {} {
           label {draw Y edges}
-          callback {viewport_->setDrawYEdges(o->value());} selected
+          callback {viewport_->setDrawYEdges(o->value());
+viewport_->redraw();}
           xywh {47 454 120 15} down_box DOWN_BOX
         }
       }
@@ -204,12 +209,13 @@ viewport_->redraw();}
   }
   Function {updateYViewVolume()} {open
   } {
-    code {if (keepAspectRatio->value())
+    code {if (keepAspectRatio && keepAspectRatio->value())
 {
   double const newYViewVolume = 
     (double)xViewVolume->value() * viewport_->h() / viewport_->w();
   yViewVolume->value(newYViewVolume);
   viewport_->setYViewVolume(newYViewVolume);
-}} {}
+}} {selected
+    }
   }
 } 
