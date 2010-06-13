@@ -1,4 +1,7 @@
 TODO:
+ * FIX building system.
+   Currently I use string to build:
+     cd src; fluid -o ../src/main_window.cpp -h ../src/main_window.h -c ../src/main_window.fl; cd ..; scons
  * Generate .sln/.vcproj files through SCons
  + Update CImg version
  + Use precompiled header files
