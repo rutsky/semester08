@@ -135,7 +135,7 @@ namespace hla
       assert(x < xSize() && y < ySize());
       Vector2d const v = origin_ + 
         unit_.cwise() * Vector2d(static_cast<double>(x), static_cast<double>(y));
-      std::cout << "FuncValuesGrid(" << x << "," << y << ") = (" << v.x() << ", " << v.y() << ", " << func_(v.x(), v.y()) << ")\n";
+      //std::cout << "FuncValuesGrid(" << x << "," << y << ") = (" << v.x() << ", " << v.y() << ", " << func_(v.x(), v.y()) << ")\n"; // debug
       return Vector3d(v.x(), v.y(), func_(v.x(), v.y()));
     }
     

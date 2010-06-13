@@ -116,8 +116,8 @@ namespace viewport
       , pitch_(appconf::startPitch)
       , drawXEdges_(appconf::startDrawXEdges)
       , drawYEdges_(appconf::startDrawYEdges)
-      , xOrigin_(appconf::startXOrigin)
-      , yOrigin_(appconf::startYOrigin)
+      , xDomainCenter_(appconf::startXDomainCenter)
+      , yDomainCenter_(appconf::startYDomainCenter)
     {
       frame_.resize(w, h);
     }
@@ -215,16 +215,16 @@ namespace viewport
       drawYEdges_ = isDraw;
     }
     
-    void setXOrigin( double xOrigin )
+    void setXDomainCenter( double xDomainCenter )
     {
-      std::cout << "setXOrigin(" << xOrigin << ")\n"; // debug
-      xOrigin_ = xOrigin;
+      std::cout << "setXDomainCenter(" << xDomainCenter << ")\n"; // debug
+      xDomainCenter_ = xDomainCenter;
     }
     
-    void setYOrigin( double yOrigin )
+    void setYDomainCenter( double yDomainCenter )
     {
-      std::cout << "setYOrigin(" << yOrigin << ")\n"; // debug
-      yOrigin_ = yOrigin;
+      std::cout << "setYDomainCenter(" << yDomainCenter << ")\n"; // debug
+      yDomainCenter_ = yDomainCenter;
     }
     
     void resize( int x, int y, int w, int h );
@@ -241,7 +241,7 @@ namespace viewport
         std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // debug
         
         // Calculate domain.
-        Vector2d const origin(xOrigin_, yOrigin_);
+        Vector2d const origin(xDomainCenter_ - xDomain_ / 2.0, yDomainCenter_ - yDomain_ / 2.0);
         Vector2i const extent((int)xCells_ + 1, (int)yCells_ + 1);
         Vector2d const domain(xDomain_, yDomain_);
         Vector2d const unit = domain.cwise() / extent.cast<double>();
@@ -350,7 +350,7 @@ namespace viewport
     bool keepAspectRatio_;
     double yaw_, pitch_;
     bool drawXEdges_, drawYEdges_;
-    double xOrigin_, yOrigin_;
+    double xDomainCenter_, yDomainCenter_;
   };
 }
   

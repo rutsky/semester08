@@ -31,7 +31,7 @@ namespace appconf
   extern bool const startKeepAspectRatio;
   extern bool const startDrawXEdges, startDrawYEdges;
   extern double const startYaw, startPitch;
-  extern double const startXOrigin, startYOrigin;
+  extern double const startXDomainCenter, startYDomainCenter;
 }
 
 #endif // APPCONF_H
