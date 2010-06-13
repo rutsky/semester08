@@ -21,7 +21,7 @@
 
 namespace appconf
 {
-  size_t const startFuncIdx = 14;
+  size_t const startFuncIdx = 16;
   size_t const startXCells = 1, startYCells = 1;
   double const startXDomain = 5.0, startYDomain = 5.0;
   double const startXViewVolume = 5.0, startYViewVolume = 5.0;

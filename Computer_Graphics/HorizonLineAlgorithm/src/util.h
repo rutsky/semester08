@@ -63,12 +63,21 @@ namespace util
   {
     return a * 180.0 / pi();
   }
+  
   inline double deg2rad( double a )
   {
     return a * pi() / 180.0;
   }
+  
+  template< class T, size_t n >
+  inline 
+  size_t array_size( T (&)[n] )
+  {
+    return n;
+  }
 }
 
 #define STATIC_ASSERT(x) typedef int static_assert_stuff##__FILE__##__LINE__[(int)x]
+#define USE_VAR(x) ((void)(x))
 
 #endif // UTIL_H

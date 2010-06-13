@@ -47,7 +47,7 @@ viewport_->redraw();}
       Fl_Choice {} {
         label {Function: z=}
         callback {viewport_->setFunction(o->value());
-viewport_->redraw();}
+viewport_->redraw();} open
         xywh {295 20 225 30} down_box BORDER_BOX when 1
         code0 {o->value(appconf::startFuncIdx);}
       } {
@@ -114,6 +114,10 @@ viewport_->redraw();}
         MenuItem {} {
           label {sin(R)} user_data_type {void *}
           xywh {15 15 36 21}
+        }
+        MenuItem {} {
+          label 0 selected
+          xywh {0 0 36 21}
         }
       }
       Fl_Group {} {
@@ -202,7 +206,7 @@ viewport_->redraw();}
         Fl_Check_Button {} {
           label {draw Y edges}
           callback {viewport_->setDrawYEdges(o->value());
-viewport_->redraw();} selected
+viewport_->redraw();}
           xywh {47 454 120 15} down_box DOWN_BOX value 1
           code0 {o->value(appconf::startDrawXEdges);}
         }

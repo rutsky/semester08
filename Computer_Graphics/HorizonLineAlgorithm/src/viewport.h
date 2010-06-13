@@ -83,12 +83,14 @@ namespace viewport
     private:
       Fl_Color & operator () ( size_t x, size_t y )
       {
-        return buffer_[w_ * y + x];
+        // Include correction to get around OY directed down.
+        return buffer_.at(w_ * (h_ - 1 - y) + x);
       }
       
       Fl_Color const & operator () ( size_t x, size_t y ) const
       {
-        return buffer_[w_ * y + x];
+        // Include correction to get around OY directed down.
+        return buffer_.at(w_ * (h_ - 1 - y) + x);
       }
 
     private:
@@ -107,6 +109,9 @@ namespace viewport
       , yCells_(appconf::startYCells)
       , xDomain_(appconf::startXDomain)
       , yDomain_(appconf::startYDomain)
+      , xViewVolume_(appconf::startXViewVolume)
+      , yViewVolume_(appconf::startYViewVolume)
+      , keepAspectRatio_(appconf::startKeepAspectRatio)
       , yaw_(appconf::startYaw)
       , pitch_(appconf::startPitch)
       , drawXEdges_(appconf::startDrawXEdges)
@@ -212,80 +217,109 @@ namespace viewport
 
     void draw()
     {
-      // Prepare frame to drawing.
-      frame_.clear(255);
-      
-      frame_.putPixel(0, 1, FL_WHITE);
-      
-      std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // debug
-      
-      // Calcule domain.
-      Vector2d const origin(0.0, 0.0); // TODO: Set origin center from GUI.
-      Vector2i const extent((int)xCells_ + 1, (int)yCells_ + 1);
-      Vector2d const domain(xDomain_, yDomain_);
-      //std::cout << domain << "\n" << extent << "\n";
-      Vector2d const unit = domain.cwise() / extent.cast<double>();
-      
-      // Build grid.
-      hla::FuncValuesGrid 
-        funcGrid(function::functions[funcIdx_], origin, unit, extent);
-                                   
-      // Build view transformation.
-      // Function in right-handed CS where:
-      //   OX looks right,
-      //   OY looks from us,
-      //   OZ looks up.
-      
-      // Yaw transformation.
-      Eigen::Transform3d const yawTf(
-        Eigen::AngleAxisd(util::deg2rad(yaw_), Vector3d::UnitZ()));
-      // Pitch transformation.
-      Eigen::Transform3d const pitchTf(
-        Eigen::AngleAxisd(util::deg2rad(pitch_), Vector3d::UnitX()));
-      // Rename axes so
-      //   OX looks right,
-      //   OY looks up,
-      //   OZ looks on us.
-      Eigen::Transform3d const replaceAxesTf(
-        Eigen::AngleAxisd(
-          (Matrix3d() << 
-            1,  0,  0,
-            0,  0,  1,
-            0, -1,  0).finished()));
-      // Scale CS so that X view will contain exactly X domain (similar with Y).
-      Eigen::Transform3d const scaleTf(
-        Eigen::Scaling3d(
-          static_cast<double>(xViewVolume_) / xDomain_ * frame_.width(),
-          static_cast<double>(yViewVolume_) / yDomain_ * frame_.height(),
-          1.0));
-      
-      // 
-      
-      Eigen::Transform3d const totalTf = 
-        yawTf * pitchTf * replaceAxesTf * scaleTf;
-      
-      // Build transformed grid.
-      hla::TransformedFuncValuesGrid transformedFuncGrid(funcGrid, totalTf);
-      
-      // Sort direction.
-      Vector3d sortDir(0.0, 0.0, 1.0);
-      
-      // Build and sort drawing segments list.
-      typedef hla::EdgesGenerator<hla::TransformedFuncValuesGrid> edges_gen_t;
-      edges_gen_t edgesGen(transformedFuncGrid, 
-                    drawXEdges_, drawYEdges_);
-      edgesGen.sort(sortDir);
-      
-      // Draw to frame.
-      hla::renderFrame(frame_, 
-        edgesGen.begin(), edgesGen.end(), 
-        FL_GREEN, 
-        FL_RED);
-      
-      // Flush frame to window.
-      fl_draw_image(frame_.buffer(), x(), y(), 
-                    frame_.width(), frame_.height(), 
-                    frame_.pixelSize(), frame_.lineSize());
+      if (frame_.width() >= 1 && frame_.height() >= 1)
+      {
+        // Prepare frame to drawing.
+        frame_.clear(255);
+        
+        frame_.putPixel(0, 1, FL_WHITE);
+        
+        std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // debug
+        
+        // Calculate domain.
+        Vector2d const origin(0.0, 0.0); // TODO: Set origin center from GUI.
+        Vector2i const extent((int)xCells_ + 1, (int)yCells_ + 1);
+        Vector2d const domain(xDomain_, yDomain_);
+        //std::cout << domain << "\n" << extent << "\n";
+        Vector2d const unit = domain.cwise() / extent.cast<double>();
+        
+        // Build grid.
+        hla::FuncValuesGrid 
+          funcGrid(function::functions[funcIdx_], origin, unit, extent);
+                                    
+        // Build view transformation.
+        // Function in right-handed CS where:
+        //   OX looks right,
+        //   OY looks from us,
+        //   OZ looks up.
+        
+        // Yaw transformation.
+        Eigen::Transform3d const yawTf(
+          Eigen::AngleAxisd(util::deg2rad(yaw_), Vector3d::UnitZ()));
+        // Pitch transformation.
+        Eigen::Transform3d const pitchTf(
+          Eigen::AngleAxisd(util::deg2rad(pitch_), Vector3d::UnitX()));
+        // Rename axes so
+        //   OX looks right,
+        //   OY looks up,
+        //   OZ looks on us.
+        Eigen::Transform3d const replaceAxesTf(
+          Eigen::AngleAxisd(
+            (Matrix3d() << 
+              1,  0,  0,
+              0,  0,  1,
+              0, -1,  0).finished()));
+        // Scale CS so that X view will contain exactly X domain (similar with Y).
+        Eigen::Transform3d const scaleTf(
+          Eigen::Scaling3d(
+            static_cast<double>(frame_.width()) / xViewVolume_,
+            static_cast<double>(frame_.height()) / yViewVolume_,
+            1.0));
+        
+        std::cout << "Scale: (" << static_cast<double>(xViewVolume_) * frame_.width() / xDomain_ << ", " <<
+          static_cast<double>(yViewVolume_) * frame_.height() / yDomain_ << ", " <<
+          1.0 << ")\n";
+        std::cout << "xViewVolume_" << xViewVolume_ << "\n";
+        
+        // Move CS center to screen center.
+        Eigen::Transform3d const translateTf(
+          Eigen::Translation3d(
+            static_cast<double>(frame_.width()) / 2.0,
+            static_cast<double>(frame_.height()) / 2.0,
+            0.0));
+        
+        Eigen::Transform3d const totalTf = 
+          yawTf * pitchTf * replaceAxesTf * scaleTf;// * translateTf;
+        
+        // Build transformed grid.
+        hla::TransformedFuncValuesGrid transformedFuncGrid(funcGrid, totalTf);
+        
+        // Sort direction.
+        Vector3d sortDir(0.0, 0.0, 1.0);
+        
+        // Build and sort drawing segments list.
+        typedef hla::EdgesGenerator<hla::TransformedFuncValuesGrid> edges_gen_t;
+        edges_gen_t edgesGen(transformedFuncGrid, 
+                      drawXEdges_, drawYEdges_);
+        edgesGen.sort(sortDir);
+        
+        // debug
+        Vector3d const v(2.5, 0.0, 0.0);
+        Vector3d const vTr[] = {
+          yawTf * v,
+          yawTf * pitchTf * v,
+          yawTf * pitchTf * replaceAxesTf * v,
+          yawTf * pitchTf * replaceAxesTf * scaleTf * v,
+          yawTf * pitchTf * replaceAxesTf * scaleTf * translateTf * v
+          };
+        for (size_t i = 0; i < util::array_size(vTr); ++i) 
+        {
+          Vector3d const v = vTr[i];
+          std::cout << "tr * v = (" << v.x() << ", " << v.y() << ", " << v.z() << ")\n"; 
+        }
+        // eod
+        
+        // Draw to frame.
+        hla::renderFrame(frame_, 
+          edgesGen.begin(), edgesGen.end(), 
+          FL_GREEN, 
+          FL_RED);
+        
+        // Flush frame to window.
+        fl_draw_image(frame_.buffer(), x(), y(), 
+                      frame_.width(), frame_.height(), 
+                      frame_.pixelSize(), frame_.lineSize());
+      }
     }
     
   private:

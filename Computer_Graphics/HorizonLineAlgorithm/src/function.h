@@ -47,8 +47,13 @@ namespace function
   extern double f15( double x, double y );
   extern double f16( double x, double y );
   
+  //
+  // Test functions.
+  //
+  double zero( double x, double y );
+  
   extern size_t const nFunctions;
-  extern func_t functions[16];
+  extern func_t functions[17];
 }
 
 #endif // FUNCTION_H

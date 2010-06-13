@@ -106,11 +106,13 @@ namespace bresenham
   private:
     void step()
     {
+      /*
       std::cout << "(" << pStart_.x() << "," << pStart_.y() << ") -> (" << pEnd_.x() << "," << pEnd_.y() << ")\n";
       std::cout << "cur. pos: (" << p_.x() << "," << p_.y() << ")\n";
       std::cout << "base coord: " << baseMovingCoord_ << ", slave coord: " << slaveMovingCoord_ << "\n";
       std::cout << "base step: " << baseMovingStep_ << ", slave step: " << slaveMovingStep_ << "\n";
       std::cout << "error: " << error_ << "\n";
+      */
       
       assert(valid_);
       if (p_[baseMovingCoord_] == pEnd_[baseMovingCoord_])
