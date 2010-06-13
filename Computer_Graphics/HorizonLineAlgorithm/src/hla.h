@@ -40,22 +40,22 @@ namespace hla
   class baseRenderingEdge
   {
   public:
-    baseRenderingEdge( Vector2i p0, Vector2i p1, bool fake )
+    baseRenderingEdge( Vector3d p0, Vector3d p1, bool fake )
       : p0_(p0)
       , p1_(p1)
       , fake_(fake)
     {
     }
     
-    Vector2i p0() const { return p0_; }
-    Vector2i p1() const { return p1_; }
+    Vector3d p0() const { return p0_; }
+    Vector3d p1() const { return p1_; }
     
     // Fake edges shouldn't be drawed on screen (but should update horizon 
     // buffer).
     bool fake() const { return fake_; }
     
   private:
-    Vector2i p0_, p1_;
+    Vector3d p0_, p1_;
     bool fake_;
   };
 
@@ -82,13 +82,16 @@ namespace hla
     SegmentsIt segIt = firstSeg;
     while (segIt != beyondSeg)
     {
+      Vector2i const p0(std::floor(segIt->p0().x()), std::floor(segIt->p0().y()));
+      Vector2i const p1(std::floor(segIt->p1().x()), std::floor(segIt->p1().y()));
+      
       // Draw current segment.
       if (!segIt->fake())
       {
-        for (bresenham::PointsIterator pIt(segIt->p0(), segIt->p1()); pIt; ++pIt)
+        for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt)
         {
-          if (pIt->x() >= 0 && pIt->x() < frame.width() &&
-              pIt->y() >= 0 && pIt->y() < frame.height())
+          if (pIt->x() >= 0 && pIt->x() < static_cast<int>(frame.width()) &&
+              pIt->y() >= 0 && pIt->y() < static_cast<int>(frame.height()))
           {
             if (pIt->y() > topHorizon[pIt->x()])
               frame.putPixel(pIt->x(), pIt->y(), topEdgesColor);
@@ -99,9 +102,9 @@ namespace hla
       }
       
       // Update horizons.
-      for (bresenham::PointsIterator pIt(segIt->p0(), segIt->p1()); pIt; ++pIt)
+      for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt)
       {
-        if (pIt->x() >= 0 && pIt->x() < frame.width())
+        if (pIt->x() >= 0 && pIt->x() < static_cast<int>(frame.width()))
         {
           util::make_max(topHorizon[pIt->x()], pIt->y());
           util::make_min(bottomHorizon[pIt->x()], pIt->y());
@@ -183,7 +186,6 @@ namespace hla
     
   public:
     EdgesGenerator( GridType grid, 
-                    Vector2d const &sortDir,
                     bool hEdges = true, bool vEdges = true )
     {
       if (hEdges)
@@ -237,7 +239,7 @@ namespace hla
       }
     }
     
-    void sort( Vector2d const &sortDir )
+    void sort( Vector3d const &sortDir )
     {
       std::sort(edges_.begin(), edges_.end(), RenderingEgdeLess(sortDir));
     }
@@ -248,7 +250,8 @@ namespace hla
   private:
     class RenderingEgdeLess
     {
-      RenderingEgdeLess( Vector2d const &dir )
+    public:
+      RenderingEgdeLess( Vector3d const &dir )
         : dir_(dir)
       {
       }
@@ -262,7 +265,7 @@ namespace hla
       }
       
     private:
-      Vector2d dir_;
+      Vector3d dir_;
     };
     
   private:

@@ -41,20 +41,6 @@ USING_PART_OF_NAMESPACE_EIGEN
 
 MAIN_FUNCTION
 {
-  if (0)
-  {
-    Fl_Window *window = new Fl_Window(300,180);
-    Fl_Box *box = new Fl_Box(20,40,260,100,"Hello, World!");
-    box->box(FL_UP_BOX);
-    box->labelsize(36);
-    box->labelfont(FL_BOLD+FL_ITALIC);
-    box->labeltype(FL_SHADOW_LABEL);
-    window->end();
-    //window->show(argc, argv);
-    window->show();
-    std::cout << Fl::run() << "\n";
-  }
-  
   {
     std::auto_ptr<MainWindow> mainWindow(
       new MainWindow(745, 515, "Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010"));
@@ -64,16 +50,5 @@ MAIN_FUNCTION
     mainWindow->show();
 
     Fl::run();
-  }
-
-  {
-    // Basic Eigen test (from Eigen's documentation).
-    int rows=5, cols=5;
-    MatrixXf m(rows,cols);
-    m << (Matrix3f() << 1, 2, 3, 4, 5, 6, 7, 8, 9).finished(),
-      MatrixXf::Zero(3,cols-3),
-      MatrixXf::Zero(rows-3,3),
-      MatrixXf::Identity(rows-3,cols-3);
-    std::cout << m << "\n";
   }
 }

@@ -17,7 +17,7 @@ widget_class MainWindow {
       xywh {220 48 515 470}
     } {
       Fl_Value_Slider {} {
-        label yaw selected
+        label yaw
         xywh {280 454 415 34} type {Horz Knob} minimum -180 maximum 180 step 0.1
         code0 {o->value(appconf::startYaw);}
         code1 {viewport_->setPitch(appconf::startYaw);}
@@ -40,7 +40,7 @@ widget_class MainWindow {
       }
     }
     Fl_Group {} {open
-      xywh {-6 16 696 429}
+      xywh {-6 16 696 467}
     } {
       Fl_Choice {} {
         label {Function: z=}
@@ -173,7 +173,7 @@ viewport_->redraw();}
           code1 {if (!appconf::startKeepAspectRatio) o->activate(); else { o->deactivate(); double const newYViewVolume = (double)appconf::startXViewVolume * viewport_->h() / viewport_->w(); o->value(newYViewVolume); viewport_->setYViewVolume(newYViewVolume); std::cout << viewport_->h() << " / " << viewport_->w(); }}
         }
         Fl_Check_Button keepAspectRatio {
-          label {Keep aspect ratio}
+          label {keep aspect ratio}
           callback {if (o->value())
   yViewVolume->deactivate();
 else
@@ -183,6 +183,21 @@ updateYViewVolume();
 viewport_->redraw();}
           xywh {39 363 145 15} down_box DOWN_BOX value 1
           code0 {o->value(appconf::startKeepAspectRatio);}
+        }
+      }
+      Fl_Group {} {
+        label {Render parameters:} open
+        xywh {30 418 160 65} box ENGRAVED_FRAME align 5
+      } {
+        Fl_Check_Button {} {
+          label {draw X edges}
+          callback {viewport_->setDrawXEdges(o->value());}
+          xywh {47 434 120 15} down_box DOWN_BOX
+        }
+        Fl_Check_Button {} {
+          label {draw Y edges}
+          callback {viewport_->setDrawYEdges(o->value());} selected
+          xywh {47 454 120 15} down_box DOWN_BOX
         }
       }
     }

@@ -43,56 +43,59 @@ namespace viewport
   
   STATIC_ASSERT(sizeof(Fl_Color) == 4); // TODO
 
-  class RenderFrame
+  namespace details
   {
-  public:
-    RenderFrame()
-      : w_(0)
-      , h_(0)
+    class RenderFrame
     {
-    }
-    
-    void resize( size_t w, size_t h )
-    {
-      w_ = w;
-      h_ = h;
-      size_t const newSize = lineSize() * height();
-      if (newSize > buffer_.size())
-        buffer_.resize(newSize);
-    }
-    
-    size_t width() const { return w_; }
-    size_t height() const { return h_; }
-    
-    void putPixel( size_t x, size_t y, Fl_Color color )
-    {
-      (*this)(x, y) = color;
-    }
-    
-    size_t pixelSize() const { return sizeof(Fl_Color); }
-    size_t lineSize() const { return pixelSize() * width(); }
-    uchar const * buffer() const { return (uchar const *)&buffer_[0]; };
-    
-    void clear( uchar byte = 0 )
-    {
-      std::memset(&buffer_[0], byte, buffer_.size());
-    }
-    
-  private:
-    Fl_Color & operator () ( size_t x, size_t y )
-    {
-      return buffer_[lineSize() * y + x];
-    }
-    
-    Fl_Color const & operator () ( size_t x, size_t y ) const
-    {
-      return buffer_[lineSize() * y + x];
-    }
+    public:
+      RenderFrame()
+        : w_(0)
+        , h_(0)
+      {
+      }
+      
+      void resize( size_t w, size_t h )
+      {
+        w_ = w;
+        h_ = h;
+        size_t const newSize = lineSize() * height();
+        if (newSize > buffer_.size())
+          buffer_.resize(newSize);
+      }
+      
+      size_t width() const { return w_; }
+      size_t height() const { return h_; }
+      
+      void putPixel( size_t x, size_t y, Fl_Color color )
+      {
+        (*this)(x, y) = color;
+      }
+      
+      size_t pixelSize() const { return sizeof(Fl_Color); }
+      size_t lineSize() const { return pixelSize() * width(); }
+      uchar const * buffer() const { return (uchar const *)&buffer_[0]; };
+      
+      void clear( uchar byte = 0 )
+      {
+        std::memset(&buffer_[0], byte, buffer_.size());
+      }
+      
+    private:
+      Fl_Color & operator () ( size_t x, size_t y )
+      {
+        return buffer_[lineSize() * y + x];
+      }
+      
+      Fl_Color const & operator () ( size_t x, size_t y ) const
+      {
+        return buffer_[lineSize() * y + x];
+      }
 
-  private:
-    size_t w_, h_;
-    std::vector<Fl_Color> buffer_;
-  };
+    private:
+      size_t w_, h_;
+      std::vector<Fl_Color> buffer_;
+    };
+  }
 
   class Viewport : public Fl_Box
   {
@@ -189,6 +192,18 @@ namespace viewport
       pitch_ = pitch;
     }
     
+    void setDrawXEdges( bool isDraw )
+    {
+      std::cout << "setDrawXEdges(" << isDraw << ")\n"; // debug
+      drawXEdges_ = isDraw;
+    }
+    
+    void setDrawYEdges( bool isDraw )
+    {
+      std::cout << "setDrawYEdges(" << isDraw << ")\n"; // debug
+      drawYEdges_ = isDraw;
+    }
+    
     void resize( int x, int y, int w, int h );
 
     void draw()
@@ -244,8 +259,21 @@ namespace viewport
       // Build transformed grid.
       hla::TransformedFuncValuesGrid transformedFuncGrid(funcGrid, totalTf);
       
-      // Draw to frame.
+      // Sort direction.
+      Vector3d sortDir(0.0, 0.0, 1.0);
       
+      // Build and sort drawing segments list.
+      typedef hla::EdgesGenerator<hla::TransformedFuncValuesGrid> edges_gen_t;
+      edges_gen_t edgesGen(transformedFuncGrid, 
+                    drawXEdges_, drawYEdges_);
+      edgesGen.sort(sortDir);
+      
+      // Draw to frame.
+      /*
+      hla::renderFrame(frame_, 
+                    edgesGen.begin(), edgesGen.end(), 
+                    FL_GREEN, 
+                    FL_RED);*/
       
       // Flush frame to window.
       fl_draw_image(frame_.buffer(), x(), y(), 
@@ -254,13 +282,14 @@ namespace viewport
     }
     
   private:
-    RenderFrame frame_;
+    details::RenderFrame frame_;
     size_t funcIdx_;
     size_t xCells_, yCells_;
     double xDomain_, yDomain_;
     double xViewVolume_, yViewVolume_;
     bool keepAspectRatio_;
     double yaw_, pitch_;
+    bool drawXEdges_, drawYEdges_;
   };
 }
   
