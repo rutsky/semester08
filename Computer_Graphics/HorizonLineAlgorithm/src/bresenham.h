@@ -52,9 +52,9 @@ namespace bresenham
         slaveMovingStep_ = util::sign(p1.y() - p0.y());
         
         // dError = dy / dx
-        dError_ =
+        dError_ = std::abs(
           static_cast<double>(p1.y() - p0.y()) / 
-          static_cast<double>(p1.x() - p0.x());
+          static_cast<double>(p1.x() - p0.x()));
       }
       else
       {
@@ -67,9 +67,9 @@ namespace bresenham
         slaveMovingStep_ = util::sign(p1.x() - p0.x());
         
         // dError = dx / dy
-        dError_ =
+        dError_ = std::abs(
           static_cast<double>(p1.x() - p0.x()) / 
-          static_cast<double>(p1.y() - p0.y());
+          static_cast<double>(p1.y() - p0.y()));
       }
     }
     
@@ -107,8 +107,8 @@ namespace bresenham
     void step()
     {
       /*
-      std::cout << "(" << pStart_.x() << "," << pStart_.y() << ") -> (" << pEnd_.x() << "," << pEnd_.y() << ")\n";
-      std::cout << "cur. pos: (" << p_.x() << "," << p_.y() << ")\n";
+      std::cout << "(" << pStart_.x() << ", " << pStart_.y() << ") -> (" << pEnd_.x() << ", " << pEnd_.y() << ")\n";
+      std::cout << "cur. pos: (" << p_.x() << ", " << p_.y() << ")\n";
       std::cout << "base coord: " << baseMovingCoord_ << ", slave coord: " << slaveMovingCoord_ << "\n";
       std::cout << "base step: " << baseMovingStep_ << ", slave step: " << slaveMovingStep_ << "\n";
       std::cout << "error: " << error_ << "\n";
@@ -117,28 +117,21 @@ namespace bresenham
       assert(valid_);
       if (p_[baseMovingCoord_] == pEnd_[baseMovingCoord_])
       {
-        // At last point
-        p_[slaveMovingCoord_] = pEnd_[slaveMovingCoord_];
+        // At last point.
+        assert(p_[slaveMovingCoord_] == pEnd_[slaveMovingCoord_]);
         valid_ = false;
       }
       else
       {
         assert(baseMovingStep_ != 0);
         p_[baseMovingCoord_] += baseMovingStep_;
-        if (p_[baseMovingCoord_] == pEnd_[baseMovingCoord_])
+        error_ += dError_;
+        if (error_ >= 0.5)
         {
-          // Reach last point.
-          p_[slaveMovingCoord_] = pEnd_[slaveMovingCoord_];
-          valid_ = false;
-        }
-        else
-        {
-          error_ += dError_;
-          if (abs(error_) >= 0.5)
-          {
-            p_[slaveMovingCoord_] += slaveMovingStep_;
-            error_ -= slaveMovingStep_;
-          }
+          p_[slaveMovingCoord_] += slaveMovingStep_;
+          error_ -= 1.0;
+          assert(error_ >= -0.5);
+          assert(error_ < 0.5);
         }
       }
     }
