@@ -336,13 +336,27 @@ namespace viewport
         // Build and sort drawing segments list.
         typedef edge_gen::EdgesGenerator<edge::edge_t> edges_gen_t;
         edges_gen_t edgesGen;
-        edgesGen.addGridEdges(
-          transformedFuncGrid,
-          color::make_rgb(0, 100, 0), 
-          color::make_rgb(22, 44, 165),
-          drawXEdges_, drawYEdges_);
-        
-        edgesGen.sort(sortDir);
+        {         
+          // Add axes.
+          edge::edge_t axisX(
+            totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0),
+            totalTf * Vector3d(xViewVolumeCenter_ + xViewVolume_ / 2.0, 0.0, 0.0), 
+            edge::line_style_t(color::red(), edge::rs_solid), // init
+            edge::line_style_t(color::red(), edge::rs_solid), // above
+            edge::line_style_t(color::red(), edge::rs_dash),  // inside
+            edge::line_style_t(color::red(), edge::rs_solid), // below
+            true, false);
+          edgesGen.addEdge(axisX);
+         
+          // Add all grid edges.
+          edgesGen.addGridEdges(
+            transformedFuncGrid,
+            color::make_rgb(0, 100, 0), 
+            color::make_rgb(22, 44, 165),
+            drawXEdges_, drawYEdges_);
+          
+          edgesGen.sort(sortDir);
+        }
         
         // debug
         /*

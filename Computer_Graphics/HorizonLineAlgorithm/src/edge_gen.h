@@ -166,7 +166,7 @@ namespace edge_gen
     
     void sort( Vector3d const &sortDir )
     {
-      std::sort(edges_.begin(), edges_.end(), RenderingEgdeLess(sortDir));
+      std::stable_sort(edges_.begin(), edges_.end(), RenderingEgdeLess(sortDir));
     }
     
     const_iterator begin() const { return edges_.begin(); }
