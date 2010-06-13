@@ -17,6 +17,8 @@
  *  along with HLA.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "precompiled.hpp"
+
 #include "function.h"
 #include "util.h"
 

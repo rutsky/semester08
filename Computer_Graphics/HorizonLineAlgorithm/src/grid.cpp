@@ -19,20 +19,8 @@
 
 #include "precompiled.hpp"
 
-#include "viewport.h"
+#include "grid.h"
 
-#include "main_window.h"
-
-namespace viewport
+namespace grid
 {
-  void Viewport::resize( int x, int y, int w, int h )
-  {
-    Fl_Box::resize(x, y, w, h);
-    frame_.resize(w, h);
-    
-    // TODO
-    static_cast<MainWindow *>(parent()->parent()->parent()->parent())->updateYViewVolume();
-    // debug
-    //std::cout << "parent 4: " << parent()->parent()->parent()->parent() << "\n";
-  }
 }

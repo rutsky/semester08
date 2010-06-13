@@ -36,6 +36,8 @@
 #include "appconf.h"
 #include "function.h"
 #include "hla.h"
+#include "grid.h"
+#include "edge.h"
 
 class MainWindow;
 
@@ -297,7 +299,7 @@ namespace viewport
           static_cast<double>(yDomain_) / yCells_);
         
         // Build grid.
-        hla::FuncValuesGrid 
+        grid::FuncValuesGrid 
           funcGrid(function::functions[funcIdx_], origin, unit, extent);
                                     
         // Build view transformation.
@@ -345,13 +347,13 @@ namespace viewport
           translateTf * scaleTf * replaceAxesTf * pitchTf * yawTf * viewVolumeTranslateTf;
         
         // Build transformed grid.
-        hla::TransformedFuncValuesGrid transformedFuncGrid(funcGrid, totalTf);
+        grid::TransformedFuncValuesGrid transformedFuncGrid(funcGrid, totalTf);
         
         // Sort direction.
         Vector3d sortDir(0.0, 0.0, 1.0);
         
         // Build and sort drawing segments list.
-        typedef hla::EdgesGenerator<hla::baseRenderingEdge> edges_gen_t;
+        typedef edge::EdgesGenerator<edge::baseRenderingEdge> edges_gen_t;
         edges_gen_t edgesGen(transformedFuncGrid, drawXEdges_, drawYEdges_);
         
         edgesGen.sort(sortDir);
