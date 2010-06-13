@@ -116,6 +116,8 @@ namespace viewport
       , pitch_(appconf::startPitch)
       , drawXEdges_(appconf::startDrawXEdges)
       , drawYEdges_(appconf::startDrawYEdges)
+      , xOrigin_(appconf::startXOrigin)
+      , yOrigin_(appconf::startYOrigin)
     {
       frame_.resize(w, h);
     }
@@ -213,6 +215,18 @@ namespace viewport
       drawYEdges_ = isDraw;
     }
     
+    void setXOrigin( double xOrigin )
+    {
+      std::cout << "setXOrigin(" << xOrigin << ")\n"; // debug
+      xOrigin_ = xOrigin;
+    }
+    
+    void setYOrigin( double yOrigin )
+    {
+      std::cout << "setYOrigin(" << yOrigin << ")\n"; // debug
+      yOrigin_ = yOrigin;
+    }
+    
     void resize( int x, int y, int w, int h );
 
     void draw()
@@ -227,10 +241,9 @@ namespace viewport
         std::cout << "draw(" << x() << ", " << y() << ", " << w() << ", " << h() << ");\n"; // debug
         
         // Calculate domain.
-        Vector2d const origin(0.0, 0.0); // TODO: Set origin center from GUI.
+        Vector2d const origin(xOrigin_, yOrigin_);
         Vector2i const extent((int)xCells_ + 1, (int)yCells_ + 1);
         Vector2d const domain(xDomain_, yDomain_);
-        //std::cout << domain << "\n" << extent << "\n";
         Vector2d const unit = domain.cwise() / extent.cast<double>();
         
         // Build grid.
@@ -245,7 +258,7 @@ namespace viewport
         
         // Yaw transformation.
         Eigen::Transform3d const yawTf(
-          Eigen::AngleAxisd(util::deg2rad(yaw_), Vector3d::UnitZ()));
+          Eigen::AngleAxisd(-util::deg2rad(yaw_), Vector3d::UnitZ()));
         // Pitch transformation.
         Eigen::Transform3d const pitchTf(
           Eigen::AngleAxisd(util::deg2rad(pitch_), Vector3d::UnitX()));
@@ -266,10 +279,11 @@ namespace viewport
             static_cast<double>(frame_.height()) / yViewVolume_,
             1.0));
         
+        /*
         std::cout << "Scale: (" << static_cast<double>(xViewVolume_) * frame_.width() / xDomain_ << ", " <<
           static_cast<double>(yViewVolume_) * frame_.height() / yDomain_ << ", " <<
           1.0 << ")\n";
-        std::cout << "xViewVolume_" << xViewVolume_ << "\n";
+        std::cout << "xViewVolume_" << xViewVolume_ << "\n";*/
         
         // Move CS center to screen center.
         Eigen::Transform3d const translateTf(
@@ -282,7 +296,7 @@ namespace viewport
         Eigen::Transform3d const totalTf = 
           yawTf * pitchTf * replaceAxesTf * translateTf * scaleTf;*/
         Eigen::Transform3d const totalTf = 
-          translateTf * scaleTf * replaceAxesTf * yawTf * pitchTf;
+          translateTf * scaleTf * replaceAxesTf * pitchTf * yawTf ;
         
         // Build transformed grid.
         hla::TransformedFuncValuesGrid transformedFuncGrid(funcGrid, totalTf);
@@ -297,6 +311,7 @@ namespace viewport
         edgesGen.sort(sortDir);
         
         // debug
+        /*
         Vector3d const v(2.5, 0.0, 0.0);
         Vector3d const vTr[] = {
           yawTf * v,
@@ -310,6 +325,7 @@ namespace viewport
           Vector3d const v = vTr[i];
           std::cout << "tr * v = (" << v.x() << ", " << v.y() << ", " << v.z() << ")\n"; 
         }
+        */
         // eod
         
         // Draw to frame.
@@ -334,6 +350,7 @@ namespace viewport
     bool keepAspectRatio_;
     double yaw_, pitch_;
     bool drawXEdges_, drawYEdges_;
+    double xOrigin_, yOrigin_;
   };
 }
   

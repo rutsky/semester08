@@ -42,7 +42,7 @@ viewport_->redraw();}
       }
     }
     Fl_Group {} {open
-      xywh {-6 16 696 467}
+      xywh {-6 16 696 490}
     } {
       Fl_Choice {} {
         label {Function: z=}
@@ -116,7 +116,7 @@ viewport_->redraw();} open
           xywh {15 15 36 21}
         }
         MenuItem {} {
-          label 0 selected
+          label 0
           xywh {0 0 36 21}
         }
       }
@@ -141,40 +141,62 @@ viewport_->redraw();}
       }
       Fl_Group {} {
         label {Function domain:} open
-        xywh {30 175 160 74} box ENGRAVED_FRAME align 5
+        xywh {30 175 200 112} box ENGRAVED_FRAME align 5
       } {
         Fl_Value_Input {} {
           label {X size:}
           callback {viewport_->setXDomain(o->value());
 viewport_->redraw();}
-          xywh {105 185 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          xywh {95 222 50 25} minimum 0.1 maximum 100 step 0.1 value 5
           code0 {o->value(appconf::startXDomain);}
         }
         Fl_Value_Input {} {
           label {Y size:}
           callback {viewport_->setYDomain(o->value());
 viewport_->redraw();}
-          xywh {105 214 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          xywh {95 251 50 25} minimum 0.1 maximum 100 step 0.1 value 5
           code0 {o->value(appconf::startYDomain);}
+        }
+        Fl_Group {} {open
+          xywh {30 187 200 25}
+        } {
+          Fl_Value_Input {} {
+            label {origin: (}
+            callback {viewport_->setXOrigin(o->value());
+viewport_->redraw();}
+            xywh {95 187 50 25} minimum -100 maximum 100 step 0.1
+            code0 {o->value(appconf::startXOrigin);}
+          }
+          Fl_Value_Input {} {
+            label {, }
+            callback {viewport_->setYOrigin(o->value());
+viewport_->redraw();} selected
+            xywh {157 187 50 25} minimum -100 maximum 100 step 0.1
+            code0 {o->value(appconf::startYOrigin);}
+          }
+          Fl_Box {} {
+            label {)}
+            xywh {205 191 15 17}
+          }
         }
       }
       Fl_Group {} {
         label {View volume:} open
-        xywh {31 283 159 108} box ENGRAVED_BOX align 5
+        xywh {31 307 159 108} box ENGRAVED_BOX align 5
       } {
         Fl_Value_Input xViewVolume {
           label {X size:}
           callback {viewport_->setXViewVolume(o->value());
 updateYViewVolume();
 viewport_->redraw();}
-          xywh {105 297 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+          xywh {105 321 50 25} minimum 0.1 maximum 100 step 0.1 value 5
           code0 {o->value(appconf::startXViewVolume);}
         }
         Fl_Value_Input yViewVolume {
           label {Y size:}
           callback {viewport_->setXViewVolume(o->value());
 viewport_->redraw();}
-          xywh {105 328 50 25} minimum 0.1 maximum 100 step 0.1 value 5 deactivate
+          xywh {105 352 50 25} minimum 0.1 maximum 100 step 0.1 value 5 deactivate
           code0 {o->value(appconf::startYViewVolume);}
           code1 {if (!appconf::startKeepAspectRatio) o->activate(); else o->deactivate();}
           code2 {updateYViewVolume();}
@@ -188,26 +210,26 @@ else
 viewport_->setKeepAspectRatio(o->value());
 updateYViewVolume();
 viewport_->redraw();}
-          xywh {39 363 145 15} down_box DOWN_BOX value 1
+          xywh {39 387 145 15} down_box DOWN_BOX value 1
           code0 {o->value(appconf::startKeepAspectRatio);}
         }
       }
       Fl_Group {} {
         label {Render parameters:} open
-        xywh {30 418 160 65} box ENGRAVED_FRAME align 5
+        xywh {30 441 160 65} box ENGRAVED_FRAME align 5
       } {
         Fl_Check_Button {} {
           label {draw X edges}
           callback {viewport_->setDrawXEdges(o->value());
 viewport_->redraw();}
-          xywh {47 434 120 15} down_box DOWN_BOX value 1
+          xywh {47 457 120 15} down_box DOWN_BOX value 1
           code0 {o->value(appconf::startDrawXEdges);}
         }
         Fl_Check_Button {} {
           label {draw Y edges}
           callback {viewport_->setDrawYEdges(o->value());
 viewport_->redraw();}
-          xywh {47 454 120 15} down_box DOWN_BOX value 1
+          xywh {47 477 120 15} down_box DOWN_BOX value 1
           code0 {o->value(appconf::startDrawXEdges);}
         }
       }

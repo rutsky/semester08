@@ -28,4 +28,5 @@ namespace appconf
   bool const startKeepAspectRatio = true;
   bool const startDrawXEdges = true, startDrawYEdges = true;
   double const startYaw = 0.0, startPitch = 45.0;
+  double const startXOrigin = 0.0, startYOrigin = 0.0;
 }
