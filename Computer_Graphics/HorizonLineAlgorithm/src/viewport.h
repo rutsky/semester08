@@ -269,11 +269,10 @@ namespace viewport
       edgesGen.sort(sortDir);
       
       // Draw to frame.
-      /*
       hla::renderFrame(frame_, 
                     edgesGen.begin(), edgesGen.end(), 
                     FL_GREEN, 
-                    FL_RED);*/
+                    FL_RED);
       
       // Flush frame to window.
       fl_draw_image(frame_.buffer(), x(), y(), 
