@@ -278,8 +278,11 @@ namespace viewport
             static_cast<double>(frame_.height()) / 2.0,
             0.0));
         
+        /*
         Eigen::Transform3d const totalTf = 
-          yawTf * pitchTf * replaceAxesTf * scaleTf;// * translateTf;
+          yawTf * pitchTf * replaceAxesTf * translateTf * scaleTf;*/
+        Eigen::Transform3d const totalTf = 
+          translateTf * scaleTf * replaceAxesTf * yawTf * pitchTf;
         
         // Build transformed grid.
         hla::TransformedFuncValuesGrid transformedFuncGrid(funcGrid, totalTf);
@@ -300,7 +303,7 @@ namespace viewport
           yawTf * pitchTf * v,
           yawTf * pitchTf * replaceAxesTf * v,
           yawTf * pitchTf * replaceAxesTf * scaleTf * v,
-          yawTf * pitchTf * replaceAxesTf * scaleTf * translateTf * v
+          yawTf * pitchTf * replaceAxesTf * translateTf * scaleTf * v
           };
         for (size_t i = 0; i < util::array_size(vTr); ++i) 
         {
