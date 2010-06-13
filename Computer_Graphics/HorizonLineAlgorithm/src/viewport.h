@@ -25,6 +25,8 @@
 #include <vector>
 #include <cstdlib>
 
+#include <boost/cstdint.hpp>
+
 #include <FL/Fl.H>
 #include <FL/Fl_Box.H>
 #include <FL/fl_draw.H>
@@ -45,6 +47,32 @@ namespace viewport
 
   namespace details
   {
+    typedef uint32_t color_t;
+    
+    inline
+    color_t make_rgb( int r, int g, int b )
+    {
+      return 
+        (static_cast<uint8_t>(r) << 24) |
+        (static_cast<uint8_t>(g) << 16) |
+        (static_cast<uint8_t>(b) << 8);
+    }
+    
+    inline
+    color_t make_rgb( int v )
+    {
+      return make_rgb(v, v, v);
+    }
+    
+    namespace colors
+    {
+      inline color_t white() { return make_rgb(255); }
+      inline color_t black() { return make_rgb(0); }
+      inline color_t red  () { return make_rgb(255,   0,   0); }
+      inline color_t green() { return make_rgb(  0, 255,   0); }
+      inline color_t blue () { return make_rgb(  0,   0, 255); }
+    }
+    
     class RenderFrame
     {
     public:
@@ -66,28 +94,33 @@ namespace viewport
       size_t width() const { return w_; }
       size_t height() const { return h_; }
       
-      void putPixel( size_t x, size_t y, Fl_Color color )
+      void putPixel( size_t x, size_t y, color_t color )
       {
         (*this)(x, y) = color;
       }
       
-      size_t pixelSize() const { return sizeof(Fl_Color); }
+      size_t pixelSize() const { return sizeof(color_t); }
       size_t lineSize() const { return pixelSize() * width(); }
       uchar const * buffer() const { return (uchar const *)&buffer_[0]; };
       
-      void clear( uchar byte = 0 )
+      void clear( int byte = 0 )
       {
         std::memset(&buffer_[0], byte, buffer_.size() * sizeof(buffer_[0]));
       }
       
+      void fill( color_t color )
+      {
+        std::fill(buffer_.begin(), buffer_.end(), color);
+      }
+      
     private:
-      Fl_Color & operator () ( size_t x, size_t y )
+      color_t & operator () ( size_t x, size_t y )
       {
         // Include correction to get around OY directed down.
         return buffer_.at(w_ * (h_ - 1 - y) + x);
       }
       
-      Fl_Color const & operator () ( size_t x, size_t y ) const
+      color_t const & operator () ( size_t x, size_t y ) const
       {
         // Include correction to get around OY directed down.
         return buffer_.at(w_ * (h_ - 1 - y) + x);
@@ -95,7 +128,7 @@ namespace viewport
 
     private:
       size_t w_, h_;
-      std::vector<Fl_Color> buffer_;
+      std::vector<color_t> buffer_;
     };
   }
 
@@ -248,7 +281,8 @@ namespace viewport
       if (frame_.width() >= 1 && frame_.height() >= 1)
       {
         // Prepare frame to drawing.
-        frame_.clear(255);
+        //frame_.clear(255);
+        frame_.fill(details::colors::black());
         
         //frame_.putPixel(0, 1, FL_WHITE);
         

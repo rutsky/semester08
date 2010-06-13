@@ -25,7 +25,26 @@
 #define PRECOMPILED_H
 
 #include <iostream>
+#include <memory>
+#include <cmath>
+#include <vector>
+#include <limits>
+#include <utility>
+#include <cassert>
+#include <algorithm>
+#include <cstdlib>
+#include <cstddef>
+
+#include <boost/cstdint.hpp>
 
 #include <Eigen/Core>
+#include <Eigen/Geometry>
+
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Box.H>
+#include <FL/fl_draw.H>
+#include <FL/Enumerations.H>
+#include <FL/Fl_Group.H>
 
 #endif // PRECOMPILED_H
