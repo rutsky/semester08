@@ -38,6 +38,8 @@
 #include "hla.h"
 #include "grid.h"
 #include "edge.h"
+#include "color.h"
+#include "edge_gen.h"
 
 class MainWindow;
 
@@ -45,38 +47,14 @@ namespace viewport
 {
   USING_PART_OF_NAMESPACE_EIGEN
   
-  STATIC_ASSERT(sizeof(Fl_Color) == 4); // TODO
-
   namespace details
   {
-    typedef uint32_t color_t;
-    
-    inline
-    color_t make_rgb( int r, int g, int b )
-    {
-      return 
-        (static_cast<uint8_t>(r) << 24) |
-        (static_cast<uint8_t>(g) << 16) |
-        (static_cast<uint8_t>(b) << 8);
-    }
-    
-    inline
-    color_t make_rgb( int v )
-    {
-      return make_rgb(v, v, v);
-    }
-    
-    namespace colors
-    {
-      inline color_t white() { return make_rgb(255); }
-      inline color_t black() { return make_rgb(0); }
-      inline color_t red  () { return make_rgb(255,   0,   0); }
-      inline color_t green() { return make_rgb(  0, 255,   0); }
-      inline color_t blue () { return make_rgb(  0,   0, 255); }
-    }
-    
+    template< class ColorType >
     class RenderFrame
     {
+    public:
+      typedef ColorType color_t;
+      
     public:
       RenderFrame()
         : w_(0)
@@ -136,6 +114,9 @@ namespace viewport
 
   class Viewport : public Fl_Box
   {
+  private:
+    typedef details::RenderFrame<color::color_t> render_frame_t;
+    
   public:
     Viewport( int x, int y, int w, int h, char const *l = 0 )
       : Fl_Box(x, y, w, h, l)
@@ -353,8 +334,13 @@ namespace viewport
         Vector3d sortDir(0.0, 0.0, 1.0);
         
         // Build and sort drawing segments list.
-        typedef edge::EdgesGenerator<edge::baseRenderingEdge> edges_gen_t;
-        edges_gen_t edgesGen(transformedFuncGrid, drawXEdges_, drawYEdges_);
+        typedef edge_gen::EdgesGenerator<edge::edge_t> edges_gen_t;
+        edges_gen_t edgesGen;
+        edgesGen.addGridEdges(
+          transformedFuncGrid,
+          color::make_rgb(0, 100, 0), 
+          color::make_rgb(22, 44, 165),
+          drawXEdges_, drawYEdges_);
         
         edgesGen.sort(sortDir);
         
@@ -377,10 +363,14 @@ namespace viewport
         // eod
         
         // Draw to frame.
-        hla::renderFrame(frame_, 
-          edgesGen.begin(), edgesGen.end(), 
-          details::make_rgb(0, 100, 0), 
-          details::make_rgb(22, 44, 165));
+        {
+          hla::FrameRenderer<render_frame_t> hlaFrameRenderer(frame_);
+          
+          hlaFrameRenderer.drawEdges(edgesGen.begin(), edgesGen.end());
+
+          //color::make_rgb(0, 100, 0), 
+          //color::make_rgb(22, 44, 165));
+        }
         
         // Flush frame to window.
         fl_draw_image(frame_.buffer(), x(), y(), 
@@ -390,7 +380,7 @@ namespace viewport
     }
     
   private:
-    details::RenderFrame frame_;
+    render_frame_t frame_;
     size_t funcIdx_;
     size_t xCells_, yCells_;
     double xDomain_, yDomain_;

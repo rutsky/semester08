@@ -27,152 +27,98 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-#include "function.h"
+#include "color.h"
 
 namespace edge
 {
   USING_PART_OF_NAMESPACE_EIGEN
-
-  class baseRenderingEdge
+  
+  enum line_form_style_t
   {
-  public:
-    baseRenderingEdge( Vector3d p0, Vector3d p1, bool fake, int axesIdx = -1 )
-      : p0_(p0)
-      , p1_(p1)
-      , fake_(fake)
-      , axesIdx_(axesIdx)
-    {
-    }
-    
-    Vector3d p0() const { return p0_; }
-    Vector3d p1() const { return p1_; }
-    
-    // Fake edges shouldn't be drawed on screen (but should update horizon 
-    // buffer).
-    bool fake() const { return fake_; }
-    
-    int axesIdx() const { return axesIdx_; }
-    
-  private:
-    Vector3d p0_, p1_;
-    bool fake_;
-    int axesIdx_;
+    rs_none = 0,
+    rs_solid,
+    rs_dash,
   };
   
-  // TODO: Not standart iterator.
-  template< class EdgeType > 
-  class EdgesGenerator
+  struct line_style_t
+  {
+    line_style_t()
+      : color(color::gray())
+      , style(rs_solid)
+      , updateHorizon(true)
+    {
+    }
+    
+    line_style_t( color::color_t newColor, 
+                  line_form_style_t newStyle = rs_solid,
+                  bool newUpdateHorizon = true )
+      : color(newColor)
+      , style(newStyle)
+      , updateHorizon(newUpdateHorizon)
+    {
+    }
+    
+    color::color_t    color;
+    line_form_style_t style;
+    bool              updateHorizon;
+  };
+  
+  class edge_t
   {
   public:
-    typedef EdgeType edge_t;
-
-  private:
-    typedef std::vector<edge_t> edges_t;
-    
-  public:
-    typedef typename edges_t::const_iterator const_iterator;
-    
-  public:
-    EdgesGenerator()
+    edge_t( Vector3d const &p0, Vector3d const &p1 )
+      : p0_(p0)
+      , p1_(p1)
+      , isDraw_(true)
+      , isUpdateHorizon_(true)
     {
     }
     
-    template< class GridType >
-    EdgesGenerator( GridType grid, 
-                    bool hEdges = true, bool vEdges = true )
+    edge_t( Vector3d const &p0, Vector3d const &p1, color::color_t color )
+      : p0_(p0)
+      , p1_(p1)
+      , isDraw_(true)
+      , isUpdateHorizon_(true)
+      , initHorizon_(color)
+      , aboveHorizon_(color)
+      , insideHorizon_(color)
+      , belowHorizon_(color)
     {
-      addGridEdges(grid, hEdges, vEdges);
     }
     
-    template< class GridType >
-    void addGridEdges( GridType grid, bool hEdges = true, bool vEdges = true )
+    edge_t( Vector3d const &p0, Vector3d const &p1, 
+            line_style_t const &initHorizon, line_style_t const &aboveHorizon, 
+            line_style_t const &insideHorizon, line_style_t const &belowHorizon,
+            bool isDraw = true, bool isUpdateHorizon = true )
+      : p0_(p0)
+      , p1_(p1)
+      , isDraw_(isDraw)
+      , isUpdateHorizon_(isUpdateHorizon)
+      , initHorizon_(initHorizon)
+      , aboveHorizon_(aboveHorizon)
+      , insideHorizon_(insideHorizon)
+      , belowHorizon_(belowHorizon)
     {
-      if (hEdges)
-      {
-        // Add horizontal edges.
-        for (size_t y = 0; y < grid.ySize(); ++y)
-          for (size_t x = 0; x + 1 < grid.xSize(); ++x)
-          {
-            edge_t edge(grid(x, y), grid(x + 1, y), false);
-            edges_.push_back(edge);
-          }
-      }
-      
-      if (vEdges)
-      {
-        // Add vertical edges.
-        for (size_t y = 0; y + 1 < grid.ySize(); ++y)
-          for (size_t x = 0; x < grid.xSize(); ++x)
-          {
-            edge_t edge(grid(x, y), grid(x, y + 1), false);
-            edges_.push_back(edge);
-          }
-      }
-      
-      if ((hEdges || vEdges) && !(hEdges && vEdges))
-      {
-        // Only horizontal edges or only vertical edges.
-        // Add fake edges.
-        if (hEdges)
-        {
-          for (size_t y = 0; y + 1 < grid.ySize(); ++y)
-          {
-            edge_t leftEdge(grid(0, y), grid(0, y + 1), true);
-            edges_.push_back(leftEdge);
-            
-            baseRenderingEdge rightEdge(grid(grid.xSize() - 1, y), grid(grid.xSize() - 1, y + 1), true);
-            edges_.push_back(rightEdge);
-          }
-        }
-        else // vEdges
-        {
-          for (size_t x = 0; x + 1 < grid.xSize(); ++x)
-          {
-            edge_t bottomEdge(grid(x, 0), grid(x + 1, 0), true);
-            edges_.push_back(bottomEdge);
-            
-            edge_t topEdge(grid(x, grid.ySize() - 1), grid(x + 1, grid.ySize() - 1), true);
-            edges_.push_back(topEdge);
-          }
-        }
-      }
     }
     
-    void addEdge( edge_t const &edge )
-    {
-      edges_.push_back(edge);
-    }
+    virtual Vector3d p0() const { return p0_; };
+    virtual Vector3d p1() const { return p1_; };
     
-    void sort( Vector3d const &sortDir )
-    {
-      std::sort(edges_.begin(), edges_.end(), RenderingEgdeLess(sortDir));
-    }
+    // If false, none of segment points will be drawed.
+    virtual bool isDraw() const { return isDraw_; }
+    // If false, none of segment points will update horizon.
+    virtual bool isUpdateHorizon() const { return isUpdateHorizon_; }
     
-    const_iterator begin() const { return edges_.begin(); }
-    const_iterator end  () const { return edges_.end  (); }
+    line_style_t const &initHorizon  () const { return initHorizon_;   }
+    line_style_t const &aboveHorizon () const { return aboveHorizon_;  }
+    line_style_t const &insideHorizon() const { return insideHorizon_; }
+    line_style_t const &belowHorizon () const { return belowHorizon_;  }
     
-  private:
-    class RenderingEgdeLess
-    {
-    public:
-      RenderingEgdeLess( Vector3d const &dir )
-        : dir_(dir)
-      {
-      }
-      
-      bool operator () ( edge_t const &a, edge_t const &b )
-      {
-        double const aMin = std::min(dir_.dot(a.p0()), dir_.dot(a.p1()));
-        double const bMin = std::min(dir_.dot(b.p0()), dir_.dot(b.p1()));
-        return aMin < bMin;
-      }
-      
-    private:
-      Vector3d dir_;
-    };
-    
-  private:
-    edges_t edges_;
+  protected:
+    Vector3d p0_, p1_;
+    bool isDraw_;
+    bool isUpdateHorizon_; 
+    line_style_t initHorizon_, aboveHorizon_, insideHorizon_, belowHorizon_;
   };
 }
 

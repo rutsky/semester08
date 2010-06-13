@@ -28,69 +28,202 @@
 #include <algorithm>
 
 #include <Eigen/Core>
-#include <Eigen/Geometry>
 
 #include "bresenham.h"
-#include "function.h"
-
-// TODO: Divide on hla.h, grid.h end edge.h.
+#include "color.h"
+#include "edge.h"
 
 namespace hla
 {
   USING_PART_OF_NAMESPACE_EIGEN
   
-  namespace details
-  {
-    typedef std::vector<int> horizon_type;
-  }
- 
+  // FrameAdapterType is abstraction of 2d surface for drawing with such CS:
+  //   O  - left-lower corner,
+  //   OX - right,
+  //   OY - up.
   // FrameAdapterType must provide such functions as:
   //   width(), 
   //   height(), 
   //   putPixel(x, y, color).
-  template< class FrameAdapterType, class SegmentsIt, class ColorType >
-  inline
-  void renderFrame( FrameAdapterType &frame, 
-                    SegmentsIt firstSeg, SegmentsIt beyondSeg, 
-                    ColorType topEdgesColor, 
-                    ColorType bottomEdgesColor )
+  template< class FrameAdapterType >
+  class FrameRenderer
   {
-    details::horizon_type 
-      topHorizon   (frame.width(), std::numeric_limits<int>::min()), 
-      bottomHorizon(frame.width(), std::numeric_limits<int>::max());
-      
-    for (SegmentsIt segIt = firstSeg; segIt != beyondSeg; ++segIt)
+  public:
+    typedef FrameAdapterType frame_adapter_t;
+    
+  private:
+    struct horizon_column_t
     {
-      Vector2i const p0(std::floor(segIt->p0().x()), std::floor(segIt->p0().y()));
-      Vector2i const p1(std::floor(segIt->p1().x()), std::floor(segIt->p1().y()));
+      horizon_column_t()
+        : initialized(false)
+        , lo(-1)
+        , hi(-1)
+      {
+      }
+      
+      bool initialized;
+      int lo, hi;
+    };
+    
+    typedef std::vector<horizon_column_t> horizon_t;
+    
+  public:
+    FrameRenderer( FrameAdapterType &frame )
+      : frame_(frame)
+      , horizon_(frame.width())
+    {
+    }
+    
+    void resetHorizons()
+    {
+      std::fill(horizon_.begin(), horizon_.end(), horizon_column_t());
+    }
+    
+    template< class EdgeType >
+    void drawEdge( EdgeType const &edge )
+    {
+      Vector2i const p0(std::floor(edge.p0().x()), std::floor(edge.p0().y()));
+      Vector2i const p1(std::floor(edge.p1().x()), std::floor(edge.p1().y()));
+      
+      // TODO: Implement segment culling by render frame.
       
       // Draw current segment.
-      if (!segIt->fake())
+      if (edge.isDraw())
       {
-        for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt)
+        size_t idx = 0;
+        for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt, ++idx)
         {
-          if (pIt->x() >= 0 && pIt->x() < static_cast<int>(frame.width()) &&
-              pIt->y() >= 0 && pIt->y() < static_cast<int>(frame.height()))
+          Vector2i const p = *pIt;
+          if (isInsideRenderFrame(p))
           {
-            if (pIt->y() > topHorizon[pIt->x()])
-              frame.putPixel(pIt->x(), pIt->y(), topEdgesColor);
-            else if (pIt->y() < bottomHorizon[pIt->x()])
-              frame.putPixel(pIt->x(), pIt->y(), bottomEdgesColor);
+            horizon_column_t const &horizonColumn = horizon_[p.x()];
+            if (!horizonColumn.initialized)
+            {
+              // Uninitialized column.
+              edge::line_style_t const &ls = edge.initHorizon();
+              drawLinePoint(p, ls.color, ls.style, idx);
+            }
+            else if (p.y() > horizonColumn.hi)
+            {
+              // Point above horizon.
+              edge::line_style_t const &ls = edge.aboveHorizon();
+              drawLinePoint(p, ls.color, ls.style, idx);
+            }
+            else if (p.y() < horizonColumn.lo)
+            {
+              // Point below horizon.
+              edge::line_style_t const &ls = edge.belowHorizon();
+              drawLinePoint(p, ls.color, ls.style, idx);
+            }
+            else
+            {
+              assert(p.y() >= horizonColumn.lo && p.y() <= horizonColumn.hi);
+              // Point inside horizon.
+              edge::line_style_t const &ls = edge.insideHorizon();
+              drawLinePoint(p, ls.color, ls.style, idx);
+            }
           }
         }
       }
       
-      // Update horizons.
-      for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt)
+      // Update horizon.
+      if (edge.isUpdateHorizon())
       {
-        if (pIt->x() >= 0 && pIt->x() < static_cast<int>(frame.width()))
+        for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt)
         {
-          util::make_max(topHorizon[pIt->x()], pIt->y());
-          util::make_min(bottomHorizon[pIt->x()], pIt->y());
+          Vector2i const p = *pIt;
+          if (isXInsideRenderFrame(p.x()))
+          {
+            horizon_column_t &horizonColumn = horizon_[p.x()];
+            if (!horizonColumn.initialized)
+            {
+              // Uninitialized column.
+              edge::line_style_t const &ls = edge.initHorizon();
+              if (ls.updateHorizon)
+              {
+                horizonColumn.initialized = true;
+                horizonColumn.hi = p.y();
+                horizonColumn.lo = p.y();
+              }
+            }
+            else if (p.y() > horizonColumn.hi)
+            {
+              // Point above horizon.
+              edge::line_style_t const &ls = edge.aboveHorizon();
+              if (ls.updateHorizon)
+              {
+                horizonColumn.hi = p.y();
+              }
+            }
+            else if (p.y() < horizonColumn.lo)
+            {
+              // Point below horizon.
+              edge::line_style_t const &ls = edge.belowHorizon();
+              if (ls.updateHorizon)
+              {
+                horizonColumn.lo = p.y();
+              }          
+            }
+            else
+            {
+              assert(p.y() >= horizonColumn.lo && p.y() <= horizonColumn.hi);
+              // Point inside horizon.
+              edge::line_style_t const &ls = edge.insideHorizon();
+              if (ls.updateHorizon)
+              {
+                // Nothing to do.
+              }
+            }
+          }
         }
       }
     }
-  }
+    
+    template< class EdgeIt >
+    void drawEdges( EdgeIt first, EdgeIt beyond )
+    {
+      for (EdgeIt edgeIt = first; edgeIt != beyond; ++edgeIt)
+        drawEdge(*edgeIt);
+    }
+    
+  private:
+    bool isXInsideRenderFrame( double x ) const
+    {
+      return (x >= 0 && x < static_cast<int>(frame_.width()));
+    }
+    
+    bool isInsideRenderFrame( Vector2i const &p ) const
+    {
+      return 
+        (p.x() >= 0 && p.x() < static_cast<int>(frame_.width()) &&
+         p.y() >= 0 && p.y() < static_cast<int>(frame_.height()));
+    }
+    
+    void drawLinePoint( Vector2i const &p, color::color_t color, edge::line_form_style_t const &formStyle, size_t idx )
+    {
+      if (formStyle == edge::rs_solid)
+      {
+        // Solid line.
+        frame_.putPixel(p.x(), p.y(), color);
+      }
+      else if (formStyle == edge::rs_dash)
+      {
+        // Dashed line.
+        if (idx % 2 != 0)
+          frame_.putPixel(p.x(), p.y(), color);
+      }
+      else // (formStyle == edge::rs_none)
+      {
+        // Don't draw anything.
+        assert(formStyle == edge::rs_none);
+        // TODO: Or may be just ignore unknown type?
+      }
+    }
+    
+  private:
+    frame_adapter_t &frame_;
+    horizon_t horizon_;
+  };
 }
 
 #endif // HLA_H
