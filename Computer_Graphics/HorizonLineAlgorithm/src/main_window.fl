@@ -197,8 +197,8 @@ viewport_->redraw();}
           }
           Fl_Value_Input yViewVolume {
             label {Y size:}
-            callback {viewport_->setXViewVolume(o->value());
-viewport_->redraw();}
+            callback {viewport_->setYViewVolume(o->value());
+viewport_->redraw();} selected
             xywh {92 335 50 25} minimum 0.1 maximum 100 step 0.1 value 5 deactivate
             code0 {o->value(appconf::startYViewVolume);}
             code1 {if (!appconf::startKeepAspectRatio) o->activate(); else o->deactivate();}
@@ -260,7 +260,7 @@ viewport_->redraw();}
           Fl_Check_Button {} {
             label {draw axes}
             callback {viewport_->setDrawAxes(o->value());
-viewport_->redraw();} selected
+viewport_->redraw();}
             xywh {37 470 120 15} down_box DOWN_BOX
             code0 {o->value(appconf::startDrawAxes);}
           }
