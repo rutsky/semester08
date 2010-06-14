@@ -4,7 +4,7 @@ header_name {.h}
 code_name {.cpp}
 widget_class MainWindow {
   label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open
-  xywh {501 95 745 515} type Double align 0 resizable
+  xywh {301 57 745 515} type Double align 0 resizable
   code0 {\#include <FL/Fl_Window.H>}
   code1 {\#include <iostream>}
   code2 {\#include "appconf.h"}
@@ -198,7 +198,7 @@ viewport_->redraw();}
           Fl_Value_Input yViewVolume {
             label {Y size:}
             callback {viewport_->setYViewVolume(o->value());
-viewport_->redraw();} selected
+viewport_->redraw();}
             xywh {92 335 50 25} minimum 0.1 maximum 100 step 0.1 value 5 deactivate
             code0 {o->value(appconf::startYViewVolume);}
             code1 {if (!appconf::startKeepAspectRatio) o->activate(); else o->deactivate();}
@@ -241,28 +241,35 @@ viewport_->redraw();}
         }
         Fl_Group {} {
           label {Render parameters:} open
-          xywh {20 415 202 80} box ENGRAVED_FRAME align 5
+          xywh {20 415 202 90} box ENGRAVED_FRAME align 5
         } {
           Fl_Check_Button {} {
             label {draw X edges}
             callback {viewport_->setDrawXEdges(o->value());
 viewport_->redraw();}
-            xywh {37 431 120 15} down_box DOWN_BOX value 1
+            xywh {37 426 120 15} down_box DOWN_BOX value 1
             code0 {o->value(appconf::startDrawXEdges);}
           }
           Fl_Check_Button {} {
             label {draw Y edges}
             callback {viewport_->setDrawYEdges(o->value());
 viewport_->redraw();}
-            xywh {37 451 120 15} down_box DOWN_BOX value 1
+            xywh {37 446 120 15} down_box DOWN_BOX value 1
             code0 {o->value(appconf::startDrawXEdges);}
           }
           Fl_Check_Button {} {
             label {draw axes}
             callback {viewport_->setDrawAxes(o->value());
 viewport_->redraw();}
-            xywh {37 470 120 15} down_box DOWN_BOX
+            xywh {37 465 120 15} down_box DOWN_BOX value 1
             code0 {o->value(appconf::startDrawAxes);}
+          }
+          Fl_Check_Button {} {
+            label {use fake edges}
+            callback {viewport_->setDrawFakeEdges(o->value());
+viewport_->redraw();} selected
+            xywh {37 481 131 17} down_box DOWN_BOX value 1
+            code0 {o->value(appconf::startDrawFakeEdges);}
           }
         }
       }

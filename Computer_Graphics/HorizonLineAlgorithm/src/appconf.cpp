@@ -31,4 +31,5 @@ namespace appconf
   double const startXDomainCenter = 0.0, startYDomainCenter = 0.0;
   double const startXViewVolumeCenter = 0.0, startYViewVolumeCenter = 0.0;
   bool const startDrawAxes = true;
+  bool const startDrawFakeEdges = true;
 }

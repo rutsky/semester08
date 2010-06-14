@@ -87,7 +87,8 @@ namespace edge_gen
     void addGridEdges( GridType grid, 
                        color::color_t aboveHorizonColor,
                        color::color_t belowHorizonColor,
-                       bool hEdges = true, bool vEdges = true )
+                       bool hEdges = true, bool vEdges = true,
+                       bool fakeEdges = true )
     {
       if (hEdges)
       {
@@ -123,9 +124,10 @@ namespace edge_gen
           }
       }
       
-      if ((hEdges || vEdges) && !(hEdges && vEdges))
+      if (fakeEdges && (hEdges || vEdges) && !(hEdges && vEdges))
       {
-        color::color_t const alphaColor = color::make_rgb(0, 0, 0, 255);
+        color::color_t const alphaColor = color::makeRGB(0, 255, 255, 255);
+        //std::cout << "alphaColor:" << alphaColor << "\n";
         // Only horizontal edges or only vertical edges.
         // Add fake edges.
         if (hEdges)
@@ -137,9 +139,9 @@ namespace edge_gen
             edge_t leftEdge(leftEdgeP0, leftEdgeP1, 
               edge::line_style_t(alphaColor),
               edge::line_style_t(alphaColor), 
+              edge::line_style_t(color::color_t(), edge::rs_none), // inside
               edge::line_style_t(alphaColor),
-              edge::line_style_t(alphaColor),
-              false, true);
+              true, true);
             edges_.push_back(leftEdge);
             
             Vector3d const rightEdgeP0 = grid(grid.xSize() - 1, y);
@@ -147,9 +149,9 @@ namespace edge_gen
             edge_t rightEdge(rightEdgeP0, rightEdgeP1, 
               edge::line_style_t(alphaColor),
               edge::line_style_t(alphaColor), 
+              edge::line_style_t(color::color_t(), edge::rs_none), // inside
               edge::line_style_t(alphaColor),
-              edge::line_style_t(alphaColor),
-              false, true);
+              true, true);
             edges_.push_back(rightEdge);
           }
         }
@@ -162,9 +164,9 @@ namespace edge_gen
             edge_t bottomEdge(bottomEdgeP0, bottomEdgeP1, 
               edge::line_style_t(alphaColor),
               edge::line_style_t(alphaColor), 
+              edge::line_style_t(color::color_t(), edge::rs_none), // inside
               edge::line_style_t(alphaColor),
-              edge::line_style_t(alphaColor),
-              false, true);
+              true, true);
             edges_.push_back(bottomEdge);
             
             Vector3d const topEdgeP0 = grid(x, grid.ySize() - 1);
@@ -172,9 +174,9 @@ namespace edge_gen
             edge_t topEdge(topEdgeP0, topEdgeP1, 
               edge::line_style_t(alphaColor),
               edge::line_style_t(alphaColor), 
+              edge::line_style_t(color::color_t(), edge::rs_none), // inside
               edge::line_style_t(alphaColor),
-              edge::line_style_t(alphaColor),
-              false, true);
+              true, true);
             edges_.push_back(topEdge);
           }
         }

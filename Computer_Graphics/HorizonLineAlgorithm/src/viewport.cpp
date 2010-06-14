@@ -197,7 +197,8 @@ namespace viewport
           funcGrid,
           color::black(),
           color::crimsonGlory(), 
-          drawXEdges_, drawYEdges_);
+          drawXEdges_, drawYEdges_,
+          drawFakeEdges_);
         
         edgesGen.orientBy(sortDir);
         edgesGen.sort(sortDir);

@@ -99,6 +99,10 @@ namespace edge
       , insideHorizon_(insideHorizon)
       , belowHorizon_(belowHorizon)
     {
+      /*
+      if (color::getA(insideHorizon.color))
+        std::cout << "!!!\n";
+      */
     }
     
     virtual Vector3d p0() const { return p0_; };

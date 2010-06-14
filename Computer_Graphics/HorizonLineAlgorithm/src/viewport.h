@@ -142,6 +142,7 @@ namespace viewport
       , xViewVolumeCenter_(appconf::startXViewVolumeCenter)
       , yViewVolumeCenter_(appconf::startYViewVolumeCenter)
       , drawAxes_(appconf::startDrawAxes)
+      , drawFakeEdges_(appconf::startDrawFakeEdges)
     {
       frame_.resize(w, h);
     }
@@ -269,6 +270,12 @@ namespace viewport
       drawAxes_ = draw;
     }
     
+    void setDrawFakeEdges( bool draw )
+    {
+      std::cout << "setDrawFakeEdges(" << draw << ")\n"; // debug
+      drawFakeEdges_ = draw;
+    }
+    
     void resize( int x, int y, int w, int h );
 
     void draw();
@@ -285,6 +292,7 @@ namespace viewport
     double xDomainCenter_, yDomainCenter_;
     double xViewVolumeCenter_, yViewVolumeCenter_;
     bool drawAxes_;
+    bool drawFakeEdges_;
   };
 }
   

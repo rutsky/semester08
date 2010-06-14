@@ -28,7 +28,7 @@ namespace color
   typedef uint32_t color_t;
   
   inline
-  color_t make_rgb( int r, int g, int b, int a = 0 ) // TODO: Rename to "makeRGB".
+  color_t makeRGB( int r, int g, int b, int a = 0 )
   {
 #if   (BOOST_BYTE_ORDER == 4321)
     return
@@ -68,24 +68,64 @@ namespace color
   inline int getA( color_t c ) { return getComponent<3>(c); }
   
   inline
-  color_t make_rgb( int v )
+  color_t makeRGB( int v )
   {
-    return make_rgb(v, v, v);
+    return makeRGB(v, v, v);
   }
   
-  inline color_t white         () { return make_rgb(255); }
-  inline color_t black         () { return make_rgb(  0); }
-  inline color_t red           () { return make_rgb(255,   0,   0); }
-  inline color_t green         () { return make_rgb(  0, 255,   0); }
-  inline color_t blue          () { return make_rgb(  0,   0, 255); }
-  inline color_t grey          () { return make_rgb(127, 127, 127); }
-  inline color_t violet        () { return make_rgb(128,   0, 255); }
-  inline color_t orange        () { return make_rgb(255, 128,   0); }
-  inline color_t darkBrown     () { return make_rgb(101,  67,  33); }
-  inline color_t darkOliveGreen() { return make_rgb( 85, 107,  47); }
-  inline color_t darkSlateGrey () { return make_rgb( 47,  79,  79); }
-  inline color_t bulgarianRose () { return make_rgb( 72,   6,   7); }
-  inline color_t crimsonGlory  () { return make_rgb(190,   0,  50); }
+  class Converter
+  {
+  public:
+    Converter()
+      : r()
+      , g()
+      , b()
+      , a()
+    {
+    }
+    
+    Converter( color_t c )
+    {
+      load(c);
+    }
+    
+    Converter( int newR, int newG, int newB, int newA )
+      : r(newR)
+      , g(newG)
+      , b(newB)
+      , a(newA)
+    {
+    }
+    
+    operator color_t () const
+    {
+      return makeRGB(r, g, b, a);
+    }
+    
+    void load( color_t c )
+    {
+      r = getR(c);
+      g = getG(c);
+      b = getB(c);
+      a = getA(c);
+    }
+    
+    int r, g, b, a;
+  };
+  
+  inline color_t white         () { return makeRGB(255); }
+  inline color_t black         () { return makeRGB(  0); }
+  inline color_t red           () { return makeRGB(255,   0,   0); }
+  inline color_t green         () { return makeRGB(  0, 255,   0); }
+  inline color_t blue          () { return makeRGB(  0,   0, 255); }
+  inline color_t grey          () { return makeRGB(127, 127, 127); }
+  inline color_t violet        () { return makeRGB(128,   0, 255); }
+  inline color_t orange        () { return makeRGB(255, 128,   0); }
+  inline color_t darkBrown     () { return makeRGB(101,  67,  33); }
+  inline color_t darkOliveGreen() { return makeRGB( 85, 107,  47); }
+  inline color_t darkSlateGrey () { return makeRGB( 47,  79,  79); }
+  inline color_t bulgarianRose () { return makeRGB( 72,   6,   7); }
+  inline color_t crimsonGlory  () { return makeRGB(190,   0,  50); }
 }
   
 #endif // COLOR_H

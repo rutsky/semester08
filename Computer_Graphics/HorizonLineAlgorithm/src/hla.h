@@ -122,9 +122,10 @@ namespace hla
             {
               assert(p.y() >= horizonColumn.lo && p.y() <= horizonColumn.hi);
               // Point inside horizon.
+              //std::cout << "end color:" << frame_.getPixel(p.x(), p.y()) << "\n";
               if (color::getA(frame_.getPixel(p.x(), p.y())))
               {
-                std::cout << "a: " << color::getA(frame_.getPixel(p.x(), p.y())) << "\n";
+                //std::cout << "a: " << color::getA(frame_.getPixel(p.x(), p.y())) << "\n";
                 // Found alpha label in "busy" horizon column, overwrite it.
                 if (p.y() == horizonColumn.hi)
                 {
@@ -132,13 +133,13 @@ namespace hla
                   edge::line_style_t const &ls = edge.aboveHorizon();
                   drawLinePoint(p, ls.color, ls.style, idx);
                 }
-                else
+                else if (p.y() == horizonColumn.lo)
                 {
                   // Near low or any else horizon border.
                   edge::line_style_t const &ls = edge.belowHorizon();
                   drawLinePoint(p, ls.color, ls.style, idx);
                 }
-                assert(!color::getA(frame_.getPixel(p.x(), p.y())));
+                //assert(!color::getA(frame_.getPixel(p.x(), p.y())));
               }
               else
               {
@@ -251,18 +252,27 @@ namespace hla
          p.y() >= 0 && p.y() < static_cast<int>(frame_.height()));
     }
     
-    void drawLinePoint( Vector2i const &p, color::color_t color, edge::line_form_style_t const &formStyle, size_t idx )
+    void drawLinePoint( Vector2i const &p, color::color_t c, edge::line_form_style_t const &formStyle, size_t idx )
     {
+      color::Converter oldColorConv(frame_.getPixel(p.x(), p.y()));
+      color::Converter colorConv(c);
+      if (colorConv.a)
+      {
+        oldColorConv.a = colorConv.a;
+        c = oldColorConv;
+      }
+      
+      //std::cout << "found alpha: (" << p.x() << ", " << p.y() << ")\n";*/
       if (formStyle == edge::rs_solid)
       {
         // Solid line.
-        frame_.putPixel(p.x(), p.y(), color);
+        frame_.putPixel(p.x(), p.y(), c);
       }
       else if (formStyle == edge::rs_dash)
       {
         // Dashed line.
         if (idx % 2 != 0)
-          frame_.putPixel(p.x(), p.y(), color);
+          frame_.putPixel(p.x(), p.y(), c);
       }
       else // (formStyle == edge::rs_none)
       {
