@@ -43,7 +43,7 @@ namespace edge
   struct line_style_t
   {
     line_style_t()
-      : color(color::gray())
+      : color(color::grey())
       , style(rs_solid)
       , updateHorizon(true)
     {

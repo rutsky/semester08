@@ -415,8 +415,8 @@ namespace viewport
           // Add all grid edges.
           edgesGen.addGridEdges(
             funcGrid,
-            color::make_rgb(0, 100, 0), 
-            color::make_rgb(22, 44, 165),
+            color::black(),
+            color::bulgarianRose(), 
             drawXEdges_, drawYEdges_);
           
           edgesGen.sort(sortDir);
@@ -428,32 +428,11 @@ namespace viewport
             ++edgeIt)
           edgeIt->transform(totalTf);
         
-        // debug
-        /*
-        Vector3d const v(2.5, 0.0, 0.0);
-        Vector3d const vTr[] = {
-          yawTf * v,
-          yawTf * pitchTf * v,
-          yawTf * pitchTf * replaceAxesTf * v,
-          yawTf * pitchTf * replaceAxesTf * scaleTf * v,
-          yawTf * pitchTf * replaceAxesTf * translateTf * scaleTf * v
-          };
-        for (size_t i = 0; i < util::array_size(vTr); ++i) 
-        {
-          Vector3d const v = vTr[i];
-          std::cout << "tr * v = (" << v.x() << ", " << v.y() << ", " << v.z() << ")\n"; 
-        }
-        */
-        // eod
-        
         // Draw to frame.
         {
           hla::FrameRenderer<render_frame_t> hlaFrameRenderer(frame_);
           
           hlaFrameRenderer.drawEdges(edgesGen.begin(), edgesGen.end());
-
-          //color::make_rgb(0, 100, 0), 
-          //color::make_rgb(22, 44, 165));
         }
         
         // Flush frame to window.

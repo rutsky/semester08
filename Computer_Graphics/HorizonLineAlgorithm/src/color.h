@@ -55,12 +55,18 @@ namespace color
   }
   
   
-  inline color_t white() { return make_rgb(255); }
-  inline color_t black() { return make_rgb(0); }
-  inline color_t red  () { return make_rgb(255,   0,   0); }
-  inline color_t green() { return make_rgb(  0, 255,   0); }
-  inline color_t blue () { return make_rgb(  0,   0, 255); }
-  inline color_t gray () { return make_rgb(127, 127, 127); }
+  inline color_t white         () { return make_rgb(255); }
+  inline color_t black         () { return make_rgb(  0); }
+  inline color_t red           () { return make_rgb(255,   0,   0); }
+  inline color_t green         () { return make_rgb(  0, 255,   0); }
+  inline color_t blue          () { return make_rgb(  0,   0, 255); }
+  inline color_t grey          () { return make_rgb(127, 127, 127); }
+  inline color_t violet        () { return make_rgb(128,   0, 255); }
+  inline color_t orange        () { return make_rgb(255, 128,   0); }
+  inline color_t darkBrown     () { return make_rgb(101,  67,  33); }
+  inline color_t darkOliveGreen() { return make_rgb( 85, 107,  47); }
+  inline color_t darkSlateGrey () { return make_rgb( 47,  79,  79); }
+  inline color_t bulgarianRose () { return make_rgb( 72,   6,   7); }
 }
   
 #endif // COLOR_H
