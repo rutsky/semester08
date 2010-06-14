@@ -67,6 +67,7 @@ namespace color
   inline color_t darkOliveGreen() { return make_rgb( 85, 107,  47); }
   inline color_t darkSlateGrey () { return make_rgb( 47,  79,  79); }
   inline color_t bulgarianRose () { return make_rgb( 72,   6,   7); }
+  inline color_t crimsonGlory  () { return make_rgb(190,   0,  50); }
 }
   
 #endif // COLOR_H

@@ -193,7 +193,7 @@ namespace viewport
         edgesGen.addGridEdges(
           funcGrid,
           color::black(),
-          color::bulgarianRose(), 
+          color::crimsonGlory(), 
           drawXEdges_, drawYEdges_);
         
         edgesGen.sort(sortDir);
