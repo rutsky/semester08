@@ -87,6 +87,7 @@ namespace edge_gen
     void addGridEdges( GridType grid, 
                        color::color_t aboveHorizonColor,
                        color::color_t belowHorizonColor,
+                       color::color_t initHorizonColor,
                        bool hEdges = true, bool vEdges = true,
                        bool fakeEdges = true )
     {
@@ -99,10 +100,10 @@ namespace edge_gen
             Vector3d const p0 = grid(x, y);
             Vector3d const p1 = grid(x + 1, y);
             edge_t edge(p0, p1, 
-              edge::line_style_t(aboveHorizonColor),
-              edge::line_style_t(aboveHorizonColor), 
-              edge::line_style_t(color::color_t(), edge::rs_none),
-              edge::line_style_t(belowHorizonColor));
+              edge::line_style_t(initHorizonColor),                // init
+              edge::line_style_t(aboveHorizonColor),               // above 
+              edge::line_style_t(color::color_t(), edge::rs_none), // inside
+              edge::line_style_t(belowHorizonColor));              // below
             edges_.push_back(edge);
           }
       }
@@ -116,10 +117,10 @@ namespace edge_gen
             Vector3d const p0 = grid(x, y);
             Vector3d const p1 = grid(x, y + 1);
             edge_t edge(p0, p1, 
-              edge::line_style_t(aboveHorizonColor),
-              edge::line_style_t(aboveHorizonColor), 
-              edge::line_style_t(color::color_t(), edge::rs_none),
-              edge::line_style_t(belowHorizonColor));
+              edge::line_style_t(initHorizonColor),                // init 
+              edge::line_style_t(aboveHorizonColor),               // above
+              edge::line_style_t(color::color_t(), edge::rs_none), // inside
+              edge::line_style_t(belowHorizonColor));              // below
             edges_.push_back(edge);
           }
       }

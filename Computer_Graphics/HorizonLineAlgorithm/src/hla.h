@@ -94,34 +94,49 @@ namespace hla
       if (edge.isDraw())
       {
         size_t idx = 0;
+        Vector2i lastInitialized(-1, -1);
         for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt, ++idx)
         {
           Vector2i const p = *pIt;
           if (isInsideRenderFrame(p))
           {
-            horizon_column_t const &horizonColumn = horizon_[p.x()];
+            horizon_column_t horizonColumn = horizon_[p.x()];
             if (!horizonColumn.initialized)
             {
-              // Uninitialized column.
-              edge::line_style_t const &ls = edge.initHorizon();
-              drawLinePoint(p, ls.color, ls.style, idx);
+              if (lastInitialized.x() != p.x())
+              {
+                // Uninitialized column.
+                lastInitialized = p; // Virtually initialize it.
+                
+                edge::line_style_t const &ls = edge.initHorizon();
+                drawLinePoint(p, ls.color, ls.style, idx);
+                
+                continue;
+              }
+              else
+              {
+                // Virtually initialized column.
+                horizonColumn.lo = lastInitialized.y();
+                horizonColumn.hi = lastInitialized.y();
+              }
             }
-            else if (p.y() > horizonColumn.hi)
+            
+            if (p.y() > horizonColumn.hi)
             {
-              // Point above horizon.
+              // Point above horizon (or virtual horizon).
               edge::line_style_t const &ls = edge.aboveHorizon();
               drawLinePoint(p, ls.color, ls.style, idx);
             }
             else if (p.y() < horizonColumn.lo)
             {
-              // Point below horizon.
+              // Point below horizon (or virtual horizon).
               edge::line_style_t const &ls = edge.belowHorizon();
               drawLinePoint(p, ls.color, ls.style, idx);
             }
             else
             {
               assert(p.y() >= horizonColumn.lo && p.y() <= horizonColumn.hi);
-              // Point inside horizon.
+              // Point inside horizon (or at virtual horizon, which should be impossible).
               //std::cout << "end color:" << frame_.getPixel(p.x(), p.y()) << "\n";
               if (color::getA(frame_.getPixel(p.x(), p.y())))
               {
@@ -135,7 +150,7 @@ namespace hla
                 }
                 else if (p.y() == horizonColumn.lo)
                 {
-                  // Near low or any else horizon border.
+                  // Near low horizon border.
                   edge::line_style_t const &ls = edge.belowHorizon();
                   drawLinePoint(p, ls.color, ls.style, idx);
                 }

@@ -196,7 +196,8 @@ namespace viewport
         edgesGen.addGridEdges(
           funcGrid,
           color::black(),
-          color::crimsonGlory(), 
+          color::crimsonGlory(),
+          color::coquelicot(),
           drawXEdges_, drawYEdges_,
           drawFakeEdges_);
         

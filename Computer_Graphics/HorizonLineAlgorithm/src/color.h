@@ -126,6 +126,7 @@ namespace color
   inline color_t darkSlateGrey () { return makeRGB( 47,  79,  79); }
   inline color_t bulgarianRose () { return makeRGB( 72,   6,   7); }
   inline color_t crimsonGlory  () { return makeRGB(190,   0,  50); }
+  inline color_t coquelicot    () { return makeRGB(255,  56,   0); }
 }
   
 #endif // COLOR_H
