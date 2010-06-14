@@ -114,6 +114,12 @@ namespace edge
     line_style_t const &insideHorizon() const { return insideHorizon_; }
     line_style_t const &belowHorizon () const { return belowHorizon_;  }
     
+    void transform( Eigen::Transform3d const &tf )
+    {
+      p0_ = tf * p0_;
+      p1_ = tf * p1_;
+    }
+    
   protected:
     Vector3d p0_, p1_;
     bool isDraw_;

@@ -327,11 +327,10 @@ namespace viewport
         Eigen::Transform3d const totalTf = 
           translateTf * scaleTf * replaceAxesTf * pitchTf * yawTf * viewVolumeTranslateTf;
         
-        // Build transformed grid.
-        grid::TransformedFuncValuesGrid transformedFuncGrid(funcGrid, totalTf);
-        
         // Sort direction.
-        Vector3d sortDir(0.0, 0.0, 1.0);
+        Vector3d const sortDir(
+          Eigen::AngleAxisd(util::deg2rad(yaw_), Vector3d::UnitZ()) * 
+          Vector3d(0.0, 1.0, 0.0));
         
         // Build and sort drawing segments list.
         typedef edge_gen::EdgesGenerator<edge::edge_t> edges_gen_t;
@@ -340,8 +339,8 @@ namespace viewport
           // Add axes.
           {
             // OX.
-            Vector3d const pStart(totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
-            Vector3d const pEnd(totalTf * Vector3d(xViewVolumeCenter_ + xViewVolume_ / 2.0, yViewVolumeCenter_, 0.0));
+            Vector3d const pStart(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
+            Vector3d const pEnd(Vector3d(xViewVolumeCenter_ + xViewVolume_ / 2.0, yViewVolumeCenter_, 0.0));
             size_t const nFractions = std::max(xCells_ * 2, yCells_ * 2);
             Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
             Vector3d p(pStart);
@@ -365,8 +364,8 @@ namespace viewport
           
           {
             // OY.
-            Vector3d const pStart(totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
-            Vector3d const pEnd(totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_ + yViewVolume_ / 2.0, 0.0));
+            Vector3d const pStart(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
+            Vector3d const pEnd(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_ + yViewVolume_ / 2.0, 0.0));
             size_t const nFractions = std::max(xCells_ * 2, yCells_ * 2);
             Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
             Vector3d p(pStart);
@@ -390,8 +389,8 @@ namespace viewport
           
           {
             // OZ.
-            Vector3d const pStart(totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
-            Vector3d const pEnd(totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, (xViewVolume_ + yViewVolume_) / 4.0));
+            Vector3d const pStart(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
+            Vector3d const pEnd(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, (xViewVolume_ + yViewVolume_) / 4.0));
             size_t const nFractions = std::max(xCells_ * 2, yCells_ * 2);
             Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
             Vector3d p(pStart);
@@ -415,13 +414,19 @@ namespace viewport
          
           // Add all grid edges.
           edgesGen.addGridEdges(
-            transformedFuncGrid,
+            funcGrid,
             color::make_rgb(0, 100, 0), 
             color::make_rgb(22, 44, 165),
             drawXEdges_, drawYEdges_);
           
           edgesGen.sort(sortDir);
         }
+        
+        // Transform all edges.
+        for (edges_gen_t::iterator edgeIt = edgesGen.begin(); 
+            edgeIt != edgesGen.end();
+            ++edgeIt)
+          edgeIt->transform(totalTf);
         
         // debug
         /*

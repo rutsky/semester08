@@ -27,7 +27,7 @@ namespace appconf
   double const startXViewVolume = 5.0, startYViewVolume = 5.0;
   bool const startKeepAspectRatio = true;
   bool const startDrawXEdges = true, startDrawYEdges = true;
-  double const startYaw = 30.0, startPitch = -45.0;
+  double const startYaw = 30.0, startPitch = 45.0;
   double const startXDomainCenter = 0.0, startYDomainCenter = 0.0;
   double const startXViewVolumeCenter = 0.0, startYViewVolumeCenter = 0.0;
 }

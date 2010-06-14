@@ -47,6 +47,7 @@ namespace edge_gen
     
   public:
     typedef typename edges_t::const_iterator const_iterator;
+    typedef typename edges_t::iterator iterator; // TODO
     
   public:
     EdgesGenerator()
@@ -171,6 +172,9 @@ namespace edge_gen
     
     const_iterator begin() const { return edges_.begin(); }
     const_iterator end  () const { return edges_.end  (); }
+    
+    iterator begin() { return edges_.begin(); }
+    iterator end  () { return edges_.end  (); }
     
   private:
     class RenderingEgdeLess
