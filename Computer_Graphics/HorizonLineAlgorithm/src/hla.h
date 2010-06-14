@@ -135,7 +135,7 @@ namespace hla
         {
           Vector2i const p = *pIt;
           
-          bresenham::PointsIterator pNextIt = pIt;
+          bresenham::PointsIterator pNextIt = pIt; // TODO: Use single iterator.
           ++pNextIt;
           
           // Don't update horizon for last point. This fix bugs like this:
