@@ -35,6 +35,26 @@ namespace edge_gen
 {
   USING_PART_OF_NAMESPACE_EIGEN
   
+  class EdgeLess
+  {
+  public:
+    EdgeLess( Vector3d const &dir )
+      : dir_(dir)
+    {
+    }
+  
+    template< class EdgeType >
+    bool operator () ( EdgeType const &a, EdgeType const &b )
+    {
+      double const aMin = std::min(dir_.dot(a.p0()), dir_.dot(a.p1()));
+      double const bMin = std::min(dir_.dot(b.p0()), dir_.dot(b.p1()));
+      return aMin < bMin;
+    }
+    
+  private:
+    Vector3d dir_;
+  };
+
   // TODO: Not standart iterator.
   template< class EdgeType > 
   class EdgesGenerator
@@ -105,6 +125,7 @@ namespace edge_gen
       
       if ((hEdges || vEdges) && !(hEdges && vEdges))
       {
+        color::color_t const alphaColor = color::make_rgb(0, 0, 0, 255);
         // Only horizontal edges or only vertical edges.
         // Add fake edges.
         if (hEdges)
@@ -114,20 +135,20 @@ namespace edge_gen
             Vector3d const leftEdgeP0 = grid(0, y);
             Vector3d const leftEdgeP1 = grid(0, y + 1);
             edge_t leftEdge(leftEdgeP0, leftEdgeP1, 
-              edge::line_style_t(color::color_t()),
-              edge::line_style_t(color::color_t()), 
-              edge::line_style_t(color::color_t()),
-              edge::line_style_t(color::color_t()),
+              edge::line_style_t(alphaColor),
+              edge::line_style_t(alphaColor), 
+              edge::line_style_t(alphaColor),
+              edge::line_style_t(alphaColor),
               false, true);
             edges_.push_back(leftEdge);
             
             Vector3d const rightEdgeP0 = grid(grid.xSize() - 1, y);
             Vector3d const rightEdgeP1 = grid(grid.xSize() - 1, y + 1);
             edge_t rightEdge(rightEdgeP0, rightEdgeP1, 
-              edge::line_style_t(color::color_t()),
-              edge::line_style_t(color::color_t()), 
-              edge::line_style_t(color::color_t()),
-              edge::line_style_t(color::color_t()),
+              edge::line_style_t(alphaColor),
+              edge::line_style_t(alphaColor), 
+              edge::line_style_t(alphaColor),
+              edge::line_style_t(alphaColor),
               false, true);
             edges_.push_back(rightEdge);
           }
@@ -139,20 +160,20 @@ namespace edge_gen
             Vector3d const bottomEdgeP0 = grid(x, 0);
             Vector3d const bottomEdgeP1 = grid(x + 1, 0);
             edge_t bottomEdge(bottomEdgeP0, bottomEdgeP1, 
-              edge::line_style_t(color::color_t()),
-              edge::line_style_t(color::color_t()), 
-              edge::line_style_t(color::color_t()),
-              edge::line_style_t(color::color_t()),
+              edge::line_style_t(alphaColor),
+              edge::line_style_t(alphaColor), 
+              edge::line_style_t(alphaColor),
+              edge::line_style_t(alphaColor),
               false, true);
             edges_.push_back(bottomEdge);
             
             Vector3d const topEdgeP0 = grid(x, grid.ySize() - 1);
             Vector3d const topEdgeP1 = grid(x + 1, grid.ySize() - 1);
             edge_t topEdge(topEdgeP0, topEdgeP1, 
-              edge::line_style_t(color::color_t()),
-              edge::line_style_t(color::color_t()), 
-              edge::line_style_t(color::color_t()),
-              edge::line_style_t(color::color_t()),
+              edge::line_style_t(alphaColor),
+              edge::line_style_t(alphaColor), 
+              edge::line_style_t(alphaColor),
+              edge::line_style_t(alphaColor),
               false, true);
             edges_.push_back(topEdge);
           }
@@ -167,7 +188,18 @@ namespace edge_gen
     
     void sort( Vector3d const &sortDir )
     {
-      std::stable_sort(edges_.begin(), edges_.end(), RenderingEgdeLess(sortDir));
+      std::stable_sort(edges_.begin(), edges_.end(), EdgeLess(sortDir));
+    }
+    
+    void orientBy( Vector3d const &sortDir )
+    {
+      EdgeLess lessComparator(sortDir);
+      
+      for (typename edges_t::iterator edgeIt = edges_.begin(); edgeIt != edges_.end(); ++edgeIt)
+      {
+        if (sortDir.dot(edgeIt->p0()) > sortDir.dot(edgeIt->p1()))
+          edgeIt->swapEnds();
+      }
     }
     
     const_iterator begin() const { return edges_.begin(); }
@@ -175,27 +207,7 @@ namespace edge_gen
     
     iterator begin() { return edges_.begin(); }
     iterator end  () { return edges_.end  (); }
-    
-  private:
-    class RenderingEgdeLess
-    {
-    public:
-      RenderingEgdeLess( Vector3d const &dir )
-        : dir_(dir)
-      {
-      }
-      
-      bool operator () ( edge_t const &a, edge_t const &b )
-      {
-        double const aMin = std::min(dir_.dot(a.p0()), dir_.dot(a.p1()));
-        double const bMin = std::min(dir_.dot(b.p0()), dir_.dot(b.p1()));
-        return aMin < bMin;
-      }
-      
-    private:
-      Vector3d dir_;
-    };
-    
+
   private:
     edges_t edges_;
   };

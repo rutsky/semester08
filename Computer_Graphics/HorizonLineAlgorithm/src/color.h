@@ -28,32 +28,50 @@ namespace color
   typedef uint32_t color_t;
   
   inline
-  color_t make_rgb( int r, int g, int b )
+  color_t make_rgb( int r, int g, int b, int a = 0 ) // TODO: Rename to "makeRGB".
   {
-    color_t result;
 #if   (BOOST_BYTE_ORDER == 4321)
-    result =
-      (static_cast<uint8_t>(r) << 24) |
-      (static_cast<uint8_t>(g) << 16) |
-      (static_cast<uint8_t>(b) << 8);
+    return
+      (static_cast<uint8_t>(r & 0xFF) << 24) |
+      (static_cast<uint8_t>(g & 0xFF) << 16) |
+      (static_cast<uint8_t>(b & 0xFF) <<  8) |
+      (static_cast<uint8_t>(a & 0xFF) <<  0);
 #elif (BOOST_BYTE_ORDER == 1234)
-    result =
-      (static_cast<uint8_t>(r) << 0) |
-      (static_cast<uint8_t>(g) << 8) |
-      (static_cast<uint8_t>(b) << 16);
+    return
+      (static_cast<uint8_t>(r & 0xFF) <<  0) |
+      (static_cast<uint8_t>(g & 0xFF) <<  8) |
+      (static_cast<uint8_t>(b & 0xFF) << 16) |
+      (static_cast<uint8_t>(a & 0xFF) << 24);
 #else
 # error Unsupported byte order in color.h
 #endif
-
-    return result;
   }
+  
+  template< int n >
+  inline 
+  int getComponent( color_t c )
+  {
+    //STATIC_ASSERT(n >= 0 && n <= 3); // TODO: Compile errors.
+    
+#if   (BOOST_BYTE_ORDER == 4321)
+    return (c >> ((3 - n) * 8)) & 0xFF;
+#elif (BOOST_BYTE_ORDER == 1234)
+    return (c >> (n * 8)) & 0xFF;
+#else
+# error Unsupported byte order in color.h
+#endif
+  }
+  
+  inline int getR( color_t c ) { return getComponent<0>(c); }
+  inline int getG( color_t c ) { return getComponent<1>(c); }
+  inline int getB( color_t c ) { return getComponent<2>(c); }
+  inline int getA( color_t c ) { return getComponent<3>(c); }
   
   inline
   color_t make_rgb( int v )
   {
     return make_rgb(v, v, v);
   }
-  
   
   inline color_t white         () { return make_rgb(255); }
   inline color_t black         () { return make_rgb(  0); }

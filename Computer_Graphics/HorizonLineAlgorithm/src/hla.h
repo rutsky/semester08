@@ -44,7 +44,8 @@ namespace hla
   // FrameAdapterType must provide such functions as:
   //   width(), 
   //   height(), 
-  //   putPixel(x, y, color).
+  //   putPixel(x, y, color),
+  //   getPixel(x, y).
   template< class FrameAdapterType >
   class FrameRenderer
   {
@@ -121,8 +122,30 @@ namespace hla
             {
               assert(p.y() >= horizonColumn.lo && p.y() <= horizonColumn.hi);
               // Point inside horizon.
-              edge::line_style_t const &ls = edge.insideHorizon();
-              drawLinePoint(p, ls.color, ls.style, idx);
+              if (color::getA(frame_.getPixel(p.x(), p.y())))
+              {
+                std::cout << "a: " << color::getA(frame_.getPixel(p.x(), p.y())) << "\n";
+                // Found alpha label in "busy" horizon column, overwrite it.
+                if (p.y() == horizonColumn.hi)
+                {
+                  // Near high horizon border.
+                  edge::line_style_t const &ls = edge.aboveHorizon();
+                  drawLinePoint(p, ls.color, ls.style, idx);
+                }
+                else
+                {
+                  // Near low or any else horizon border.
+                  edge::line_style_t const &ls = edge.belowHorizon();
+                  drawLinePoint(p, ls.color, ls.style, idx);
+                }
+                assert(!color::getA(frame_.getPixel(p.x(), p.y())));
+              }
+              else
+              {
+                // Draw as point inside horizon.
+                edge::line_style_t const &ls = edge.insideHorizon();
+                drawLinePoint(p, ls.color, ls.style, idx);
+              }
             }
           }
         }

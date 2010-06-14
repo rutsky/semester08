@@ -41,8 +41,8 @@ namespace viewport
     if (frame_.width() >= 1 && frame_.height() >= 1)
     {
       // Prepare frame to drawing.
-      frame_.clear(255);
-      //frame_.fill(details::colors::black());
+      //frame_.clear(255);
+      frame_.fill(color::white());
       
       //frame_.putPixel(0, 1, FL_WHITE);
       
@@ -199,6 +199,7 @@ namespace viewport
           color::crimsonGlory(), 
           drawXEdges_, drawYEdges_);
         
+        edgesGen.orientBy(sortDir);
         edgesGen.sort(sortDir);
       }
       

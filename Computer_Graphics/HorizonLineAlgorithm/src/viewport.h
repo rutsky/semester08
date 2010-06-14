@@ -79,6 +79,11 @@ namespace viewport
         (*this)(x, y) = color;
       }
       
+      color_t getPixel( size_t x, size_t y )
+      {
+        return (*this)(x, y);
+      }
+      
       size_t pixelSize() const { return sizeof(color_t); }
       size_t lineSize() const { return pixelSize() * width(); }
       uchar const * buffer() const { return (uchar const *)&buffer_[0]; };

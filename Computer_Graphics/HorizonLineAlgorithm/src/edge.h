@@ -120,6 +120,11 @@ namespace edge
       p1_ = tf * p1_;
     }
     
+    void swapEnds()
+    {
+      std::swap(p0_, p1_);
+    }
+    
   protected:
     Vector3d p0_, p1_;
     bool isDraw_;
