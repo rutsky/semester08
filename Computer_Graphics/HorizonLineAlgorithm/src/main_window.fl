@@ -3,9 +3,9 @@ version 1.0109
 header_name {.h} 
 code_name {.cpp}
 widget_class {\#include <FL/Fl_Window.H>} MainWindow {
-  label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open selected
+  label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open
   xywh {501 95 745 515} type Double align 0 resizable
-  code0 {\#include "precompiled.hpp"}
+  code0 {\#include <FL/Fl_Window.H>}
   code1 {\#include <iostream>}
   code2 {\#include "appconf.h"}
   code3 {\#include <FL/Fl_Window.H>}
@@ -27,7 +27,7 @@ viewport_->redraw();}
       Fl_Value_Slider {} {
         label pitch
         callback {viewport_->setPitch(o->value());
-viewport_->redraw();}
+viewport_->redraw();} selected
         xywh {695 65 39 390} type {Vert Knob} align 1 minimum 90 maximum -90 step 0.1 value 45
         code0 {o->value(appconf::startPitch);}
       }
