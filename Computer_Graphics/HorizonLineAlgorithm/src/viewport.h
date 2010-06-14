@@ -339,15 +339,28 @@ namespace viewport
         {         
           // Add axes.
           // TODO: Subdivide axes.
-          edge::edge_t axisX(
-            totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0),
-            totalTf * Vector3d(xViewVolumeCenter_ + xViewVolume_ / 2.0, 0.0, 0.0), 
-            edge::line_style_t(color::red(), edge::rs_solid), // init
-            edge::line_style_t(color::red(), edge::rs_solid), // above
-            edge::line_style_t(color::red(), edge::rs_dash),  // inside
-            edge::line_style_t(color::red(), edge::rs_solid), // below
-            true, false);
-          edgesGen.addEdge(axisX);
+          {
+            Vector3d const pStart(totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
+            Vector3d const pEnd(totalTf * Vector3d(xViewVolumeCenter_ + xViewVolume_ / 2.0, 0.0, 0.0));
+            size_t const nFractions = xCells_ * 2;
+            Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
+            Vector3d p(pStart);
+            for (size_t i = 0; i < nFractions; ++i, p += step)
+            {
+              Vector3d const p0(p);
+              Vector3d const p1(p + step);
+              
+              edge::edge_t axisX(
+                p0,
+                p1,
+                edge::line_style_t(color::red(), edge::rs_solid), // init
+                edge::line_style_t(color::red(), edge::rs_solid), // above
+                edge::line_style_t(color::red(), edge::rs_dash),  // inside
+                edge::line_style_t(color::red(), edge::rs_solid), // below
+                true, false);
+              edgesGen.addEdge(axisX);
+            }
+          }
          
           // Add all grid edges.
           edgesGen.addGridEdges(
