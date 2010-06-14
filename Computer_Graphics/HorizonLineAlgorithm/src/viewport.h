@@ -308,8 +308,8 @@ namespace viewport
         // Move CS center to view volume center.
         Eigen::Transform3d const viewVolumeTranslateTf(
           Eigen::Translation3d(
-            static_cast<double>(xViewVolumeCenter_) / 2.0,
-            static_cast<double>(yViewVolumeCenter_) / 2.0,
+            static_cast<double>(-xViewVolumeCenter_),
+            static_cast<double>(-yViewVolumeCenter_),
             0.0));
         // Scale CS so that X view will contain exactly X domain (similar with Y).
         Eigen::Transform3d const scaleTf(
@@ -341,7 +341,7 @@ namespace viewport
           {
             // OX.
             Vector3d const pStart(totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
-            Vector3d const pEnd(totalTf * Vector3d(xViewVolumeCenter_ + xViewVolume_ / 2.0, 0.0, 0.0));
+            Vector3d const pEnd(totalTf * Vector3d(xViewVolumeCenter_ + xViewVolume_ / 2.0, yViewVolumeCenter_, 0.0));
             size_t const nFractions = std::max(xCells_ * 2, yCells_ * 2);
             Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
             Vector3d p(pStart);
@@ -366,7 +366,7 @@ namespace viewport
           {
             // OY.
             Vector3d const pStart(totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
-            Vector3d const pEnd(totalTf * Vector3d(0.0, yViewVolumeCenter_ + yViewVolume_ / 2.0, 0.0));
+            Vector3d const pEnd(totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_ + yViewVolume_ / 2.0, 0.0));
             size_t const nFractions = std::max(xCells_ * 2, yCells_ * 2);
             Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
             Vector3d p(pStart);
@@ -391,7 +391,7 @@ namespace viewport
           {
             // OZ.
             Vector3d const pStart(totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
-            Vector3d const pEnd(totalTf * Vector3d(0.0, 0.0, (xViewVolume_ + yViewVolume_) / 4.0));
+            Vector3d const pEnd(totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, (xViewVolume_ + yViewVolume_) / 4.0));
             size_t const nFractions = std::max(xCells_ * 2, yCells_ * 2);
             Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
             Vector3d p(pStart);
