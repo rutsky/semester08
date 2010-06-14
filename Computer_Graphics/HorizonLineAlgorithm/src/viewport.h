@@ -338,6 +338,7 @@ namespace viewport
         edges_gen_t edgesGen;
         {         
           // Add axes.
+          // TODO: Subdivide axes.
           edge::edge_t axisX(
             totalTf * Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0),
             totalTf * Vector3d(xViewVolumeCenter_ + xViewVolume_ / 2.0, 0.0, 0.0), 

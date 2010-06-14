@@ -21,6 +21,7 @@
 #define COLOR_H
 
 #include <boost/cstdint.hpp>
+#include <boost/detail/endian.hpp>
 
 namespace color
 {
@@ -29,10 +30,22 @@ namespace color
   inline
   color_t make_rgb( int r, int g, int b )
   {
-    return 
+    color_t result;
+#if   (BOOST_BYTE_ORDER == 4321)
+    result =
       (static_cast<uint8_t>(r) << 24) |
       (static_cast<uint8_t>(g) << 16) |
       (static_cast<uint8_t>(b) << 8);
+#elif (BOOST_BYTE_ORDER == 1234)
+    result =
+      (static_cast<uint8_t>(r) << 0) |
+      (static_cast<uint8_t>(g) << 8) |
+      (static_cast<uint8_t>(b) << 16);
+#else
+# error Unsupported byte order in color.h
+#endif
+
+    return result;
   }
   
   inline
