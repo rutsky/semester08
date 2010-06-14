@@ -136,6 +136,7 @@ namespace viewport
       , yDomainCenter_(appconf::startYDomainCenter)
       , xViewVolumeCenter_(appconf::startXViewVolumeCenter)
       , yViewVolumeCenter_(appconf::startYViewVolumeCenter)
+      , drawAxes_(appconf::startDrawAxes)
     {
       frame_.resize(w, h);
     }
@@ -257,6 +258,12 @@ namespace viewport
       yViewVolumeCenter_ = yViewVolumeCenter;
     }
     
+    void setDrawAxes( bool draw )
+    {
+      std::cout << "setDrawAxes(" << draw << ")\n"; // debug
+      drawAxes_ = draw;
+    }
+    
     void resize( int x, int y, int w, int h );
 
     void draw();
@@ -272,6 +279,7 @@ namespace viewport
     bool drawXEdges_, drawYEdges_;
     double xDomainCenter_, yDomainCenter_;
     double xViewVolumeCenter_, yViewVolumeCenter_;
+    bool drawAxes_;
   };
 }
   

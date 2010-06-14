@@ -24,10 +24,11 @@ namespace appconf
   size_t const startFuncIdx = 15;
   size_t const startXCells = 10, startYCells = 10;
   double const startXDomain = 5.0, startYDomain = 5.0;
-  double const startXViewVolume = 5.0, startYViewVolume = 5.0;
+  double const startXViewVolume = 7.0, startYViewVolume = 7.0;
   bool const startKeepAspectRatio = true;
   bool const startDrawXEdges = true, startDrawYEdges = true;
   double const startYaw = 30.0, startPitch = 45.0;
   double const startXDomainCenter = 0.0, startYDomainCenter = 0.0;
   double const startXViewVolumeCenter = 0.0, startYViewVolumeCenter = 0.0;
+  bool const startDrawAxes = true;
 }

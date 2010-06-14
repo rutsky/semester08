@@ -114,78 +114,81 @@ namespace viewport
       edges_gen_t edgesGen;
       {         
         // Add axes.
+        if (drawAxes_)
         {
-          // OX.
-          Vector3d const pStart(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
-          Vector3d const pEnd(Vector3d(xViewVolumeCenter_ + xViewVolume_ / 2.0, yViewVolumeCenter_, 0.0));
-          size_t const nFractions = std::max(xCells_ * 2, yCells_ * 2);
-          Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
-          Vector3d p(pStart);
-          color::color_t c = color::red();
-          for (size_t i = 0; i < nFractions; ++i, p += step)
           {
-            Vector3d const p0(p);
-            Vector3d const p1(p + step);
-            
-            edge::edge_t axis(
-              p0,
-              p1,
-              edge::line_style_t(c, edge::rs_solid), // init
-              edge::line_style_t(c, edge::rs_solid), // above
-              edge::line_style_t(c, edge::rs_dash),  // inside
-              edge::line_style_t(c, edge::rs_solid), // below
-              true, false);
-            edgesGen.addEdge(axis);
+            // OX.
+            Vector3d const pStart(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
+            Vector3d const pEnd(Vector3d(xViewVolumeCenter_ + xViewVolume_ / 2.0, yViewVolumeCenter_, 0.0));
+            size_t const nFractions = std::max(xCells_ * 2, yCells_ * 2);
+            Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
+            Vector3d p(pStart);
+            color::color_t c = color::red();
+            for (size_t i = 0; i < nFractions; ++i, p += step)
+            {
+              Vector3d const p0(p);
+              Vector3d const p1(p + step);
+              
+              edge::edge_t axis(
+                p0,
+                p1,
+                edge::line_style_t(c, edge::rs_solid), // init
+                edge::line_style_t(c, edge::rs_solid), // above
+                edge::line_style_t(c, edge::rs_dash),  // inside
+                edge::line_style_t(c, edge::rs_solid), // below
+                true, false);
+              edgesGen.addEdge(axis);
+            }
           }
-        }
-        
-        {
-          // OY.
-          Vector3d const pStart(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
-          Vector3d const pEnd(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_ + yViewVolume_ / 2.0, 0.0));
-          size_t const nFractions = std::max(xCells_ * 2, yCells_ * 2);
-          Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
-          Vector3d p(pStart);
-          color::color_t c = color::green();
-          for (size_t i = 0; i < nFractions; ++i, p += step)
+          
           {
-            Vector3d const p0(p);
-            Vector3d const p1(p + step);
-            
-            edge::edge_t axis(
-              p0,
-              p1,
-              edge::line_style_t(c, edge::rs_solid), // init
-              edge::line_style_t(c, edge::rs_solid), // above
-              edge::line_style_t(c, edge::rs_dash),  // inside
-              edge::line_style_t(c, edge::rs_solid), // below
-              true, false);
-            edgesGen.addEdge(axis);
+            // OY.
+            Vector3d const pStart(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
+            Vector3d const pEnd(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_ + yViewVolume_ / 2.0, 0.0));
+            size_t const nFractions = std::max(xCells_ * 2, yCells_ * 2);
+            Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
+            Vector3d p(pStart);
+            color::color_t c = color::green();
+            for (size_t i = 0; i < nFractions; ++i, p += step)
+            {
+              Vector3d const p0(p);
+              Vector3d const p1(p + step);
+              
+              edge::edge_t axis(
+                p0,
+                p1,
+                edge::line_style_t(c, edge::rs_solid), // init
+                edge::line_style_t(c, edge::rs_solid), // above
+                edge::line_style_t(c, edge::rs_dash),  // inside
+                edge::line_style_t(c, edge::rs_solid), // below
+                true, false);
+              edgesGen.addEdge(axis);
+            }
           }
-        }
-        
-        {
-          // OZ.
-          Vector3d const pStart(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
-          Vector3d const pEnd(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, (xViewVolume_ + yViewVolume_) / 4.0));
-          size_t const nFractions = std::max(xCells_ * 2, yCells_ * 2);
-          Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
-          Vector3d p(pStart);
-          color::color_t c = color::blue();
-          for (size_t i = 0; i < nFractions; ++i, p += step)
+          
           {
-            Vector3d const p0(p);
-            Vector3d const p1(p + step);
-            
-            edge::edge_t axis(
-              p0,
-              p1,
-              edge::line_style_t(c, edge::rs_solid), // init
-              edge::line_style_t(c, edge::rs_solid), // above
-              edge::line_style_t(c, edge::rs_dash),  // inside
-              edge::line_style_t(c, edge::rs_solid), // below
-              true, false);
-            edgesGen.addEdge(axis);
+            // OZ.
+            Vector3d const pStart(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, 0.0));
+            Vector3d const pEnd(Vector3d(xViewVolumeCenter_, yViewVolumeCenter_, (xViewVolume_ + yViewVolume_) / 4.0));
+            size_t const nFractions = std::max(xCells_ * 2, yCells_ * 2);
+            Vector3d const step = (pEnd - pStart) / static_cast<double>(nFractions);
+            Vector3d p(pStart);
+            color::color_t c = color::blue();
+            for (size_t i = 0; i < nFractions; ++i, p += step)
+            {
+              Vector3d const p0(p);
+              Vector3d const p1(p + step);
+              
+              edge::edge_t axis(
+                p0,
+                p1,
+                edge::line_style_t(c, edge::rs_solid), // init
+                edge::line_style_t(c, edge::rs_solid), // above
+                edge::line_style_t(c, edge::rs_dash),  // inside
+                edge::line_style_t(c, edge::rs_solid), // below
+                true, false);
+              edgesGen.addEdge(axis);
+            }
           }
         }
         

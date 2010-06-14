@@ -2,258 +2,268 @@
 version 1.0109 
 header_name {.h} 
 code_name {.cpp}
-widget_class {\#include <FL/Fl_Window.H>} MainWindow {
+widget_class MainWindow {
   label {Horizon Line Algorithm. 4057/2  Rutsky Vladimir, 2010} open
   xywh {501 95 745 515} type Double align 0 resizable
   code0 {\#include <FL/Fl_Window.H>}
   code1 {\#include <iostream>}
   code2 {\#include "appconf.h"}
-  code3 {\#include <FL/Fl_Window.H>}
   class Fl_Window visible
 } {
   Fl_Group {} {open
-    xywh {-11 11 746 509}
+    xywh {5 9 737 502} align 0
   } {
     Fl_Group {} {open
-      xywh {220 48 515 470}
+      xywh {227 41 515 470}
     } {
       Fl_Value_Slider {} {
         label yaw
         callback {viewport_->setYaw(o->value());
 viewport_->redraw();}
-        xywh {280 454 415 34} type {Horz Knob} minimum -180 maximum 180 step 0.1
+        xywh {287 447 415 34} type {Horz Knob} minimum -180 maximum 180 step 0.1
         code0 {o->value(appconf::startYaw);}
       }
       Fl_Value_Slider {} {
         label pitch
         callback {viewport_->setPitch(o->value());
-viewport_->redraw();} selected
-        xywh {695 65 39 390} type {Vert Knob} align 1 minimum 90 maximum -90 step 0.1 value 45
+viewport_->redraw();}
+        xywh {702 58 39 390} type {Vert Knob} align 1 minimum 90 maximum -90 step 0.1 value 45
         code0 {o->value(appconf::startPitch);}
       }
       Fl_Group {} {open
-        xywh {240 58 455 425}
+        xywh {247 51 455 425}
       } {
         Fl_Box viewport_ {
           label label
-          private xywh {275 64 420 391}
+          private xywh {282 57 420 391}
           code0 {\#include "viewport.h"}
           class {viewport::Viewport}
         }
       }
     }
     Fl_Group {} {open
-      xywh {-2 16 696 490}
+      xywh {5 9 696 496}
     } {
       Fl_Choice {} {
         label {Function: z=}
         callback {viewport_->setFunction(o->value());
 viewport_->redraw();}
-        xywh {299 20 225 30} down_box BORDER_BOX when 1
+        xywh {417 13 225 30} down_box BORDER_BOX when 1
         code0 {o->value(appconf::startFuncIdx);}
       } {
         MenuItem {} {
           label {((1 - R^2 + |1 - R^2|) / 2)^0.5} user_data_type {void*}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {10*x^2+5*y^2} user_data_type {void*}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {sin(x+y)/(1+(x-y)^2)}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {cos(x)*cos(y)}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {cos((x+2*y)/R)}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {-sin(R)/R}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {cos(x-y)/cos(R^2)}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {sin(x*y)/R^2}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {(cos(x)^2+ch(y)^2)^0.5}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {arctg(R)}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {cos(x*y/R)}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {sin(x*y/R)}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {cos(3*x*y)}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {x^2+cos(12.5*pi*y)}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {(sin(x)^2+sh(y)^2)^0.5}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label {sin(R)} user_data_type {void *}
-          xywh {15 15 36 21}
+          xywh {20 20 36 21}
         }
         MenuItem {} {
           label 0
-          xywh {0 0 36 21}
+          xywh {5 5 36 21}
         }
       }
-      Fl_Group {} {
-        label {Number of cells:} open
-        xywh {34 63 204 71} box ENGRAVED_FRAME align 5
+      Fl_Group {} {open
+        xywh {16 16 256 489}
       } {
-        Fl_Value_Input {} {
-          label {by X:}
-          callback {viewport_->setXCells(o->value());
-viewport_->redraw();}
-          xywh {124 71 35 26} minimum 1 maximum 128 step 1 value 16
-          code0 {o->value(appconf::startXCells);}
-        }
-        Fl_Value_Input {} {
-          label {by Y:}
-          callback {viewport_->setYCells(o->value());
-viewport_->redraw();}
-          xywh {124 101 35 25} minimum 1 maximum 128 step 1 value 16
-          code0 {o->value(appconf::startYCells);}
-        }
-      }
-      Fl_Group {} {
-        label {Function domain:} open
-        xywh {34 158 204 112} box ENGRAVED_FRAME align 5
-      } {
-        Fl_Value_Input {} {
-          label {X size:}
-          callback {viewport_->setXDomain(o->value());
-viewport_->redraw();}
-          xywh {108 205 50 25} minimum 0.1 maximum 100 step 0.1 value 5
-          code0 {o->value(appconf::startXDomain);}
-        }
-        Fl_Value_Input {} {
-          label {Y size:}
-          callback {viewport_->setYDomain(o->value());
-viewport_->redraw();}
-          xywh {108 234 50 25} minimum 0.1 maximum 100 step 0.1 value 5
-          code0 {o->value(appconf::startYDomain);}
-        }
-        Fl_Group {} {open
-          xywh {43 170 193 25}
+        Fl_Group {} {
+          label {Number of cells:} open
+          xywh {20 43 204 72} box ENGRAVED_FRAME align 5
         } {
           Fl_Value_Input {} {
-            label {center: (}
-            callback {viewport_->setXDomainCenter(o->value());
+            label {by X:}
+            callback {viewport_->setXCells(o->value());
 viewport_->redraw();}
-            xywh {108 170 50 25} minimum -100 maximum 100 step 0.1
-            code0 {o->value(appconf::startXDomainCenter);}
+            xywh {110 52 35 26} minimum 1 maximum 128 step 1 value 16
+            code0 {o->value(appconf::startXCells);}
           }
           Fl_Value_Input {} {
-            label {, }
-            callback {viewport_->setYDomainCenter(o->value());
+            label {by Y:}
+            callback {viewport_->setYCells(o->value());
 viewport_->redraw();}
-            xywh {170 170 50 25} minimum -100 maximum 100 step 0.1
-            code0 {o->value(appconf::startYDomainCenter);}
-          }
-          Fl_Box {} {
-            label {)}
-            xywh {216 175 15 14}
+            xywh {110 82 35 25} minimum 1 maximum 128 step 1 value 16
+            code0 {o->value(appconf::startYCells);}
           }
         }
-      }
-      Fl_Group {} {
-        label {View volume:} open
-        xywh {35 291 203 132} box ENGRAVED_BOX align 5
-      } {
-        Fl_Value_Input xViewVolume {
-          label {X size:}
-          callback {viewport_->setXViewVolume(o->value());
+        Fl_Group {} {
+          label {Function domain:} open
+          xywh {18 135 204 112} box ENGRAVED_FRAME align 5
+        } {
+          Fl_Value_Input {} {
+            label {X size:}
+            callback {viewport_->setXDomain(o->value());
+viewport_->redraw();}
+            xywh {92 182 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+            code0 {o->value(appconf::startXDomain);}
+          }
+          Fl_Value_Input {} {
+            label {Y size:}
+            callback {viewport_->setYDomain(o->value());
+viewport_->redraw();}
+            xywh {92 211 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+            code0 {o->value(appconf::startYDomain);}
+          }
+          Fl_Group {} {open
+            xywh {27 147 193 25}
+          } {
+            Fl_Value_Input {} {
+              label {center: (}
+              callback {viewport_->setXDomainCenter(o->value());
+viewport_->redraw();}
+              xywh {92 147 50 25} minimum -100 maximum 100 step 0.1
+              code0 {o->value(appconf::startXDomainCenter);}
+            }
+            Fl_Value_Input {} {
+              label {, }
+              callback {viewport_->setYDomainCenter(o->value());
+viewport_->redraw();}
+              xywh {154 147 50 25} minimum -100 maximum 100 step 0.1
+              code0 {o->value(appconf::startYDomainCenter);}
+            }
+            Fl_Box {} {
+              label {)}
+              xywh {200 152 15 14}
+            }
+          }
+        }
+        Fl_Group {} {
+          label {View volume:} open
+          xywh {19 266 203 132} box ENGRAVED_BOX align 5
+        } {
+          Fl_Value_Input xViewVolume {
+            label {X size:}
+            callback {viewport_->setXViewVolume(o->value());
 updateYViewVolume();
 viewport_->redraw();}
-          xywh {108 329 50 25} minimum 0.1 maximum 100 step 0.1 value 5
-          code0 {o->value(appconf::startXViewVolume);}
-        }
-        Fl_Value_Input yViewVolume {
-          label {Y size:}
-          callback {viewport_->setXViewVolume(o->value());
+            xywh {92 304 50 25} minimum 0.1 maximum 100 step 0.1 value 5
+            code0 {o->value(appconf::startXViewVolume);}
+          }
+          Fl_Value_Input yViewVolume {
+            label {Y size:}
+            callback {viewport_->setXViewVolume(o->value());
 viewport_->redraw();}
-          xywh {108 360 50 25} minimum 0.1 maximum 100 step 0.1 value 5 deactivate
-          code0 {o->value(appconf::startYViewVolume);}
-          code1 {if (!appconf::startKeepAspectRatio) o->activate(); else o->deactivate();}
-          code2 {updateYViewVolume();}
-        }
-        Fl_Check_Button keepAspectRatio {
-          label {keep aspect ratio}
-          callback {if (o->value())
+            xywh {92 335 50 25} minimum 0.1 maximum 100 step 0.1 value 5 deactivate
+            code0 {o->value(appconf::startYViewVolume);}
+            code1 {if (!appconf::startKeepAspectRatio) o->activate(); else o->deactivate();}
+            code2 {updateYViewVolume();}
+          }
+          Fl_Check_Button keepAspectRatio {
+            label {keep aspect ratio}
+            callback {if (o->value())
   yViewVolume->deactivate();
 else
   yViewVolume->activate();
 viewport_->setKeepAspectRatio(o->value());
 updateYViewVolume();
 viewport_->redraw();}
-          xywh {42 394 145 15} down_box DOWN_BOX value 1
-          code0 {o->value(appconf::startKeepAspectRatio);}
+            xywh {26 369 145 15} down_box DOWN_BOX value 1
+            code0 {o->value(appconf::startKeepAspectRatio);}
+          }
+          Fl_Group {} {open
+            xywh {27 273 193 25}
+          } {
+            Fl_Value_Input {} {
+              label {center: (}
+              callback {viewport_->setXViewVolumeCenter(o->value());
+viewport_->redraw();}
+              xywh {92 273 50 25} minimum -100 maximum 100 step 0.1
+              code0 {o->value(appconf::startXViewVolumeCenter);}
+            }
+            Fl_Value_Input {} {
+              label {, }
+              callback {viewport_->setYViewVolumeCenter(o->value());
+viewport_->redraw();}
+              xywh {154 273 50 25} minimum -100 maximum 100 step 0.1
+              code0 {o->value(appconf::startYViewVolumeCenter);}
+            }
+            Fl_Box {} {
+              label {)}
+              xywh {200 278 15 14}
+            }
+          }
         }
-        Fl_Group {} {open
-          xywh {43 298 193 25}
+        Fl_Group {} {
+          label {Render parameters:} open
+          xywh {20 415 202 80} box ENGRAVED_FRAME align 5
         } {
-          Fl_Value_Input {} {
-            label {center: (}
-            callback {viewport_->setXViewVolumeCenter(o->value());
+          Fl_Check_Button {} {
+            label {draw X edges}
+            callback {viewport_->setDrawXEdges(o->value());
 viewport_->redraw();}
-            xywh {108 298 50 25} minimum -100 maximum 100 step 0.1
-            code0 {o->value(appconf::startXViewVolumeCenter);}
+            xywh {37 431 120 15} down_box DOWN_BOX value 1
+            code0 {o->value(appconf::startDrawXEdges);}
           }
-          Fl_Value_Input {} {
-            label {, }
-            callback {viewport_->setYViewVolumeCenter(o->value());
+          Fl_Check_Button {} {
+            label {draw Y edges}
+            callback {viewport_->setDrawYEdges(o->value());
 viewport_->redraw();}
-            xywh {170 298 50 25} minimum -100 maximum 100 step 0.1
-            code0 {o->value(appconf::startYViewVolumeCenter);}
+            xywh {37 451 120 15} down_box DOWN_BOX value 1
+            code0 {o->value(appconf::startDrawXEdges);}
           }
-          Fl_Box {} {
-            label {)}
-            xywh {216 303 15 14}
+          Fl_Check_Button {} {
+            label {draw axes}
+            callback {viewport_->setDrawAxes(o->value());
+viewport_->redraw();} selected
+            xywh {37 470 120 15} down_box DOWN_BOX
+            code0 {o->value(appconf::startDrawAxes);}
           }
-        }
-      }
-      Fl_Group {} {
-        label {Render parameters:} open
-        xywh {34 441 200 65} box ENGRAVED_FRAME align 5
-      } {
-        Fl_Check_Button {} {
-          label {draw X edges}
-          callback {viewport_->setDrawXEdges(o->value());
-viewport_->redraw();}
-          xywh {51 457 120 15} down_box DOWN_BOX value 1
-          code0 {o->value(appconf::startDrawXEdges);}
-        }
-        Fl_Check_Button {} {
-          label {draw Y edges}
-          callback {viewport_->setDrawYEdges(o->value());
-viewport_->redraw();}
-          xywh {51 477 120 15} down_box DOWN_BOX value 1
-          code0 {o->value(appconf::startDrawXEdges);}
         }
       }
     }
