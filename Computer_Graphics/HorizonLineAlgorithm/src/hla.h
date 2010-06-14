@@ -84,6 +84,8 @@ namespace hla
     {
       Vector2i const p0(std::floor(edge.p0().x()), std::floor(edge.p0().y()));
       Vector2i const p1(std::floor(edge.p1().x()), std::floor(edge.p1().y()));
+      //Vector2i const p0(std::floor(0.5 + edge.p0().x()), std::floor(0.5 + edge.p0().y()));
+      //Vector2i const p1(std::floor(0.5 + edge.p1().x()), std::floor(0.5 + edge.p1().y()));
       
       // TODO: Implement segment culling by render frame.
       
@@ -132,6 +134,33 @@ namespace hla
         for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt)
         {
           Vector2i const p = *pIt;
+          
+          bresenham::PointsIterator pNextIt = pIt;
+          ++pNextIt;
+          
+          // Don't update horizon for last point. This fix bugs like this:
+          //   BC
+          //   12
+          //   12
+          // 1  2
+          // 1  2
+          // A    2
+          //      2
+          //      2
+          //      2
+          //      D
+          // ------ 
+          //  0 1 2  --- index of horizon column
+          // First segment AB (marked with "1", from (0,0) to (1,5)).
+          // After it (and further from us) segment CD (marked with "2", from
+          // (1,5) to (-4,2)). At point B=C they intersects.
+          // In old scheme, when AB has been drawed, it updated horizon at
+          // indices [0, 1]. After that, drawing of CD segment have been 
+          // denies at cells (1,1), (1,2) (and (1,3), (1,4), (1,5)),
+          // which leaded to "holes" in image.
+          if (!pNextIt || pNextIt->x() == p.x())
+            continue;
+          
           if (isXInsideRenderFrame(p.x()))
           {
             horizon_column_t &horizonColumn = horizon_[p.x()];
