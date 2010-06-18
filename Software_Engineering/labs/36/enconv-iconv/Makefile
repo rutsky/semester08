@@ -37,6 +37,7 @@ build:
 stage:
 	mkdir -p $(stage_dir)/platform
 	cp -R -v platform/$(platform) $(stage_dir)/platform
+	cp -R -v libiconv/$(platform) $(stage_dir)/platform
 
 clean:
 	$(MAKE) -C src clean
