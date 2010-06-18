@@ -17,10 +17,35 @@
  *  along with enconv.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
+
 #include "nsIGenericFactory.h"
 #include "EnconvIconv.h"
 
 NS_GENERIC_FACTORY_CONSTRUCTOR(EnconvIconv)
+
+static 
+NS_METHOD 
+EnconvIconvRegistrationProc( nsIComponentManager *aCompMgr,
+                             nsIFile *aPath,
+                             char const *registryLocation,
+                             char const *componentType,
+                             nsModuleComponentInfo const *info )
+{
+  std::cout << "EnconvIconvRegistrationProc()" << std::endl;
+  return NS_OK;
+}
+
+static 
+NS_METHOD 
+EnconvIconvUnregistrationProc( nsIComponentManager *aCompMgr,
+                               nsIFile *aPath,
+                               char const *registryLocation,
+                               nsModuleComponentInfo const *info )
+{
+  std::cout << "EnconvIconvUnregistrationProc()" << std::endl;
+  return NS_OK;
+}
 
 static nsModuleComponentInfo components[] =
 {
@@ -29,6 +54,8 @@ static nsModuleComponentInfo components[] =
     ENCONV_ICONV_CID,
     ENCONV_ICONV_CONTRACTID,
     EnconvIconvConstructor,
+    EnconvIconvRegistrationProc,
+    EnconvIconvUnregistrationProc,
   }
 };
 
