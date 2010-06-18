@@ -1,0 +1,47 @@
+/*
+ *  This file is part of enconv---character encoding converter suite.
+ *
+ *  Copyright (C) 2010  Vladimir Rutsky
+ *
+ *  enconv is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  enconv is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with enconv.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "nsISupports.idl"
+
+[scriptable, uuid(597abe10-09d2-477d-ae09-a109f447296f)]
+interface IEnconvIconv : nsISupports
+{
+  /**
+   * Listing of locale independent encodings.
+   *
+   * @returns List of supported encoding separated by two line feeds
+   *          (different aliases of encoding separated by single line feed).
+   */
+  ACString listEncodings();
+  
+  /**
+   * Perform character encofing conversion.
+   *
+   * @param fromEncoding
+   *        Source encoding.
+   * @param toEncoding
+   *        Target encoding.
+   * @param sourceText
+   *        Text to convert.
+   * @param resultText
+   *        Conversion result.
+   */
+  void iconv( in ACString fromEncoding, in ACString toEncoding,
+              in ACString sourceText, out ACString resultText );  
+};

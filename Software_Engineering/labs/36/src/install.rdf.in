@@ -4,8 +4,8 @@
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
   <Description about="urn:mozilla:install-manifest">
-    <em:id>enconv@enconv.sourceforge.net</em:id>
-    <em:version>0.1</em:version>
+    <em:id>@enconv_id@</em:id>
+    <em:version>@enconv_version@</em:version>
     <em:type>2</em:type><!-- type=extension -->
     
     <!-- Target Application this extension can install into, 
