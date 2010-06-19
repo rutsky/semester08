@@ -17,15 +17,19 @@
  *  along with enconv.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
+
 #include "EnconvIconv.h"
 
 #include "nsStringAPI.h"
 #include "nsAutoPtr.h"
+#include "prlink.h"
 
 NS_IMPL_ISUPPORTS1(EnconvIconv, IEnconvIconv)
 
 EnconvIconv::EnconvIconv()
 {
+  std::cout << "EnconvIconv()" << std::endl;
 }
 
 EnconvIconv::~EnconvIconv()

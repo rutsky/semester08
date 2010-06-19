@@ -33,6 +33,9 @@ net.sourceforge.enconv = {
     function()
     {
       alert(this.strbundle().getString("msg.alert_hello"));
+      var enconvIconv = Components.classes["@enconv.sourceforge.net/enconv/iconv"]
+        .getService(Components.interfaces.IEnconvIconv);
+      dump(enconvIconv);
     },
     
   openConverter:

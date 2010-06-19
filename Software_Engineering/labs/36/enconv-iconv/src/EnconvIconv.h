@@ -22,7 +22,7 @@
 
 #include "IEnconvIconv.h"
 
-#define ENCONV_ICONV_CONTRACTID "@enconv.sourceforge.net/Enconv/Iconv;1"
+#define ENCONV_ICONV_CONTRACTID "@enconv.sourceforge.net/enconv/iconv"
 #define ENCONV_ICONV_CLASSNAME "Enconv libiconv wrapper"
 
 // 889580bd-eef4-4309-8d7a-b75bc620e25d
