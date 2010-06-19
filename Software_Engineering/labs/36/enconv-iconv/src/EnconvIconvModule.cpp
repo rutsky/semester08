@@ -32,7 +32,7 @@ EnconvIconvRegistrationProc( nsIComponentManager *aCompMgr,
                              char const *componentType,
                              nsModuleComponentInfo const *info )
 {
-  std::cout << "EnconvIconvRegistrationProc()" << std::endl;
+  //std::cout << "EnconvIconvRegistrationProc()" << std::endl;
   return NS_OK;
 }
 
@@ -43,7 +43,8 @@ EnconvIconvUnregistrationProc( nsIComponentManager *aCompMgr,
                                char const *registryLocation,
                                nsModuleComponentInfo const *info )
 {
-  std::cout << "EnconvIconvUnregistrationProc()" << std::endl;
+  // Never show. Why?
+  //std::cout << "EnconvIconvUnregistrationProc()" << std::endl;
   return NS_OK;
 }
 
@@ -59,4 +60,4 @@ static nsModuleComponentInfo components[] =
   }
 };
 
-NS_IMPL_NSGETMODULE(EnconvIconvModule, components) 
+NS_IMPL_NSGETMODULE(EnconvIconvModule, components)
