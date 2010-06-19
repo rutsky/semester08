@@ -33,10 +33,12 @@ class EnconvIconv : public IEnconvIconv
 {
 public:
   EnconvIconv();
-  ~EnconvIconv(); // TODO: Should it be private as in WeaveCrypto?
 
   NS_DECL_ISUPPORTS
   NS_DECL_IENCONVICONV
+  
+private:
+  ~EnconvIconv();
 };
 
 #endif // ENCONV_ICONV_H
