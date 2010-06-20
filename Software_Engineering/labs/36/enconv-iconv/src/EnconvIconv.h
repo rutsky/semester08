@@ -32,6 +32,8 @@
 // TODO: Get addon ID from outside. E.g. create config.h.in.
 #define ENCONV_ADDON_ID "enconv@enconv.sourceforge.net"
 
+class PRLibrary;
+
 class EnconvIconv : public IEnconvIconv
 {
 public:
@@ -44,6 +46,9 @@ public:
   
 private:
   ~EnconvIconv();
+
+private:
+  PRLibrary *iconvLib_;
 };
 
 #endif // ENCONV_ICONV_H

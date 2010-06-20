@@ -37,6 +37,7 @@
 NS_IMPL_ISUPPORTS1(EnconvIconv, IEnconvIconv)
 
 EnconvIconv::EnconvIconv()
+  : iconvLib_(nsnull)
 {
   std::cout << "EnconvIconv::EnconvIconv()" << std::endl; // DEBUG
 }
@@ -177,8 +178,16 @@ nsresult EnconvIconv::init()
 
     // Load iconv library.
     {
+      // Construct full library path.
       char *libName = PR_GetLibraryName(cpath.get(), "iconv");
-      std::cout << libName << std::endl;
+      std::cout << "Loading: " << libName << std::endl; // DEBUG
+
+      // Load library.
+      iconvLib_ = PR_LoadLibrary(libName);
+      // Test that loading succeded.
+      NS_ENSURE_TRUE(iconvLib_, NS_ERROR_FAILURE);
+
+      
     }
   }
 
@@ -188,6 +197,9 @@ nsresult EnconvIconv::init()
 EnconvIconv::~EnconvIconv()
 {
   std::cout << "EnconvIconv::~EnconvIconv()" << std::endl; // DEBUG
+
+  if (iconvLib_)
+    PR_UnloadLibrary(iconvLib_);
 }
 
 NS_IMETHODIMP
