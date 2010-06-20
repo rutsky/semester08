@@ -33,11 +33,20 @@ net.sourceforge.enconv = {
     function()
     {
       alert(this.strbundle().getString("msg.alert_hello"));
-      var enconvIconv1 = Components.classes["@enconv.sourceforge.net/enconv/iconv"]
-        .getService(Components.interfaces.IEnconvIconv);
-      var enconvIconv2 = Components.classes["@enconv.sourceforge.net/enconv/iconv"]
-        .getService(Components.interfaces.IEnconvIconv);
-      //dump(enconvIconv);
+      try
+      {
+        var enconvIconv1 = Components.classes["@enconv.sourceforge.net/enconv/iconv"]
+          .getService(Components.interfaces.IEnconvIconv);
+      }
+      catch (e)
+      {
+        // TODO
+        alert("Encoding Converter initialization failed: " + e);
+      }
+      
+      //var enconvIconv2 = Components.classes["@enconv.sourceforge.net/enconv/iconv"]
+      //  .getService(Components.interfaces.IEnconvIconv);
+      dump(enconvIconv);
     },
     
   openConverter:
