@@ -55,15 +55,14 @@ nsresult EnconvIconv::init()
   NS_ENSURE_SUCCESS(rv, rv);
 
   nsCOMPtr<nsIFile> tmpDir;
-  //nsIFile *tmpDir;
   rv = directory->Get(NS_OS_TEMP_DIR, NS_GET_IID(nsIFile), getter_AddRefs(tmpDir));
   NS_ENSURE_SUCCESS(rv, rv);
   
-  nsEmbedString path;
+  nsAutoString path;
   rv = tmpDir->GetPath(path);
   NS_ENSURE_SUCCESS(rv, rv);
   
-  nsEmbedCString cpath;
+  nsCAutoString cpath;
   rv = NS_UTF16ToCString(path, NS_CSTRING_ENCODING_UTF8, cpath);
 
   std::cout << cpath.get() << std::endl;
