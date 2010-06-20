@@ -22,7 +22,7 @@
 #include "nsIGenericFactory.h"
 #include "EnconvIconv.h"
 
-NS_GENERIC_FACTORY_CONSTRUCTOR(EnconvIconv)
+NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(EnconvIconv, init)
 
 static 
 NS_METHOD 

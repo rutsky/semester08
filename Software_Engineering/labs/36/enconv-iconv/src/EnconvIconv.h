@@ -33,6 +33,8 @@ class EnconvIconv : public IEnconvIconv
 {
 public:
   EnconvIconv();
+  
+  nsresult init();
 
   NS_DECL_ISUPPORTS
   NS_DECL_IENCONVICONV

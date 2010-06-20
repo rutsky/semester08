@@ -21,19 +21,59 @@
 
 #include "EnconvIconv.h"
 
+#include "nsXPCOM.h"
+#include "nsIServiceManager.h"
 #include "nsStringAPI.h"
+#include "nsEmbedString.h"
 #include "nsAutoPtr.h"
+#include "nsCOMPtr.h"
+#include "nsDirectoryServiceDefs.h"
+#include "nsIProperties.h"
+#include "nsIFile.h"
 #include "prlink.h"
 
 NS_IMPL_ISUPPORTS1(EnconvIconv, IEnconvIconv)
 
 EnconvIconv::EnconvIconv()
 {
-  std::cout << "EnconvIconv()" << std::endl;
+  std::cout << "EnconvIconv::EnconvIconv()" << std::endl; // DEBUG
+}
+
+nsresult EnconvIconv::init()
+{
+  std::cout << "EnconvIconv::init()" << std::endl; // DEBUG
+
+  nsresult rv;
+
+  nsCOMPtr<nsIServiceManager> svcMgr;
+  rv = NS_GetServiceManager(getter_AddRefs(svcMgr));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsCOMPtr<nsIProperties> directory;
+  rv = svcMgr->GetServiceByContractID("@mozilla.org/file/directory_service;1", 
+    NS_GET_IID(nsIProperties), getter_AddRefs(directory));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsCOMPtr<nsIFile> tmpDir;
+  //nsIFile *tmpDir;
+  rv = directory->Get(NS_OS_TEMP_DIR, NS_GET_IID(nsIFile), getter_AddRefs(tmpDir));
+  NS_ENSURE_SUCCESS(rv, rv);
+  
+  nsEmbedString path;
+  rv = tmpDir->GetPath(path);
+  NS_ENSURE_SUCCESS(rv, rv);
+  
+  nsEmbedCString cpath;
+  rv = NS_UTF16ToCString(path, NS_CSTRING_ENCODING_UTF8, cpath);
+
+  std::cout << cpath.get() << std::endl;
+
+  return rv;
 }
 
 EnconvIconv::~EnconvIconv()
 {
+  std::cout << "EnconvIconv::~EnconvIconv()" << std::endl; // DEBUG
 }
 
 NS_IMETHODIMP
