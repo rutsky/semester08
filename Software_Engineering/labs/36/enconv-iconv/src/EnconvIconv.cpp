@@ -184,10 +184,10 @@ nsresult EnconvIconv::init()
 
       // Load library.
       iconvLib_ = PR_LoadLibrary(libName);
+      PR_FreeLibraryName(libName);
+
       // Test that loading succeded.
       NS_ENSURE_TRUE(iconvLib_, NS_ERROR_FAILURE);
-
-      
     }
   }
 
@@ -205,6 +205,10 @@ EnconvIconv::~EnconvIconv()
 NS_IMETHODIMP
 EnconvIconv::ListEncodings( nsACString &encodingsList )
 {
+  NS_ENSURE_TRUE(iconvLib_, NS_ERROR_FAILURE);
+
+  iconvLib_
+  
   return NS_OK;
 }
 
