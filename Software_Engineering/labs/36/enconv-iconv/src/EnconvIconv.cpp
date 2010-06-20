@@ -30,6 +30,7 @@
 #include "nsDirectoryServiceDefs.h"
 #include "nsIProperties.h"
 #include "nsIFile.h"
+#include "nsIExtensionManager.h"
 #include "prlink.h"
 
 NS_IMPL_ISUPPORTS1(EnconvIconv, IEnconvIconv)
@@ -41,6 +42,9 @@ EnconvIconv::EnconvIconv()
 
 nsresult EnconvIconv::init()
 {
+  // TODO: Return value corresponds to internal error. Maybe only return error
+  // should be "Failed to initialize"?
+  
   std::cout << "EnconvIconv::init()" << std::endl; // DEBUG
 
   nsresult rv;
@@ -49,23 +53,60 @@ nsresult EnconvIconv::init()
   rv = NS_GetServiceManager(getter_AddRefs(svcMgr));
   NS_ENSURE_SUCCESS(rv, rv);
 
-  nsCOMPtr<nsIProperties> directory;
-  rv = svcMgr->GetServiceByContractID("@mozilla.org/file/directory_service;1", 
-    NS_GET_IID(nsIProperties), getter_AddRefs(directory));
-  NS_ENSURE_SUCCESS(rv, rv);
+  if (0)
+  {
+    nsCOMPtr<nsIProperties> directory;
+    rv = svcMgr->GetServiceByContractID("@mozilla.org/file/directory_service;1", 
+      NS_GET_IID(nsIProperties), getter_AddRefs(directory));
+    NS_ENSURE_SUCCESS(rv, rv);
 
-  nsCOMPtr<nsIFile> tmpDir;
-  rv = directory->Get(NS_OS_TEMP_DIR, NS_GET_IID(nsIFile), getter_AddRefs(tmpDir));
-  NS_ENSURE_SUCCESS(rv, rv);
-  
-  nsAutoString path;
-  rv = tmpDir->GetPath(path);
-  NS_ENSURE_SUCCESS(rv, rv);
-  
-  nsCAutoString cpath;
-  rv = NS_UTF16ToCString(path, NS_CSTRING_ENCODING_UTF8, cpath);
+    nsCOMPtr<nsIFile> tmpDir;
+    rv = directory->Get(NS_OS_TEMP_DIR, NS_GET_IID(nsIFile), getter_AddRefs(tmpDir));
+    NS_ENSURE_SUCCESS(rv, rv);
+    
+    nsAutoString path;
+    rv = tmpDir->GetPath(path);
+    NS_ENSURE_SUCCESS(rv, rv);
+    
+    nsCAutoString cpath;
+    rv = NS_UTF16ToCString(path, NS_CSTRING_ENCODING_UTF8, cpath);
 
-  std::cout << cpath.get() << std::endl;
+    std::cout << cpath.get() << std::endl;
+  }
+  
+  if (1)
+  {
+    nsCOMPtr<nsIExtensionManager> extMgr;
+    rv = svcMgr->GetServiceByContractID("@mozilla.org/extensions/manager;1", 
+      NS_GET_IID(nsIExtensionManager), getter_AddRefs(extMgr));
+    NS_ENSURE_SUCCESS(rv, rv);
+    
+    // Obtain addon location.
+    // Done similar to method in 
+    // http://github.com/linkinpark342/firefoxnotify/blob/master/src/chrome/content/overlay.js
+    // TODO: Not sure that this is correct method.
+    
+    NS_NAMED_LITERAL_STRING(enconvAddonID, ENCONV_ADDON_ID);
+    
+    nsCOMPtr<nsIInstallLocation> instLoc;
+    rv = extMgr->GetInstallLocation(enconvAddonID, getter_AddRefs(instLoc));
+    NS_ENSURE_SUCCESS(rv, rv);
+    NS_ENSURE_TRUE(instLoc, NS_ERROR_FAILURE);
+    
+    nsCOMPtr<nsIFile> instLoc2;
+    rv = instLoc->GetItemLocation(enconvAddonID, getter_AddRefs(instLoc2));
+    NS_ENSURE_SUCCESS(rv, rv);
+    
+    nsAutoString uniStr;
+    rv = instLoc2->GetPath(uniStr);
+    NS_ENSURE_SUCCESS(rv, rv);
+    
+    nsCAutoString cStr;
+    rv = NS_UTF16ToCString(uniStr, NS_CSTRING_ENCODING_UTF8, cStr);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    std::cout << cStr.get() << std::endl;
+  }
 
   return rv;
 }

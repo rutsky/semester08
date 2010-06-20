@@ -29,6 +29,9 @@
 #define ENCONV_ICONV_CID { 0x889580bd, 0xeef4, 0x4309, \
                            { 0x8d, 0x7a, 0xb7, 0x5b, 0xc6, 0x20, 0xe2, 0x5d } }
 
+// TODO: Get addon ID from outside. E.g. create config.h.in.
+#define ENCONV_ADDON_ID "enconv@enconv.sourceforge.net"
+
 class EnconvIconv : public IEnconvIconv
 {
 public:
