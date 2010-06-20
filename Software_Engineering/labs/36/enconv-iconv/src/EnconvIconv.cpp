@@ -148,17 +148,38 @@ nsresult EnconvIconv::init()
       path->AppendNative(librariesDirName);
     }
     
-    
-    
-    nsAutoString uniStr;
-    rv = path->GetPath(uniStr);
-    NS_ENSURE_SUCCESS(rv, rv);
-    
-    nsCAutoString cStr;
-    rv = NS_UTF16ToCString(uniStr, NS_CSTRING_ENCODING_UTF8, cStr);
-    NS_ENSURE_SUCCESS(rv, rv);
+    // Check existence of libraries directory.
+    {
+      PRBool exists;
+      rv = path->Exists(&exists);
+      NS_ENSURE_SUCCESS(rv, rv);
+      
+      // Test that libraries directory exists.
+      NS_ENSURE_TRUE(exists, NS_ERROR_FAILURE);
+    }
 
-    std::cout << cStr.get() << std::endl;
+    // Convert Unicode path wide string to signle byte string.
+    nsCAutoString cpath;
+    {
+      nsAutoString uniStr;
+      rv = path->GetPath(uniStr);
+      NS_ENSURE_SUCCESS(rv, rv);
+      
+      rv = NS_UTF16ToCString(uniStr, NS_CSTRING_ENCODING_UTF8, cpath);
+      NS_ENSURE_SUCCESS(rv, rv);
+    }
+
+    // DEBUG
+    if (1)
+    {
+      std::cout << cpath.get() << std::endl;
+    }
+
+    // Load iconv library.
+    {
+      char *libName = PR_GetLibraryName(cpath.get(), "iconv");
+      std::cout << libName << std::endl;
+    }
   }
 
   return rv;
