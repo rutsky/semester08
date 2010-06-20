@@ -85,21 +85,22 @@ nsresult EnconvIconv::init()
     
     // Obtain addon installation directory (as described on
     // https://developer.mozilla.org/en/Code_snippets/File_I%2F%2FO )
-
-    NS_NAMED_LITERAL_STRING(enconvAddonID, ENCONV_ADDON_ID);
-    
-    // Get addon installation location.
-    nsCOMPtr<nsIInstallLocation> instLoc;
-    rv = extMgr->GetInstallLocation(enconvAddonID, getter_AddRefs(instLoc));
-    NS_ENSURE_SUCCESS(rv, rv);
-    
-    // Test that installation location is known.
-    NS_ENSURE_TRUE(instLoc, NS_ERROR_FAILURE);
-    
-    // Get addon installation location path.
     nsCOMPtr<nsIFile> instPath;
-    rv = instLoc->GetItemLocation(enconvAddonID, getter_AddRefs(instPath));
-    NS_ENSURE_SUCCESS(rv, rv);
+    {
+      NS_NAMED_LITERAL_STRING(enconvAddonID, ENCONV_ADDON_ID);
+      
+      // Get addon installation location.
+      nsCOMPtr<nsIInstallLocation> instLoc;
+      rv = extMgr->GetInstallLocation(enconvAddonID, getter_AddRefs(instLoc));
+      NS_ENSURE_SUCCESS(rv, rv);
+      
+      // Test that installation location is known.
+      NS_ENSURE_TRUE(instLoc, NS_ERROR_FAILURE);
+      
+      // Get addon installation location path.
+      rv = instLoc->GetItemLocation(enconvAddonID, getter_AddRefs(instPath));
+      NS_ENSURE_SUCCESS(rv, rv);
+    }
     
     // Construct platform dependent subpath to libraries.
     nsCAutoString platformName;
@@ -133,16 +134,21 @@ nsresult EnconvIconv::init()
       }
     }
     
+    // Construct path to addon libraries on current platform.
     nsCOMPtr<nsIFile> path;
-    rv = instPath->Clone(getter_AddRefs(path));
-    NS_ENSURE_SUCCESS(rv, rv);
+    {
+      rv = instPath->Clone(getter_AddRefs(path));
+      NS_ENSURE_SUCCESS(rv, rv);
+      
+      nsEmbedCString platformDirName("platform");
+      nsEmbedCString librariesDirName("libraries");
+      
+      path->AppendNative(platformDirName);
+      path->AppendNative(platformName);
+      path->AppendNative(librariesDirName);
+    }
     
-    nsEmbedCString platformDirName("platform");
-    nsEmbedCString librariesDirName("libraries");
     
-    path->AppendNative(platformDirName);
-    path->AppendNative(platformName);
-    path->AppendNative(librariesDirName);
     
     nsAutoString uniStr;
     rv = path->GetPath(uniStr);
