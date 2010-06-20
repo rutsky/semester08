@@ -325,7 +325,7 @@ else
 ifeq ($(os), Linux)
   $(so_target): $(idl_header)
 	$(cxx) $(cppflags) -o $@ $(cpp_sources) $(ldflags)
-	chmod +x $@
+	#chmod +x $@
 else
 ifeq ($(os), SunOS)
   $(so_target): $(idl_header)
