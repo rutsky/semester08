@@ -31,6 +31,7 @@
 #include "nsIProperties.h"
 #include "nsIFile.h"
 #include "nsIExtensionManager.h"
+#include "nsIXULRuntime.h"
 #include "prlink.h"
 
 NS_IMPL_ISUPPORTS1(EnconvIconv, IEnconvIconv)
@@ -76,29 +77,75 @@ nsresult EnconvIconv::init()
   
   if (1)
   {
+    // NOTE: Using not frozen interface!
     nsCOMPtr<nsIExtensionManager> extMgr;
     rv = svcMgr->GetServiceByContractID("@mozilla.org/extensions/manager;1", 
       NS_GET_IID(nsIExtensionManager), getter_AddRefs(extMgr));
     NS_ENSURE_SUCCESS(rv, rv);
     
-    // Obtain addon location.
-    // Done similar to method in 
-    // http://github.com/linkinpark342/firefoxnotify/blob/master/src/chrome/content/overlay.js
-    // TODO: Not sure that this is correct method.
-    
+    // Obtain addon installation directory (as described on
+    // https://developer.mozilla.org/en/Code_snippets/File_I%2F%2FO )
+
     NS_NAMED_LITERAL_STRING(enconvAddonID, ENCONV_ADDON_ID);
     
+    // Get addon installation location.
     nsCOMPtr<nsIInstallLocation> instLoc;
     rv = extMgr->GetInstallLocation(enconvAddonID, getter_AddRefs(instLoc));
     NS_ENSURE_SUCCESS(rv, rv);
+    
+    // Test that installation location is known.
     NS_ENSURE_TRUE(instLoc, NS_ERROR_FAILURE);
     
-    nsCOMPtr<nsIFile> instLoc2;
-    rv = instLoc->GetItemLocation(enconvAddonID, getter_AddRefs(instLoc2));
+    // Get addon installation location path.
+    nsCOMPtr<nsIFile> instPath;
+    rv = instLoc->GetItemLocation(enconvAddonID, getter_AddRefs(instPath));
     NS_ENSURE_SUCCESS(rv, rv);
     
+    // Construct platform dependent subpath to libraries.
+    nsCAutoString platformName;
+    {
+      // Note: Using not frozen interface!
+      nsCOMPtr<nsIXULRuntime> XULRuntime;
+      rv = svcMgr->GetServiceByContractID("@mozilla.org/xre/app-info;1", 
+        NS_GET_IID(nsIXULRuntime), getter_AddRefs(XULRuntime));
+      NS_ENSURE_SUCCESS(rv, rv);
+      
+      nsCAutoString targetOS;
+      rv = XULRuntime->GetOS(targetOS);
+      NS_ENSURE_SUCCESS(rv, rv);
+      
+      nsCAutoString targetABI;
+      rv = XULRuntime->GetXPCOMABI(targetABI);
+      NS_ENSURE_SUCCESS(rv, rv);
+      
+      // OS string should not be empty.
+      NS_ENSURE_TRUE((!targetOS.IsEmpty()), NS_ERROR_FAILURE);
+      rv = NS_CStringCopy(platformName, targetOS);
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      if (!targetABI.IsEmpty())
+      {
+        rv = NS_CStringAppendData(platformName, "-", 1);
+        NS_ENSURE_SUCCESS(rv, rv);
+        
+        rv = NS_CStringAppendData(platformName, targetABI.get(), targetABI.Length());
+        NS_ENSURE_SUCCESS(rv, rv);
+      }
+    }
+    
+    nsCOMPtr<nsIFile> path;
+    rv = instPath->Clone(getter_AddRefs(path));
+    NS_ENSURE_SUCCESS(rv, rv);
+    
+    nsEmbedCString platformDirName("platform");
+    nsEmbedCString librariesDirName("libraries");
+    
+    path->AppendNative(platformDirName);
+    path->AppendNative(platformName);
+    path->AppendNative(librariesDirName);
+    
     nsAutoString uniStr;
-    rv = instLoc2->GetPath(uniStr);
+    rv = path->GetPath(uniStr);
     NS_ENSURE_SUCCESS(rv, rv);
     
     nsCAutoString cStr;
