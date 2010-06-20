@@ -49,13 +49,27 @@ private:
 
 private:
   // Iconv library functions.
+  // TODO: Include definitions from original iconv.h
+  typedef void* iconv_t;
+  
   typedef int (*iconvlist_callback_func_t)( unsigned int namescount,
     const char * const *names, void *data );
 
   typedef void (*iconvlist_func_t)( iconvlist_callback_func_t do_one,
     void* data );
+
+  typedef iconv_t (*iconv_open_func_t)( const char* tocode,
+    const char* fromcode );
+
+  typedef size_t (*iconv_func_t)( iconv_t cd, char **inbuf, size_t *inbytesleft,
+    char **outbuf, size_t *outbytesleft );
+
+  typedef int (*iconv_close_func_t)( iconv_t cd );
   
-  iconvlist_func_t iconvlistFunc_;
+  iconvlist_func_t   iconvlist_;
+  iconv_open_func_t  iconv_open_;
+  iconv_func_t       iconv_;
+  iconv_close_func_t iconv_close_;
 
 private:
   PRLibrary *iconvLib_;

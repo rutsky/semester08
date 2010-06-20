@@ -38,7 +38,10 @@
 NS_IMPL_ISUPPORTS1(EnconvIconv, IEnconvIconv)
 
 EnconvIconv::EnconvIconv()
-  : iconvlistFunc_(nsnull)
+  : iconvlist_(nsnull)
+  , iconv_open_(nsnull)
+  , iconv_(nsnull)
+  , iconv_close_(nsnull)
   , iconvLib_(nsnull)
 {
   std::cout << "EnconvIconv::EnconvIconv()" << std::endl; // DEBUG
@@ -223,8 +226,17 @@ nsresult EnconvIconv::init()
 
     // Set up iconv library functions entry points.
     {
-      iconvlistFunc_ = (iconvlist_func_t)PR_FindSymbol(iconvLib_, "libiconvlist");
-      NS_ENSURE_TRUE(iconvlistFunc_, NS_ERROR_FAILURE);
+      iconvlist_   = (iconvlist_func_t)  PR_FindSymbol(iconvLib_, "libiconvlist");
+      NS_ENSURE_TRUE(iconvlist_,   NS_ERROR_FAILURE);
+      
+      iconv_open_  = (iconv_open_func_t) PR_FindSymbol(iconvLib_, "libiconv_open");
+      NS_ENSURE_TRUE(iconv_open_,  NS_ERROR_FAILURE);
+
+      iconv_       = (iconv_func_t)      PR_FindSymbol(iconvLib_, "libiconv");
+      NS_ENSURE_TRUE(iconv_,       NS_ERROR_FAILURE);
+
+      iconv_close_ = (iconv_close_func_t)PR_FindSymbol(iconvLib_, "libiconv_close");
+      NS_ENSURE_TRUE(iconv_close_, NS_ERROR_FAILURE);
     }
   }
 
@@ -244,7 +256,7 @@ EnconvIconv::ListEncodings( nsACString &encodingsList )
 {
   NS_ENSURE_TRUE(iconvLib_, NS_ERROR_FAILURE);
 
-  this->iconvlistFunc_(iconvlistCallback, (void *)&encodingsList);
+  this->iconvlist_(iconvlistCallback, (void *)&encodingsList);
 
   return NS_OK;
 }
