@@ -12,4 +12,5 @@ export XULRUNNER_BIN=/usr/bin/xulrunner
 
 #make -C crypto build
 #make crypto-obsolete-build
-make clean && make buildall && make onlyxpi
+#make clean && make buildall && make onlyxpi
+make clean && make buildall
