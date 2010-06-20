@@ -24,6 +24,7 @@
     <em:creator>Vladimir Rutsky</em:creator>
     <em:homepageURL>http://enconv.sourceforge.net</em:homepageURL>
     <em:iconURL>chrome://enconv/skin/default/icon.png</em:iconURL>
+    <em:targetPlatform>Linux_x86_64-gcc3</em:targetPlatform>
     
     <em:localized>
       <Description>
