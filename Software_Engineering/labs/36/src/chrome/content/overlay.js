@@ -43,10 +43,12 @@ net.sourceforge.enconv = {
         // TODO
         alert("Encoding Converter initialization failed: " + e);
       }
+
+      alert(enconvIconv1.listEncodings());
       
       //var enconvIconv2 = Components.classes["@enconv.sourceforge.net/enconv/iconv"]
       //  .getService(Components.interfaces.IEnconvIconv);
-      dump(enconvIconv);
+      //dump(enconvIconv1);
     },
     
   openConverter:

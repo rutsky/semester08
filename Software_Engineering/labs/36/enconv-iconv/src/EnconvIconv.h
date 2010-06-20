@@ -48,6 +48,16 @@ private:
   ~EnconvIconv();
 
 private:
+  // Iconv library functions.
+  typedef int (*iconvlist_callback_func_t)( unsigned int namescount,
+    const char * const *names, void *data );
+
+  typedef void (*iconvlist_func_t)( iconvlist_callback_func_t do_one,
+    void* data );
+  
+  iconvlist_func_t iconvlistFunc_;
+
+private:
   PRLibrary *iconvLib_;
 };
 

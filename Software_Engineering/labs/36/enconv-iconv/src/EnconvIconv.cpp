@@ -32,14 +32,45 @@
 #include "nsIFile.h"
 #include "nsIExtensionManager.h"
 #include "nsIXULRuntime.h"
+#include "nsCRT.h"
 #include "prlink.h"
 
 NS_IMPL_ISUPPORTS1(EnconvIconv, IEnconvIconv)
 
 EnconvIconv::EnconvIconv()
-  : iconvLib_(nsnull)
+  : iconvlistFunc_(nsnull)
+  , iconvLib_(nsnull)
 {
   std::cout << "EnconvIconv::EnconvIconv()" << std::endl; // DEBUG
+}
+
+
+typedef nsCString * iconvlist_callback_data_t;
+
+static // TODO: Static?
+int iconvlistCallback( unsigned int namescount, const char * const *names,
+                       void *data )
+{
+  nsCString &encodingsList = *((iconvlist_callback_data_t)data);
+
+  nsresult rv;
+  
+  for (unsigned int i = 0; i < namescount; ++i)
+  {
+    rv = NS_CStringAppendData(encodingsList, names[i],
+      (PRUint32)strlen(names[i])); // TODO: Conversion.
+    NS_ENSURE_SUCCESS(rv, -1);
+
+    rv = NS_CStringAppendData(encodingsList, "\n",
+      (PRUint32)strlen("\n")); // TODO: Conversion.
+    NS_ENSURE_SUCCESS(rv, -1);
+  }
+
+  rv = NS_CStringAppendData(encodingsList, "\n",
+    (PRUint32)strlen("\n")); // TODO: Conversion.
+  NS_ENSURE_SUCCESS(rv, -1);
+
+  return 0;
 }
 
 nsresult EnconvIconv::init()
@@ -189,6 +220,12 @@ nsresult EnconvIconv::init()
       // Test that loading succeded.
       NS_ENSURE_TRUE(iconvLib_, NS_ERROR_FAILURE);
     }
+
+    // Set up iconv library functions entry points.
+    {
+      iconvlistFunc_ = (iconvlist_func_t)PR_FindSymbol(iconvLib_, "libiconvlist");
+      NS_ENSURE_TRUE(iconvlistFunc_, NS_ERROR_FAILURE);
+    }
   }
 
   return rv;
@@ -207,8 +244,8 @@ EnconvIconv::ListEncodings( nsACString &encodingsList )
 {
   NS_ENSURE_TRUE(iconvLib_, NS_ERROR_FAILURE);
 
-  iconvLib_
-  
+  this->iconvlistFunc_(iconvlistCallback, (void *)&encodingsList);
+
   return NS_OK;
 }
 
