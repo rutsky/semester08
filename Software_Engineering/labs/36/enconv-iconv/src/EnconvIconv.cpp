@@ -126,7 +126,7 @@ nsresult EnconvIconv::init()
 
       if (!targetABI.IsEmpty())
       {
-        rv = NS_CStringAppendData(platformName, "-", 1);
+        rv = NS_CStringAppendData(platformName, "_", 1);
         NS_ENSURE_SUCCESS(rv, rv);
         
         rv = NS_CStringAppendData(platformName, targetABI.get(), targetABI.Length());
