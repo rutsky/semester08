@@ -61,7 +61,7 @@ private:
   typedef iconv_t (*iconv_open_func_t)( const char* tocode,
     const char* fromcode );
 
-  typedef size_t (*iconv_func_t)( iconv_t cd, char **inbuf, size_t *inbytesleft,
+  typedef size_t (*iconv_func_t)( iconv_t cd, char const **inbuf, size_t *inbytesleft,
     char **outbuf, size_t *outbytesleft );
 
   typedef int (*iconv_close_func_t)( iconv_t cd );

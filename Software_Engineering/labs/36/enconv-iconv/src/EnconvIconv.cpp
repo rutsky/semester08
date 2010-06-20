@@ -33,6 +33,7 @@
 #include "nsIExtensionManager.h"
 #include "nsIXULRuntime.h"
 #include "nsCRT.h"
+#include "nsMemory.h"
 #include "prlink.h"
 
 NS_IMPL_ISUPPORTS1(EnconvIconv, IEnconvIconv)
@@ -80,6 +81,7 @@ nsresult EnconvIconv::init()
 {
   // TODO: Return value corresponds to internal error. Maybe only return error
   // should be "Failed to initialize"?
+  // TODO: Return appropriate error state.
   
   std::cout << "EnconvIconv::init()" << std::endl; // DEBUG
 
@@ -254,9 +256,9 @@ EnconvIconv::~EnconvIconv()
 NS_IMETHODIMP
 EnconvIconv::ListEncodings( nsACString &encodingsList )
 {
-  NS_ENSURE_TRUE(iconvLib_, NS_ERROR_FAILURE);
+  NS_ENSURE_TRUE(iconvlist_, NS_ERROR_FAILURE);
 
-  this->iconvlist_(iconvlistCallback, (void *)&encodingsList);
+  iconvlist_(iconvlistCallback, (void *)&encodingsList);
 
   return NS_OK;
 }
@@ -265,5 +267,64 @@ NS_IMETHODIMP
 EnconvIconv::Iconv( nsACString const &fromEncoding, nsACString const &toEncoding, 
                     nsACString const &sourceText, nsACString &resultText )
 {
+  // TODO: Return appropriate error state.
+  NS_ENSURE_TRUE(iconv_open_,  NS_ERROR_FAILURE);
+  NS_ENSURE_TRUE(iconv_,       NS_ERROR_FAILURE);
+  NS_ENSURE_TRUE(iconv_close_, NS_ERROR_FAILURE);
+
+  std::cout << "iconv() from '" << fromEncoding.BeginReading() <<
+    "', to '" << fromEncoding.BeginReading() << "' for '" <<
+    sourceText.BeginReading() << "'" <<
+    std::endl; // DEBUG.
+
+  // Open iconv session.
+  iconv_t cd = iconv_open_(toEncoding.BeginReading(), fromEncoding.BeginReading());
+  NS_ENSURE_TRUE((cd != (iconv_t)-1), NS_ERROR_FAILURE);
+
+  // Allocate memory for result string.
+  // TODO: Calculate size more precisely.
+  size_t const resultBufSize = sourceText.Length() * 4 + 16;
+  char *resultBuf = (char *)nsMemory::Alloc(resultBufSize);
+  if (!resultBuf)
+  {
+    iconv_close_(cd); // TODO: Leak return status.
+    return NS_ERROR_FAILURE;
+  }
+
+  // Prepare arguments.
+  char const *inBuf = sourceText.BeginReading();
+  size_t inBytesLeft = sourceText.Length();
+  char *outBuf = resultBuf;
+  size_t outBytesLeft = resultBufSize;
+
+  // Run iconv.
+  if (iconv_(cd,
+    &inBuf, &inBytesLeft,
+    &outBuf, &outBytesLeft) == (size_t)-1)
+  {
+    iconv_close_(cd); // TODO: Leak return status.
+    nsMemory::Free(resultBuf);
+    return NS_ERROR_FAILURE;
+  }
+
+  // Close iconv session.
+  if (iconv_close_(cd))
+  {
+    nsMemory::Free(resultBuf);
+    return NS_ERROR_FAILURE;
+  }
+
+  // DEBUG
+  resultBuf[resultBufSize - outBytesLeft] = 0;
+  std::cout << "Result: '" << resultBuf << "'" << std::endl;
+
+  // Save result.
+  nsresult rv = NS_CStringSetData(resultText, resultBuf,
+    (PRUint32)(resultBufSize - outBytesLeft));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  // Free result buffer.
+  nsMemory::Free(resultBuf);
+  
   return NS_OK;
 }

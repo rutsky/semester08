@@ -35,7 +35,7 @@ net.sourceforge.enconv = {
       alert(this.strbundle().getString("msg.alert_hello"));
       try
       {
-        var enconvIconv1 = Components.classes["@enconv.sourceforge.net/enconv/iconv"]
+        var enconvIconv = Components.classes["@enconv.sourceforge.net/enconv/iconv"]
           .getService(Components.interfaces.IEnconvIconv);
       }
       catch (e)
@@ -44,7 +44,22 @@ net.sourceforge.enconv = {
         alert("Encoding Converter initialization failed: " + e);
       }
 
-      alert(enconvIconv1.listEncodings());
+      alert(enconvIconv.listEncodings());
+
+      var inputStr = "Test!";
+      var inputEnc = "UTF-8";
+      var resultStr = new String();
+      var resultEnc = "UTF-8";
+
+      try
+      {
+        resultStr = enconvIconv.iconv(resultEnc, inputEnc, inputStr);
+        alert(resultStr);
+      }
+      catch (e)
+      {
+        alert("Encoding converter: iconv() failed.");
+      }
       
       //var enconvIconv2 = Components.classes["@enconv.sourceforge.net/enconv/iconv"]
       //  .getService(Components.interfaces.IEnconvIconv);

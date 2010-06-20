@@ -39,9 +39,9 @@ interface IEnconvIconv : nsISupports
    *        Target encoding.
    * @param sourceText
    *        Text to convert.
-   * @param resultText
-   *        Conversion result.
+   *
+   * @returns Conversion result.
    */
-  void iconv( in ACString fromEncoding, in ACString toEncoding,
-              in ACString sourceText, out ACString resultText );  
+  ACString iconv( in ACString fromEncoding, in ACString toEncoding,
+                  in ACString sourceText );
 };
