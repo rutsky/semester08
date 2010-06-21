@@ -42,6 +42,6 @@ interface IEnconvIconv : nsISupports
    *
    * @returns Conversion result.
    */
-  ACString iconv( in ACString fromEncoding, in ACString toEncoding,
-                  in ACString sourceText );
+  AString iconv( in ACString fromEncoding, in ACString toEncoding,
+                 in AString sourceText );
 };

@@ -46,14 +46,13 @@ net.sourceforge.enconv = {
 
       alert(enconvIconv.listEncodings());
 
-      var inputStr = "Test!";
+      var inputStr = "Test! Большой тест!";
       var inputEnc = "UTF-8";
-      var resultStr = new String();
       var resultEnc = "UTF-8";
 
       try
       {
-        resultStr = enconvIconv.iconv(resultEnc, inputEnc, inputStr);
+        var resultStr = enconvIconv.iconv(resultEnc, inputEnc, inputStr);
         alert(resultStr);
       }
       catch (e)

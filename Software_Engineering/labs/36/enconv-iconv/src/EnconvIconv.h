@@ -48,6 +48,11 @@ private:
   ~EnconvIconv();
 
 private:
+  nsresult iconvImpl( nsACString const &fromEncoding,
+                      nsACString const &toEncoding,
+                      nsACString const &sourceText, nsACString &resultText );
+
+private:
   // Iconv library functions.
   // TODO: Include definitions from original iconv.h
   typedef void* iconv_t;

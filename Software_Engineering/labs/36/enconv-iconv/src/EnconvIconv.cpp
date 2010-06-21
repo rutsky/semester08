@@ -263,9 +263,9 @@ EnconvIconv::ListEncodings( nsACString &encodingsList )
   return NS_OK;
 }
 
-NS_IMETHODIMP
-EnconvIconv::Iconv( nsACString const &fromEncoding, nsACString const &toEncoding, 
-                    nsACString const &sourceText, nsACString &resultText )
+nsresult
+EnconvIconv::iconvImpl( nsACString const &fromEncoding, nsACString const &toEncoding,
+                        nsACString const &sourceText, nsACString &resultText )
 {
   // TODO: Return appropriate error state.
   NS_ENSURE_TRUE(iconv_open_,  NS_ERROR_FAILURE);
@@ -273,7 +273,7 @@ EnconvIconv::Iconv( nsACString const &fromEncoding, nsACString const &toEncoding
   NS_ENSURE_TRUE(iconv_close_, NS_ERROR_FAILURE);
 
   std::cout << "iconv() from '" << fromEncoding.BeginReading() <<
-    "', to '" << fromEncoding.BeginReading() << "' for '" <<
+    "' to '" << toEncoding.BeginReading() << "' for '" <<
     sourceText.BeginReading() << "'" <<
     std::endl; // DEBUG.
 
@@ -326,5 +326,37 @@ EnconvIconv::Iconv( nsACString const &fromEncoding, nsACString const &toEncoding
   // Free result buffer.
   nsMemory::Free(resultBuf);
   
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+EnconvIconv::Iconv( nsACString const &fromEncoding, nsACString const &toEncoding,
+                    nsAString const &sourceText, nsAString &resultText )
+{
+  // TODO: Null-characters missed.
+  
+  nsresult rv;
+
+  nsCAutoString csourceText;
+  rv = NS_UTF16ToCString(sourceText, NS_CSTRING_ENCODING_UTF8, csourceText);
+  NS_ENSURE_SUCCESS(rv, rv);
+  
+  nsCAutoString systemEnc("UTF-8"); // TODO: LE or BE?
+  
+  nsCAutoString conv1;
+  rv = iconvImpl(systemEnc, fromEncoding, csourceText, conv1);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsCAutoString conv2;
+  rv = iconvImpl(fromEncoding, toEncoding, conv1, conv2);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsCAutoString cresultText;
+  rv = iconvImpl(fromEncoding, systemEnc, conv2, cresultText);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  rv = NS_CStringToUTF16(cresultText, NS_CSTRING_ENCODING_UTF8, resultText);
+  NS_ENSURE_SUCCESS(rv, rv);
+
   return NS_OK;
 }
