@@ -32,7 +32,7 @@
         <checkbox label="Use document selection" checked="false" disabled="true"/>
         <textbox id="input-text" multiline="true" oninput="updateConvertedText();" flex="1"/>
       </groupbox>
-      <splitter/>
+      <!--<splitter/>
       <groupbox flex="1">
         <caption label="Applied conversions"/>
         <tree flex="1" hidecolumnpicker="true" treelines="true" seltype="single">
@@ -79,7 +79,7 @@
             </treeitem>
           </treechildren>
         </tree>
-      </groupbox>
+      </groupbox>-->
     </hbox>
   </vbox>
   <splitter resizeafter="farthest"/>
@@ -113,8 +113,9 @@
         </hbox>-->
       </vbox>
       <vbox>
-        <button label="Add"/>
-        <button label="Delete"/>
+        <button label="Use Result As Input" onclick="inputText.value = resultText.value; updateConvertedText();"/>
+        <!--<button label="Add"/>
+        <button label="Delete"/>-->
         <spacer flex="1"/>
         <!--<button label="Add encoding to list"/>-->
       </vbox>
@@ -128,7 +129,7 @@
         <hbox flex="3">
           <textbox id="result-text" multiline="true" readonly="true" flex="1"/>
           </hbox>
-          <splitter />
+          <!--<splitter />
           <vbox flex="1">
             <listbox id="view-encoding-list" flex="1">
               <listhead>
@@ -136,11 +137,12 @@
               </listhead>
             </listbox>
           </vbox>
+          -->
         </hbox>
         <hbox>
           <spacer flex="1"/>
           <button label="Apply conversion to selection" onclick="window.close();" disabled="true"/>
-          <button label="Apply conversion to whole page" disabled="true"/>
+          <!--<button label="Apply conversion to whole page" disabled="true"/>-->
         </hbox>
       </groupbox>
     </vbox>

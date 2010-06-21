@@ -61,7 +61,7 @@ var inputText        = null;
 var resultText       = null;
 var fromEncodingList = null;
 var toEncodingList   = null;
-var viewEncodingList = null;
+//var viewEncodingList = null;
 
 // TODO: Better implementation.
 function assert(expr)
@@ -73,8 +73,9 @@ function assert(expr)
 function updateConvertedText()
 {
   var inputStr = inputText.value;
-  var inputEnc = fromEncodingList.value;
-  var resultEnc = toEncodingList.value;
+  var inputEnc = fromEncodingList.value.split("/")[0];
+  dump("toEncodingList:" + toEncodingList + "\n");
+  var resultEnc = toEncodingList.value.split("/")[0];
 
   var resultStr = "";
   try
@@ -97,7 +98,7 @@ function onLoad()
     resultText       = document.getElementById("result-text");
     fromEncodingList = document.getElementById("from-encoding-list");
     toEncodingList   = document.getElementById("to-encoding-list");
-    viewEncodingList = document.getElementById("view-encoding-list");
+    //viewEncodingList = document.getElementById("view-encoding-list");
     
     inputText.value = window.arguments[0];
 
@@ -106,9 +107,17 @@ function onLoad()
       .getService(Components.interfaces.IEnconvIconv);
 
     // Get supported encoding list.
-    encodings = enconvIconv.listEncodings().split("\n")
-      .filter(function (x) { return x.length != 0; }).sort()
-    //dump(encodings);
+    var encodingsGroups = enconvIconv.listEncodings().split("\n\n")
+      .filter(function (x) { return x.length != 0; });
+    encodings = [];
+    for (var i = 0; i < encodingsGroups.length; i++)
+    {
+      encodings.push(encodingsGroups[i].split("\n").join("/"));
+    }
+    encodings.sort();
+    //dump(encodings.join("\n") + "\n");
+    //dump(encodingsGroups.join("\n") + "\n");
+    //assert(encodings.length == encodingsGroups.length);
 
     var utf8Idx = encodings.indexOf("UTF-8");
     assert(utf8Idx >= 0);
@@ -137,6 +146,7 @@ function onLoad()
     toEncodingList.selectItem(toEncodingList.getItemAtIndex(utf8Idx));
     
     // Fill view encodings list.
+    /*
     //viewEncodingList.removeAllItems();
     while (viewEncodingList.itemCount > 0)
       viewEncodingList.removeItemAt(0);
@@ -147,11 +157,12 @@ function onLoad()
     viewEncodingList.scrollToIndex(utf8Idx);
     // TODO: Obtain default view encoding from page guessed encoding.
     viewEncodingList.selectItem(viewEncodingList.getItemAtIndex(utf8Idx));
+    */
 
     // Install event listeners.
     fromEncodingList.addEventListener("select",   updateConvertedText, false);
     toEncodingList  .addEventListener("select",   updateConvertedText, false);
-    viewEncodingList.addEventListener("select",   updateConvertedText, false);
+    //viewEncodingList.addEventListener("select",   updateConvertedText, false);
     // TODO: Not work. Why?
     //inputText       .addEventListener("oninput",  updateConvertedText, false);
 
