@@ -55,13 +55,14 @@ window.addEventListener("load", function(){ net.sourceforge.enconv.onLoad(); }, 
 */
 
 var enconvIconv = null;
+var enconvCharDet = null;
+
 var encodings = [];
 
 var inputText        = null;
 var resultText       = null;
 var fromEncodingList = null;
 var toEncodingList   = null;
-//var viewEncodingList = null;
 
 // TODO: Better implementation.
 function assert(expr)
@@ -99,18 +100,29 @@ function onLoadFreqTable()
   nsIFilePicker = Components.interfaces.nsIFilePicker;
   var fp = Components.classes["@mozilla.org/filepicker;1"]
     .createInstance(Components.interfaces.nsIFilePicker);
-    
+  
   fp.init(window, "Load Frequencies Table", nsIFilePicker.modeOpen);
   fp.appendFilters(nsIFilePicker.filterAll | nsIFilePicker.filterText);
 
   var rv = fp.show();
-  if (rv == nsIFilePicker.returnOK || rv == nsIFilePicker.returnReplace) {
+  if (rv == nsIFilePicker.returnOK || rv == nsIFilePicker.returnReplace)
+  {
+    /*
     var file = fp.file;
     // Get the path as string. Note that you usually won't
     // need to work with the string paths.
     var path = fp.file.path;
     // work with returned nsILocalFile...
-    alert(path);
+    alert(path);*/
+
+    try
+    {
+      enconvCharDet.loadFreqTable(fp.file);
+    }
+    catch (e)
+    {
+      alert("Encoding Converter Error: Failed to load frequency table.");
+    }
   }
 }
 
@@ -142,6 +154,10 @@ function onLoad()
     // Obtain IEnconvIconv.
     enconvIconv = Components.classes["@enconv.sourceforge.net/enconv/iconv"]
       .getService(Components.interfaces.IEnconvIconv);
+
+    // Obtain IEnconvCharDetector.
+    enconvCharDet = Components.classes["@enconv.sourceforge.net/enconv/chardet"]
+      .getService(Components.interfaces.IEnconvCharDetector);
 
     // Get supported encoding list.
     var encodingsGroups = enconvIconv.listEncodings().split("\n\n")
@@ -190,7 +206,8 @@ function onLoad()
   catch (e)
   {
     // TODO
-    alert("Encoding Converter failed: " + e);
+    alert("Encoding Converter Failed: " + e);
+    window.close();
     throw e;
   }
 }
