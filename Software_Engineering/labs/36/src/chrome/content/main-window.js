@@ -57,6 +57,13 @@ window.addEventListener("load", function(){ net.sourceforge.enconv.onLoad(); }, 
 var enconvIconv = null;
 var encodings = [];
 
+// TODO: Better implementation.
+function assert(expr)
+{
+  if (!expr)
+    throw "Assertion failed.";
+}
+
 function onLoad()
 {
   document.getElementById("input-text").value = window.arguments[0];
@@ -72,6 +79,9 @@ function onLoad()
       .filter(function (x) { return x.length != 0; }).sort()
     //dump(encodings);
 
+    var utf8Idx = encodings.indexOf("UTF-8");
+    assert(utf8Idx >= 0);
+    //dump(utf8Idx); // DEBUG
     
     // Converter "From" encodings list.
     var fromEncodingList = document.getElementById("from-encoding-list");
@@ -82,6 +92,8 @@ function onLoad()
     {
       fromEncodingList.appendItem(encodings[i], encodings[i]);
     }
+    fromEncodingList.scrollToIndex(utf8Idx);
+    fromEncodingList.selectItem(fromEncodingList.getItemAtIndex(utf8Idx));
 
     // Converter "To" encodings list.
     var toEncodingList = document.getElementById("to-encoding-list");
@@ -92,6 +104,8 @@ function onLoad()
     {
       toEncodingList.appendItem(encodings[i], encodings[i]);
     }
+    toEncodingList.scrollToIndex(utf8Idx);
+    toEncodingList.selectItem(toEncodingList.getItemAtIndex(utf8Idx));
     
     // Fill view encodings list.
     var viewEncodingList = document.getElementById("view-encoding-list");
@@ -102,6 +116,9 @@ function onLoad()
     {
       viewEncodingList.appendItem(encodings[i], encodings[i]);
     }
+    viewEncodingList.scrollToIndex(utf8Idx);
+    // TODO: Obtain default view encoding from page guessed encoding.
+    viewEncodingList.selectItem(viewEncodingList.getItemAtIndex(utf8Idx));
   }
   catch (e)
   {
