@@ -75,7 +75,7 @@ net.sourceforge.enconv = {
       */
 
       window.openDialog("chrome://enconv/content/main-window.xul", null,
-        "chrome,modal=no,width=600,height=500",
+        "chrome,modal=no,width=700,height=600",
         content.getSelection().toString());
     },
   
