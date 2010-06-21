@@ -29,7 +29,7 @@
     <hbox flex="3">
       <groupbox flex="3">
         <caption label="Input text"/>
-        <checkbox label="Use document selection" checked="false"/>
+        <checkbox label="Use document selection" checked="false" disabled="true"/>
         <textbox id="input-text" multiline="true" flex="1"/>
       </groupbox>
       <splitter/>
@@ -88,7 +88,7 @@
     <hbox flex="1">
       <vbox flex="1">
         <hbox flex="1">
-          <listbox flex="1">
+          <listbox id="from-encoding-list" flex="1">
             <listhead>
               <listheader label="From"/>
             </listhead>
@@ -97,7 +97,7 @@
             <listitem label="cp1251"/>
           </listbox>
           <splitter />
-          <listbox flex="1">
+          <listbox id="to-encoding-list" flex="1">
             <listhead>
               <listheader label="To"/>
             </listhead>
@@ -116,7 +116,7 @@
         <button label="Add"/>
         <button label="Delete"/>
         <spacer flex="1"/>
-        <button label="Add encoding to list"/>
+        <!--<button label="Add encoding to list"/>-->
       </vbox>
     </hbox>
   </groupbox>
@@ -130,7 +130,7 @@
           </hbox>
           <splitter />
           <vbox flex="1">
-            <listbox flex="1">
+            <listbox id="view-encoding-list" flex="1">
               <listhead>
                 <listheader label="View As"/>
               </listhead>
@@ -139,8 +139,8 @@
         </hbox>
         <hbox>
           <spacer flex="1"/>
-          <button label="Apply conversion to selection" onclick="window.close();"/>
-          <button label="Apply conversion to whole page"/>
+          <button label="Apply conversion to selection" onclick="window.close();" disabled="true"/>
+          <button label="Apply conversion to whole page" disabled="true"/>
         </hbox>
       </groupbox>
     </vbox>
