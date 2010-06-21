@@ -136,7 +136,6 @@ function onLoad()
     resultText       = document.getElementById("result-text");
     fromEncodingList = document.getElementById("from-encoding-list");
     toEncodingList   = document.getElementById("to-encoding-list");
-    //viewEncodingList = document.getElementById("view-encoding-list");
     
     inputText.value = window.arguments[0];
 
@@ -153,59 +152,37 @@ function onLoad()
       encodings.push(encodingsGroups[i].split("\n").join("/"));
     }
     encodings.sort();
-    //dump(encodings.join("\n") + "\n");
-    //dump(encodingsGroups.join("\n") + "\n");
-    //assert(encodings.length == encodingsGroups.length);
 
     var utf8Idx = encodings.indexOf("UTF-8");
     assert(utf8Idx >= 0);
-    //dump(utf8Idx); // DEBUG
     
     // Converter "From" encodings list.
-    //fromEncodingList.removeAllItems();
     while (fromEncodingList.itemCount > 0)
       fromEncodingList.removeItemAt(0);
     for (var i = 0; i < encodings.length; i++)
     {
       fromEncodingList.appendItem(encodings[i], encodings[i]);
     }
+    // NOTE: First scroll and then select! TODO: May be this is bug?
+    // NOTE: Scroll not further that physically scroller can be! Hard to be
+    // precise in that, so using "ensureIndexIsVisible()".
+    //fromEncodingList.scrollToIndex(utf8Idx);
+    fromEncodingList.ensureIndexIsVisible(utf8Idx);
     fromEncodingList.selectedIndex = utf8Idx;
-    toEncodingList.ensureIndexIsVisible(utf8Idx);
-    //fromEncodingList.selectItem(fromEncodingList.getItemAtIndex(utf8Idx));
-    //dump(utf8Idx + ": utf8Idx\n");
-    //dump(fromEncodingList.value + ": fromEncodingList.value\n");
 
     // Converter "To" encodings list.
-    //toEncodingList.removeAllItems();
     while (toEncodingList.itemCount > 0)
       toEncodingList.removeItemAt(0);
     for (var i = 0; i < encodings.length; i++)
     {
       toEncodingList.appendItem(encodings[i], encodings[i]);
     }
-    toEncodingList.selectedIndex = utf8Idx;
     toEncodingList.ensureIndexIsVisible(utf8Idx);
-    //toEncodingList.selectItem(toEncodingList.getItemAtIndex(utf8Idx));
+    toEncodingList.selectedIndex = utf8Idx;
     
-    // Fill view encodings list.
-    /*
-    //viewEncodingList.removeAllItems();
-    while (viewEncodingList.itemCount > 0)
-      viewEncodingList.removeItemAt(0);
-    for (var i = 0; i < encodings.length; i++)
-    {
-      viewEncodingList.appendItem(encodings[i], encodings[i]);
-    }
-    viewEncodingList.scrollToIndex(utf8Idx);
-    // TODO: Obtain default view encoding from page guessed encoding.
-    viewEncodingList.selectItem(viewEncodingList.getItemAtIndex(utf8Idx));
-    */
-
     // Install event listeners.
     fromEncodingList.addEventListener("select",   updateConvertedText, false);
     toEncodingList  .addEventListener("select",   updateConvertedText, false);
-    //viewEncodingList.addEventListener("select",   updateConvertedText, false);
-    // TODO: Not work. Why?
     inputText       .addEventListener("input",  updateConvertedText, false);
 
     updateConvertedText();
@@ -218,4 +195,4 @@ function onLoad()
   }
 }
 
-window.addEventListener("load", onLoad, false);
+window.addEventListener("load", function () { return onLoad(); }, false);

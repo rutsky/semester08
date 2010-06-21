@@ -88,7 +88,7 @@
     <hbox flex="1">
       <vbox flex="1">
         <hbox flex="1">
-          <listbox id="from-encoding-list" flex="1">
+          <listbox id="from-encoding-list" seltype="single" flex="1">
             <listhead>
               <listheader label="From"/>
             </listhead>
@@ -97,7 +97,7 @@
             <listitem label="cp1251"/>
           </listbox>
           <splitter />
-          <listbox id="to-encoding-list" flex="1">
+          <listbox id="to-encoding-list" seltype="single" flex="1">
             <listhead>
               <listheader label="To"/>
             </listhead>
@@ -113,9 +113,11 @@
         </hbox>-->
       </vbox>
       <vbox>
+        <vbox>
         <button label="Use Result As Input" onclick="onUseResultAsInput();"/>
         <button label="Load Frequencies Table" onclick="onLoadFreqTable();"/>
         <button label="Detect Conversion" onclick="onDetectConversion();"/>
+        </vbox>
         <!--<button label="Add"/>
         <button label="Delete"/>
         <spacer flex="1"/>
