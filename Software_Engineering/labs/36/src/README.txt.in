@@ -3,4 +3,5 @@ interactive text encoding conversion. Key features of this project are
 convertion pipelining and character encoding guessing (based on statistical
 approach).
 
-This program distributed under terms of GNU GPL v3, see COPYING.txt for details.
+This program distributed under terms of GNU GPL version 3 or later, see 
+COPYING.txt for details.
