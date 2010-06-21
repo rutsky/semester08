@@ -1,1 +1,6 @@
-TODO
+Encoding Converter ("enconv") is a Mozilla Firefox extension intendent for 
+interactive text encoding conversion. Key features of this project are 
+convertion pipelining and character encoding guessing (based on statistical
+approach).
+
+This program distributed under terms of GNU GPL, see COPYING.txt for details.
