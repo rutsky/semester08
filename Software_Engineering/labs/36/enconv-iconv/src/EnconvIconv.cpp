@@ -18,6 +18,7 @@
  */
 
 #include <iostream> // DEBUG
+#include <errno.h>
 
 #include "EnconvIconv.h"
 
@@ -239,6 +240,9 @@ nsresult EnconvIconv::init()
 
       iconv_close_ = (iconv_close_func_t)PR_FindSymbol(iconvLib_, "libiconv_close");
       NS_ENSURE_TRUE(iconv_close_, NS_ERROR_FAILURE);
+
+      iconvctl_    = (iconvctl_func_t)   PR_FindSymbol(iconvLib_, "libiconvctl");
+      NS_ENSURE_TRUE(iconvctl_,    NS_ERROR_FAILURE);
     }
   }
 
@@ -298,13 +302,25 @@ EnconvIconv::iconvImpl( nsACString const &fromEncoding, nsACString const &toEnco
   size_t outBytesLeft = resultBufSize;
 
   // Run iconv.
-  if (iconv_(cd,
-    &inBuf, &inBytesLeft,
-    &outBuf, &outBytesLeft) == (size_t)-1)
+  while (inBytesLeft > 0)
   {
-    iconv_close_(cd); // TODO: Leak return status.
-    nsMemory::Free(resultBuf);
-    return NS_ERROR_FAILURE;
+    if (iconv_(cd,
+      &inBuf, &inBytesLeft,
+      &outBuf, &outBytesLeft) == (size_t)-1)
+    {
+      if (errno == EILSEQ)
+      {
+        // Invalid sequence. Skip it.
+        int one = 1;
+        iconvctl_(cd, ICONV_SET_DISCARD_ILSEQ, &one);
+      }
+      else
+      {
+        iconv_close_(cd); // TODO: Leak return status.
+        nsMemory::Free(resultBuf);
+        return NS_ERROR_FAILURE;
+      }
+    }
   }
 
   // Close iconv session.

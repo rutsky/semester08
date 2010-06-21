@@ -70,11 +70,21 @@ private:
     char **outbuf, size_t *outbytesleft );
 
   typedef int (*iconv_close_func_t)( iconv_t cd );
+
+  /* Requests for iconvctl. */
+#define ICONV_TRIVIALP            0  /* int *argument */
+#define ICONV_GET_TRANSLITERATE   1  /* int *argument */
+#define ICONV_SET_TRANSLITERATE   2  /* const int *argument */
+#define ICONV_GET_DISCARD_ILSEQ   3  /* int *argument */
+#define ICONV_SET_DISCARD_ILSEQ   4  /* const int *argument */
+
+  typedef int (*iconvctl_func_t)( iconv_t cd, int request, void *argument );
   
   iconvlist_func_t   iconvlist_;
   iconv_open_func_t  iconv_open_;
   iconv_func_t       iconv_;
   iconv_close_func_t iconv_close_;
+  iconvctl_func_t    iconvctl_;
 
 private:
   PRLibrary *iconvLib_;
