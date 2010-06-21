@@ -273,7 +273,10 @@ EnconvCharDetector::countFreqs( nsAString const &text, std::vector<double> &freq
 
   freqs.resize(counts.size());
   for (size_t i = 0; i < counts.size(); ++i)
-    freqs[i] = static_cast<double>(counts[i]) / static_cast<double>(totalCount);
+  {
+    if (totalCount)
+      freqs[i] = static_cast<double>(counts[i]) / static_cast<double>(totalCount);
+  }
 
   return NS_OK;
 }
@@ -323,7 +326,8 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
     std::string lastStr;
     while (istr.getline(buf, maxBuf - 1))
     {
-      if (buf[0] == '\n')
+      std::cout << ">> '" << buf << "'" << std::endl;
+      if (buf[0] == 0)
       {
         encodings.push_back(lastStr);
         buf[0] = 0;
@@ -334,6 +338,7 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
       }
     }
   }
+  std::cout << "Number of different encodings: " << encodings.size() << std::endl;
 
   size_t bestFromIdx(-1), bestToIdx(-1);
   double bestMetric(0);
@@ -343,6 +348,8 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
     {
       if (fromIdx == toIdx)
         continue;
+
+      std::cout << "Try: '" << encodings[toIdx] << "' <= '" << encodings[fromIdx] << std::endl;
       
       nsAutoString convertedText;
       nsCAutoString toEnc(encodings[toIdx].c_str(),
@@ -351,15 +358,21 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
                             (PRUint32)encodings[fromIdx].length());
       rv = enconvIconv->Iconv(toEnc, fromEnc, text, convertedText);
       if (NS_FAILED(rv))
+      {
+        std::cout << "  coversion not available." << std::endl;
         continue;
+      }
       else
       {
         std::vector<double> curFreqs;
         countFreqs(convertedText, curFreqs);
         double const curMetric = metric(curFreqs, freqVec_);
 
+        std::cout << "  metric: " << curMetric << " (best: " << bestMetric << ")" << std::endl;
+
         if (bestFromIdx == (size_t)-1 || bestMetric > curMetric)
         {
+          std::cout << "  mark as best." << std::endl;
           bestFromIdx = fromIdx;
           bestToIdx = toIdx;
           bestMetric = curMetric;
@@ -369,6 +382,8 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
 
   if (bestToIdx != (size_t)-1)
   {
+    std::cout << "Best fit conversion from '" << encodings[bestFromIdx] << "' to '" << encodings[bestToIdx] << "'." << std::endl;
+    
     toEncoding.Assign(encodings[bestToIdx].c_str(),
                       (PRUint32)encodings[bestToIdx].length());
     fromEncoding.Assign(encodings[bestFromIdx].c_str(),
