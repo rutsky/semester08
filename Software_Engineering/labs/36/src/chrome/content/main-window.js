@@ -110,6 +110,10 @@ function onLoadFreqTable()
   }
 }
 
+function onDetectConversion()
+{
+}
+
 function onLoad()
 {
   try

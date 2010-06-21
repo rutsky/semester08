@@ -113,12 +113,14 @@
         </hbox>-->
       </vbox>
       <vbox>
-        <button label="Use Result As Input" onclick="inputText.value = resultText.value; updateConvertedText();"/>
-        <button label="Load Frequencies Table" onclick="onLoadFreqTable();"/>
+        <!--<button label="Use Result As Input" onclick="inputText.value = resultText.value; updateConvertedText();"/>-->
+        <button id="3030" label="Load Frequencies Table" onclick="onLoadFreqTable();"/>
+        <button label="Detect Conversion" onclick="onDetectConversion();"/>
+        <!--<button label="A"/>-->
         <!--<button label="Add"/>
-        <button label="Delete"/>-->
+        <button label="Delete"/>
         <spacer flex="1"/>
-        <!--<button label="Add encoding to list"/>-->
+        <button label="Add encoding to list"/>-->
       </vbox>
     </hbox>
   </groupbox>
