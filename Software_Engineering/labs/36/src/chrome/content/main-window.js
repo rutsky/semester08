@@ -57,6 +57,12 @@ window.addEventListener("load", function(){ net.sourceforge.enconv.onLoad(); }, 
 var enconvIconv = null;
 var encodings = [];
 
+var inputText        = null;
+var resultText       = null;
+var fromEncodingList = null;
+var toEncodingList   = null;
+var viewEncodingList = null;
+
 // TODO: Better implementation.
 function assert(expr)
 {
@@ -64,12 +70,23 @@ function assert(expr)
     throw "Assertion failed.";
 }
 
+function updateConvertedText()
+{
+  resultText.value = inputText.value;
+}
+
 function onLoad()
 {
-  document.getElementById("input-text").value = window.arguments[0];
-
   try
   {
+    inputText        = document.getElementById("input-text");
+    resultText       = document.getElementById("result-text");
+    fromEncodingList = document.getElementById("from-encoding-list");
+    toEncodingList   = document.getElementById("to-encoding-list");
+    viewEncodingList = document.getElementById("view-encoding-list");
+    
+    inputText.value = window.arguments[0];
+
     // Obtain IEnconvIconv.
     enconvIconv = Components.classes["@enconv.sourceforge.net/enconv/iconv"]
       .getService(Components.interfaces.IEnconvIconv);
@@ -84,7 +101,6 @@ function onLoad()
     //dump(utf8Idx); // DEBUG
     
     // Converter "From" encodings list.
-    var fromEncodingList = document.getElementById("from-encoding-list");
     //fromEncodingList.removeAllItems();
     while (fromEncodingList.itemCount > 0)
       fromEncodingList.removeItemAt(0);
@@ -96,7 +112,6 @@ function onLoad()
     fromEncodingList.selectItem(fromEncodingList.getItemAtIndex(utf8Idx));
 
     // Converter "To" encodings list.
-    var toEncodingList = document.getElementById("to-encoding-list");
     //toEncodingList.removeAllItems();
     while (toEncodingList.itemCount > 0)
       toEncodingList.removeItemAt(0);
@@ -108,7 +123,6 @@ function onLoad()
     toEncodingList.selectItem(toEncodingList.getItemAtIndex(utf8Idx));
     
     // Fill view encodings list.
-    var viewEncodingList = document.getElementById("view-encoding-list");
     //viewEncodingList.removeAllItems();
     while (viewEncodingList.itemCount > 0)
       viewEncodingList.removeItemAt(0);
@@ -119,6 +133,11 @@ function onLoad()
     viewEncodingList.scrollToIndex(utf8Idx);
     // TODO: Obtain default view encoding from page guessed encoding.
     viewEncodingList.selectItem(viewEncodingList.getItemAtIndex(utf8Idx));
+
+    // Install event listeners.
+    fromEncodingList.addEventListener("select", updateConvertedText, false);
+    toEncodingList  .addEventListener("select", updateConvertedText, false);
+    viewEncodingList.addEventListener("select", updateConvertedText, false);
   }
   catch (e)
   {
