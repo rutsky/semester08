@@ -20,6 +20,11 @@
 #include <iostream> // DEBUG
 #include <errno.h>
 
+// TODO
+#include <fstream>
+#include <istream>
+#include <sstream>
+
 #include "EnconvCharDetector.h"
 
 #include "nsXPCOM.h"
@@ -90,8 +95,10 @@ nsresult EnconvCharDetector::init()
     rv = instPath->Clone(getter_AddRefs(path));
     NS_ENSURE_SUCCESS(rv, rv);
 
+    nsEmbedCString dataName("data");
     nsEmbedCString fileName("ru_freqs.txt");
 
+    path->AppendNative(dataName);
     path->AppendNative(fileName);
   }
 
@@ -121,7 +128,52 @@ EnconvCharDetector::LoadFreqTable( nsIFile *file )
     NS_ENSURE_TRUE(exists, NS_ERROR_FAILURE);
   }
 
-  // TODO
+  {
+    nsCAutoString path;
+    rv = file->GetNativePath(path);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    // Load table from file.
+    std::wifstream input(path.BeginReading());
+
+    size_t const bufSize = 64;
+    wchar_t buf[bufSize];
+    buf[bufSize - 1] = 0;
+
+    std::cout << "Loading frequency table from: '" << path.BeginReading() << "'... (" << input.good() << ")" << std::endl;
+
+    /*
+    std::wstring ws;
+    input >> ws;
+    std::wcout << "ws: '" << ws << "'" << std::endl;
+    */
+    
+    freq_table_t newFreqTable;
+    while (input.getline(buf, bufSize - 1).good())
+    {
+      std::wistringstream istr(buf);
+      wchar_t ch;
+      double freq;
+      istr >> ch >> freq;
+
+      // Test that character not in table.
+      //NS_ENSURE_SUCCESS((newFreqTable.find(ch) == newFreqTable.end()),
+      //  NS_ERROR_FAILURE);
+
+      std::cout << "test" << std::endl;
+      std::wcout << "ch: '" << ch << "', freq: '" << freq << "'" << std::endl;
+
+      newFreqTable.insert(std::make_pair(ch, freq));
+    }
+
+    std::wcout << "buf: '" << buf << "'" << std::endl;
+
+    // Test that loaded table not empty.
+    NS_ENSURE_TRUE(!newFreqTable.empty(), NS_ERROR_FAILURE);
+    
+    // Store successfully loaded table.
+    freqTable_.swap(newFreqTable);
+  }
 
   return NS_OK;
 }

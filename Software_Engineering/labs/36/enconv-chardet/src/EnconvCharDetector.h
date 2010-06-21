@@ -20,6 +20,9 @@
 #ifndef ENCONV_CHARDETECTOR_H
 #define ENCONV_CHARDETECTOR_H
 
+// TODO
+#include <map>
+
 #include "IEnconvCharDetector.h"
 
 #define ENCONV_CHARDETECTOR_CONTRACTID "@enconv.sourceforge.net/enconv/chardet"
@@ -44,6 +47,11 @@ public:
   
 private:
   ~EnconvCharDetector();
+
+private:
+  typedef std::map<PRUnichar, double> freq_table_t;
+  
+  freq_table_t freqTable_;
 };
 
 #endif // ENCONV_CHARDETECTOR_H

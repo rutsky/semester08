@@ -109,6 +109,7 @@ nsresult EnconvIconv::init()
     
     nsCAutoString cpath;
     rv = NS_UTF16ToCString(path, NS_CSTRING_ENCODING_UTF8, cpath);
+    NS_ENSURE_SUCCESS(rv, rv);
 
     std::cout << cpath.get() << std::endl;
   }

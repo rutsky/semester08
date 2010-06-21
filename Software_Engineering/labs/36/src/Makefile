@@ -21,7 +21,7 @@
 
 destdir = ../dist/stage
 
-bundle_dirs = chrome components defaults modules
+bundle_dirs = chrome components defaults modules data
 
 dotin_files := $(shell find . -type f -name \*.in)
 dotin_files := $(dotin_files:.in=)
