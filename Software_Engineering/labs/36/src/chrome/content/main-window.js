@@ -79,7 +79,7 @@ function updateConvertedText()
   var resultStr = "";
   try
   {
-    resultStr = enconvIconv.iconv(resultEnc, inputEnc, inputStr);
+    resultStr = enconvIconv.iconv(inputEnc, resultEnc, inputStr);
   }
   catch (e)
   {
