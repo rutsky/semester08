@@ -20,40 +20,6 @@
 // Note: don't use unique namespace since this JS is loaded only in 
 // enconv's window.
 
-/*
-if (!net) var net = {};
-if (!net.sourceforge) net.sourceforge = {};
-if (!net.sourceforge.enconv) net.sourceforge.enconv = {};
-
-net.sourceforge.enconv = {
-  onLoad:
-    function()
-    {
-      var contextMenuItem = document.getElementById("enconv-context-menu");
-      contextMenuItem.addEventListener("command", this.openConverter, false);
-    },
-  
-  onStatusBarPanelClick:
-    function()
-    {
-      alert(this.strbundle().getString("msg.alert_hello"));
-    },
-    
-  openConverter:
-    function()
-    {
-      //window.open("chrome://enconv/content/main-window.xul", null, "chrome,width=600,height=500");
-      window.openDialog("chrome://enconv/content/main-window.xul", null, "chrome,modal=yes,width=600,height=500");
-    },
-  
-  strbundle:
-    function() 
-      document.getElementById("enconv-strings")
-};
-
-window.addEventListener("load", function(){ net.sourceforge.enconv.onLoad(); }, false);
-*/
-
 var enconvIconv = null;
 var enconvCharDet = null;
 
