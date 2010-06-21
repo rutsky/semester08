@@ -75,7 +75,7 @@ def main(args):
     chars = [s[1:-1].decode(locale.getdefaultlocale()[1]) for s in splitted_data[::2]]
     freqs = [float(s.replace(",", ".")) for s in splitted_data[1::2]]
 
-    sys.stdout.write("\n".join(["%s %.20g"%(c, f) for c, f in zip(chars, freqs)]).encode("UTF-16-BE"))
+    sys.stdout.write("\n".join(["%s %.20g"%(c.encode("UTF-16")[2:], f) for c, f in zip(chars, freqs)]))
 
 if __name__ == "__main__":
     main(sys.argv)
