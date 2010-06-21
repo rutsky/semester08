@@ -32,13 +32,18 @@ interface IEnconvCharDetector : nsISupports
   void loadFreqTable( in nsIFile file );
 
   /**
-   * Guess text character encoding.
+   * Guess opimal for current frequency table conversion for text.
    *
    * @param text
    *        Text to process.
    *
-   * @returns iconv encoding name string.
-   *          Returns empty string if nothing appreciable found.
+   * @param toEncoding
+   *        Guessed target encoding.
+   *
+   * @param fromEncoding
+   *        Guessed source encoding.
    */
-  ACString guessEncoding( in AString text );
+   void guessConversion( in AString text,
+                         out ACString toEncoding,
+                         out ACString fromEncoding );
 };

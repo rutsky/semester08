@@ -22,6 +22,9 @@
 
 #include <sstream>
 #include <fstream>
+#include <vector>
+#include <cassert>
+#include <cmath>
 
 #include "EnconvCharDetector.h"
 
@@ -40,6 +43,9 @@
 #include "nsMemory.h"
 #include "nsILocalFile.h"
 #include "prlink.h"
+
+// TODO:
+#include "../../enconv-iconv-component/IEnconvIconv.h"
 
 NS_IMPL_ISUPPORTS1(EnconvCharDetector, IEnconvCharDetector)
 
@@ -237,15 +243,137 @@ EnconvCharDetector::LoadFreqTable( nsIFile *file )
     
     // Store successfully loaded table.
     freqTable_.swap(newFreqTable);
+    freqTableIdxs_.clear();
+    freqVec_.resize(freqTable_.size());
+    size_t idx(0);
+    for (freq_table_t::const_iterator it = freqTable_.begin();
+        it != freqTable_.end();
+        ++it, ++idx)
+    {
+      freqTableIdxs_.insert(std::make_pair(it->first, idx));
+      freqVec_[idx] = it->second;
+    }
   }
 
   return NS_OK;
 }
 
-NS_IMETHODIMP
-EnconvCharDetector::GuessEncoding( nsAString const &text, nsACString &encoding )
+nsresult
+EnconvCharDetector::countFreqs( nsAString const &text, std::vector<double> &freqs )
 {
-  // TODO
+  std::vector<size_t> counts(freqTable_.size(), size_t(0));
+
+  size_t totalCount(0);
+  for (PRUnichar const *p = text.BeginReading(); p != text.EndReading(); ++p, ++totalCount)
+  {
+    freq_table_idxs_t::const_iterator it = freqTableIdxs_.find(*p);
+    if (it != freqTableIdxs_.end())
+      counts[it->second]++;
+  }
+
+  freqs.resize(counts.size());
+  for (size_t i = 0; i < counts.size(); ++i)
+    freqs[i] = static_cast<double>(counts[i]) / static_cast<double>(totalCount);
+
+  return NS_OK;
+}
+
+double
+EnconvCharDetector::metric( std::vector<double> const &freqsA,
+                            std::vector<double> const &freqsB )
+{
+  double dist = 0.0;
+
+  assert(freqsA.size() == freqsB.size());
+  for (size_t i = 0; i < freqsA.size(); ++i)
+    dist += (freqsA[i] - freqsB[i]) * (freqsA[i] - freqsB[i]);
+
+  return sqrt(dist);
+}
+
+NS_IMETHODIMP
+EnconvCharDetector::GuessConversion( nsAString const &text,
+                                     nsACString &toEncoding,
+                                     nsACString &fromEncoding )
+{
+  nsresult rv;
+
+  nsCOMPtr<nsIServiceManager> svcMgr;
+  rv = NS_GetServiceManager(getter_AddRefs(svcMgr));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsCOMPtr<IEnconvIconv> enconvIconv;
+  rv = svcMgr->GetServiceByContractID("@enconv.sourceforge.net/enconv/iconv",
+    NS_GET_IID(IEnconvIconv), getter_AddRefs(enconvIconv));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  nsCAutoString encodingGroups;
+  rv = enconvIconv->ListEncodings(encodingGroups);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  // Obtain all encodings.
+  std::vector<std::string> encodings;
+  {
+    std::istringstream istr(encodingGroups.BeginReading());
+
+    size_t maxBuf = 64;
+    char buf[maxBuf];
+    buf[maxBuf - 1] = 0;
+
+    std::string lastStr;
+    while (istr.getline(buf, maxBuf - 1))
+    {
+      if (buf[0] == '\n')
+      {
+        encodings.push_back(lastStr);
+        buf[0] = 0;
+      }
+      else
+      {
+        lastStr = std::string(buf);
+      }
+    }
+  }
+
+  size_t bestFromIdx(-1), bestToIdx(-1);
+  double bestMetric(0);
+  // Iterate through all compinations of convesion.
+  for (size_t fromIdx = 0; fromIdx < encodings.size(); ++fromIdx)
+    for (size_t toIdx = 0; toIdx < encodings.size(); ++toIdx)
+    {
+      if (fromIdx == toIdx)
+        continue;
+      
+      nsAutoString convertedText;
+      nsCAutoString toEnc(encodings[toIdx].c_str(),
+                          (PRUint32)encodings[toIdx].length());
+      nsCAutoString fromEnc(encodings[fromIdx].c_str(),
+                            (PRUint32)encodings[fromIdx].length());
+      rv = enconvIconv->Iconv(toEnc, fromEnc, text, convertedText);
+      if (NS_FAILED(rv))
+        continue;
+      else
+      {
+        std::vector<double> curFreqs;
+        countFreqs(convertedText, curFreqs);
+        double const curMetric = metric(curFreqs, freqVec_);
+
+        if (bestFromIdx == (size_t)-1 || bestMetric > curMetric)
+        {
+          bestFromIdx = fromIdx;
+          bestToIdx = toIdx;
+          bestMetric = curMetric;
+        }
+      }
+    }
+
+  if (bestToIdx != (size_t)-1)
+  {
+    toEncoding.Assign(encodings[bestToIdx].c_str(),
+                      (PRUint32)encodings[bestToIdx].length());
+    fromEncoding.Assign(encodings[bestFromIdx].c_str(),
+                        (PRUint32)encodings[bestFromIdx].length());
+  }
   
   return NS_OK;
 }

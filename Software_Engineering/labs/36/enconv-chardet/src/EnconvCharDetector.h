@@ -22,6 +22,7 @@
 
 // TODO
 #include <map>
+#include <vector>
 
 #include "IEnconvCharDetector.h"
 
@@ -49,9 +50,18 @@ private:
   ~EnconvCharDetector();
 
 private:
+  nsresult countFreqs( nsAString const &text, std::vector<double> &freqs );
+  double metric( std::vector<double> const &freqsA,
+                 std::vector<double> const &freqsB );
+
+private:
   typedef std::map<PRUnichar, double> freq_table_t;
+  typedef std::map<PRUnichar, size_t> freq_table_idxs_t;
+  typedef std::vector<double> freq_vec_t;
   
-  freq_table_t freqTable_;
+  freq_table_t      freqTable_;
+  freq_table_idxs_t freqTableIdxs_;
+  freq_vec_t        freqVec_;
 };
 
 #endif // ENCONV_CHARDETECTOR_H
