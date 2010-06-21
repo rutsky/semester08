@@ -23,6 +23,7 @@
     <em:description>Character encoding converter suite</em:description>
     <em:creator>Vladimir Rutsky</em:creator>
     <em:homepageURL>http://enconv.sourceforge.net</em:homepageURL>
+    <em:aboutURL>chrome://enconv/content/about.xul</em:aboutURL>
     <em:iconURL>chrome://enconv/skin/default/icon.png</em:iconURL>
     <em:targetPlatform>Linux_x86_64-gcc3</em:targetPlatform>
     

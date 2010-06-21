@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!DOCTYPE dialog SYSTEM "chrome://enconv/locale/about.dtd">
+<dialog title="About" 
+      orient="vertical"
+      autostretch="always"
+      onload="sizeToContent()"
+      buttons="accept"
+      xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<script type="application/javascript" src="chrome://global/content/contentAreaUtils.js"/>
+<groupbox align="center" orient="horizontal">
+  <vbox>
+    <hbox flex="1">
+      <image src="chrome://enconv/icon.png"/>
+      <text value="Encoding Converter" style="font-weight: bold; font-size: x-large;"/>
+    </hbox>
+    <text value="v0.1"/>
+  
+    <separator/>
+    <vbox flex="1">
+      <text value="Created by" style="font-weight: bold;"/>
+      <text value="Vladimir Rutsky"/>
+    </vbox>
+
+    <separator/>
+    <text value="http://enconv.sourceforge.net" style="font-weight: bold;"/>
+    <text value="Encoding converter"  class="text-link" onclick="window.close(); openURL('http://enconv.sourceforge.net');"/>
+    <separator class="thin"/>
+  </vbox>
+</groupbox>
+</dialog>
