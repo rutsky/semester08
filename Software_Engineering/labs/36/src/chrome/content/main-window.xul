@@ -113,11 +113,9 @@
         </hbox>-->
       </vbox>
       <vbox>
-        <vbox>
         <button label="Use Result As Input" onclick="onUseResultAsInput();"/>
         <button label="Load Frequencies Table" onclick="onLoadFreqTable();"/>
         <button label="Detect Conversion" onclick="onDetectConversion();"/>
-        </vbox>
         <!--<button label="Add"/>
         <button label="Delete"/>
         <spacer flex="1"/>
