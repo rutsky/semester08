@@ -68,8 +68,14 @@ net.sourceforge.enconv = {
   openConverter:
     function()
     {
+      /*
       window.openDialog("chrome://enconv/content/main-window.xul", null, 
         "chrome,modal=yes,width=600,height=500",
+        content.getSelection().toString());
+      */
+
+      window.openDialog("chrome://enconv/content/main-window.xul", null,
+        "chrome,modal=no,width=600,height=500",
         content.getSelection().toString());
     },
   
