@@ -24,6 +24,7 @@ var enconvIconv = null;
 var enconvCharDet = null;
 
 var encodings = [];
+var singleEncNameToIdx = {};
 
 var inputText        = null;
 var resultText       = null;
@@ -108,6 +109,18 @@ function onDetectConversion()
   var fromEnc = {};
   enconvCharDet.guessConversion(inputText.value, toEnc, fromEnc);
   alert("to: " + toEnc.value + ", from: " + fromEnc.value);
+  if (toEnc.value && fromEnc.value)
+  {
+    var toEncIdx = singleEncNameToIdx[toEnc.value];
+    toEncodingList.ensureIndexIsVisible(toEncIdx);
+    toEncodingList.selectedIndex = toEncIdx;
+
+    var fromEncIdx = singleEncNameToIdx[fromEnc.value];
+    fromEncodingList.ensureIndexIsVisible(fromEncIdx);
+    fromEncodingList.selectedIndex = fromEncIdx;
+
+    //updateConvertedText(); // Will update after select events.
+  }
 }
 
 function onLoad()
@@ -136,6 +149,8 @@ function onLoad()
     encodings = [];
     for (var i = 0; i < encodingsGroups.length; i++)
     {
+      for (var j = 0; j < encodingsGroups[i].length; j++)
+        singleEncNameToIdx[encodingsGroups[i][j]] = i;
       encodings.push(encodingsGroups[i].split("\n").join("/"));
     }
     encodings.sort();
