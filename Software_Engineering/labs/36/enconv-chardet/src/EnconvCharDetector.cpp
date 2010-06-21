@@ -210,7 +210,7 @@ EnconvCharDetector::LoadFreqTable( nsIFile *file )
     char buf[bufSize];
     buf[bufSize - 1] = 0;
 
-    std::cout << "Loading frequency table from: '" << path.BeginReading() << "'... (" << input.good() << ")" << std::endl;
+    //std::cout << "Loading frequency table from: '" << path.BeginReading() << "'... (" << input.good() << ")" << std::endl;
 
     /*
     std::wstring ws;
@@ -231,7 +231,7 @@ EnconvCharDetector::LoadFreqTable( nsIFile *file )
       //  NS_ERROR_FAILURE);
 
       //std::cout << "test" << std::endl;
-      std::cout << "ch: '" << ch << "', freq: '" << freq << "'" << std::endl;
+      //std::cout << "ch: '" << ch << "', freq: '" << freq << "'" << std::endl;
 
       newFreqTable.insert(std::make_pair(ch, freq));
     }
@@ -326,7 +326,7 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
     std::string lastStr;
     while (istr.getline(buf, maxBuf - 1))
     {
-      std::cout << ">> '" << buf << "'" << std::endl;
+      //std::cout << ">> '" << buf << "'" << std::endl;
       if (buf[0] == 0)
       {
         encodings.push_back(lastStr);
@@ -338,7 +338,7 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
       }
     }
   }
-  std::cout << "Number of different encodings: " << encodings.size() << std::endl;
+  //std::cout << "Number of different encodings: " << encodings.size() << std::endl;
 
   size_t bestFromIdx(-1), bestToIdx(-1);
   double bestMetric(0);
@@ -350,7 +350,7 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
       if (fromIdx == toIdx)
         continue;
 
-      std::cout << "Try: '" << encodings[toIdx] << "' <= '" << encodings[fromIdx] << std::endl;
+      //std::cout << "Try: '" << encodings[toIdx] << "' <= '" << encodings[fromIdx] << std::endl;
       
       nsAutoString convertedText;
       nsCAutoString toEnc(encodings[toIdx].c_str(),
@@ -360,7 +360,7 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
       rv = enconvIconv->Iconv(toEnc, fromEnc, text, convertedText);
       if (NS_FAILED(rv))
       {
-        std::cout << "  coversion not available." << std::endl;
+        //std::cout << "  coversion not available." << std::endl;
         continue;
       }
       else
@@ -369,11 +369,11 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
         countFreqs(convertedText, curFreqs);
         double const curMetric = metric(curFreqs, freqVec_);
 
-        std::cout << "  metric: " << curMetric << " (best: " << bestMetric << ", worst: " << worstMetric << ")" << std::endl;
+        //std::cout << "  metric: " << curMetric << " (best: " << bestMetric << ", worst: " << worstMetric << ")" << std::endl;
 
         if (bestFromIdx == (size_t)-1 || curMetric < bestMetric)
         {
-          std::cout << "  mark as best." << std::endl;
+          //std::cout << "  mark as best." << std::endl;
           bestFromIdx = fromIdx;
           bestToIdx = toIdx;
           bestMetric = curMetric;
@@ -386,7 +386,7 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
 
   if ((bestToIdx != (size_t)-1) && worstMetric - bestMetric >= 0.01)
   {
-    std::cout << "Best fit conversion from '" << encodings[bestFromIdx] << "' to '" << encodings[bestToIdx] << "'." << std::endl;
+    //std::cout << "Best fit conversion from '" << encodings[bestFromIdx] << "' to '" << encodings[bestToIdx] << "'." << std::endl;
     
     toEncoding.Assign(encodings[bestToIdx].c_str(),
                       (PRUint32)encodings[bestToIdx].length());

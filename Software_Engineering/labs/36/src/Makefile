@@ -32,7 +32,7 @@ buildall: build
 
 .PHONY: $(bundle_dirs) $(dotin_files) jar subst xpi buildall
 
-build: $(bundle_dirs) subst
+build: $(bundle_dirs) subst files
 
 $(bundle_dirs):
 ifdef NO_SYMLINK
@@ -50,5 +50,8 @@ jar:
 	#cd $(destdir)/chrome;rm -f enconv.jar;zip -0r enconv.jar *
 
 subst: $(dotin_files)
+
+files:
+	cp -v icon.png $(destdir)
 
 xpi: build jar

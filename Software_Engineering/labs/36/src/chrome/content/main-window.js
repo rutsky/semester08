@@ -110,15 +110,15 @@ function onDetectConversion()
   enconvCharDet.guessConversion(inputText.value, toEnc, fromEnc);
   if (toEnc.value && fromEnc.value)
   {
-    dump("To: " + toEnc.value + "\n");
-    dump("From: " + fromEnc.value + "\n");
+    //dump("To: " + toEnc.value + "\n");
+    //dump("From: " + fromEnc.value + "\n");
     var toEncIdx = singleEncNameToIdx[toEnc.value];
-    dump("Select to #" + toEncIdx + "\n");
+    //dump("Select to #" + toEncIdx + "\n");
     toEncodingList.ensureIndexIsVisible(toEncIdx);
     toEncodingList.selectedIndex = toEncIdx;
 
     var fromEncIdx = singleEncNameToIdx[fromEnc.value];
-    dump("Select from #" + fromEncIdx + "\n");
+    //dump("Select from #" + fromEncIdx + "\n");
     fromEncodingList.ensureIndexIsVisible(fromEncIdx);
     fromEncodingList.selectedIndex = fromEncIdx;
 

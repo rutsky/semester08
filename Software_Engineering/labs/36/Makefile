@@ -92,7 +92,7 @@ chrome: setup
 build: iconv iconv-binaries chrome
 
 xpi_name := enconv-$(enconv_version)-fx.xpi
-xpi_files := chrome defaults components modules platform \
+xpi_files := chrome defaults components modules platform data \
              install.rdf chrome.manifest icon.png COPYING.txt README.txt
 
 xpi: build onlyxpi
