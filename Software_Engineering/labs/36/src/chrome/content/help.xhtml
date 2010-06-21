@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>enconv: Character encoding converter suite</title>
+</head>
+<body onload='searchBox.OnSelectItem(0);'>
+<div class="contents">
+<h1>enconv: Character encoding converter suite</h1>
+<h2>Author</h2>
+<p>Vladimir Rutsky, 2010</p>
+<h2>Introduction</h2>
+<p>Encoding Converter ("enconv") is Mozilla Firefox extension intended for 
+interactive text encoding conversion.</p>
+<h2>Usage</h2>
+<ol>
+<li>Select text in Firefox.</li>
+<li>Start <i>"Character encoding"</i> context menu item. Encoding Converter window will appear with selected text as input.
+(Also you can edit input text directly into Encoding Converter window.)</li>
+<li>Try selecting different encoding in <i>"Apply conversion"</i>'s lists <i>"From"</i> and <i>"To"</i>.
+Notice that result shown in lower part of window immediately.</li>
+<li>At any time you can move acquired result into input textbox by pressing <i>"Use Result As Input"</i>.
+This is usefull for pipeline conversions, when input text must be converted more than one time.</li>
+<li>If manual conversion don't give result you can try to automatically detect conversion 
+leading to readable text by pressing <i>"Detect Conversion"</i>. 
+It use frequencies table for conversion detection, by default it is for Russian technical language 
+(custom frequency table can be loaded by pressing <i>"Load Frequencies Table"</i> button).</li>
+</ol>
+<h2>Supported platforms</h2>
+Currently only Linux x86_64 supported (Firefox OS/ABI string: <i>Linux_x86_64-gcc3</i>).
+<h2>License</h2>
+<p>This extension is Free Software and distributed under terms of GNU GPL version 3 or later.</p>
+</div>
+</body>
+</html>
