@@ -108,18 +108,25 @@ function onDetectConversion()
   var toEnc = {};
   var fromEnc = {};
   enconvCharDet.guessConversion(inputText.value, toEnc, fromEnc);
-  alert("to: " + toEnc.value + ", from: " + fromEnc.value);
   if (toEnc.value && fromEnc.value)
   {
+    dump("To: " + toEnc.value + "\n");
+    dump("From: " + fromEnc.value + "\n");
     var toEncIdx = singleEncNameToIdx[toEnc.value];
+    dump("Select to #" + toEncIdx + "\n");
     toEncodingList.ensureIndexIsVisible(toEncIdx);
     toEncodingList.selectedIndex = toEncIdx;
 
     var fromEncIdx = singleEncNameToIdx[fromEnc.value];
+    dump("Select from #" + fromEncIdx + "\n");
     fromEncodingList.ensureIndexIsVisible(fromEncIdx);
     fromEncodingList.selectedIndex = fromEncIdx;
 
     //updateConvertedText(); // Will update after select events.
+  }
+  else
+  {
+    alert("Encoding Converter: Not found any suitable conversion.");
   }
 }
 
@@ -149,11 +156,15 @@ function onLoad()
     encodings = [];
     for (var i = 0; i < encodingsGroups.length; i++)
     {
-      for (var j = 0; j < encodingsGroups[i].length; j++)
-        singleEncNameToIdx[encodingsGroups[i][j]] = i;
       encodings.push(encodingsGroups[i].split("\n").join("/"));
     }
     encodings.sort();
+    for (var i = 0; i < encodings.length; i++)
+    {
+      var splitted = encodings[i].split("/");
+      for (var j = 0; j < splitted.length; j++)
+        singleEncNameToIdx[splitted[j]] = i;
+    }
 
     var utf8Idx = encodings.indexOf("UTF-8");
     assert(utf8Idx >= 0);

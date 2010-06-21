@@ -342,6 +342,7 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
 
   size_t bestFromIdx(-1), bestToIdx(-1);
   double bestMetric(0);
+  double worstMetric(0);
   // Iterate through all compinations of convesion.
   for (size_t fromIdx = 0; fromIdx < encodings.size(); ++fromIdx)
     for (size_t toIdx = 0; toIdx < encodings.size(); ++toIdx)
@@ -368,19 +369,22 @@ EnconvCharDetector::GuessConversion( nsAString const &text,
         countFreqs(convertedText, curFreqs);
         double const curMetric = metric(curFreqs, freqVec_);
 
-        std::cout << "  metric: " << curMetric << " (best: " << bestMetric << ")" << std::endl;
+        std::cout << "  metric: " << curMetric << " (best: " << bestMetric << ", worst: " << worstMetric << ")" << std::endl;
 
-        if (bestFromIdx == (size_t)-1 || bestMetric > curMetric)
+        if (bestFromIdx == (size_t)-1 || curMetric < bestMetric)
         {
           std::cout << "  mark as best." << std::endl;
           bestFromIdx = fromIdx;
           bestToIdx = toIdx;
           bestMetric = curMetric;
         }
+
+        if (worstMetric == 0 || curMetric > worstMetric)
+          worstMetric = curMetric;
       }
     }
 
-  if (bestToIdx != (size_t)-1)
+  if ((bestToIdx != (size_t)-1) && worstMetric - bestMetric >= 0.01)
   {
     std::cout << "Best fit conversion from '" << encodings[bestFromIdx] << "' to '" << encodings[bestToIdx] << "'." << std::endl;
     

@@ -277,10 +277,11 @@ EnconvIconv::iconvImpl( nsACString const &toEncoding, nsACString const &fromEnco
   NS_ENSURE_TRUE(iconv_,       NS_ERROR_FAILURE);
   NS_ENSURE_TRUE(iconv_close_, NS_ERROR_FAILURE);
 
+  /*
   std::cout << "iconv() from '" << fromEncoding.BeginReading() <<
     "' to '" << toEncoding.BeginReading() << "' for '" <<
     sourceText.BeginReading() << "'" <<
-    std::endl; // DEBUG.
+    std::endl; // DEBUG.*/
 
   // Open iconv session.
   iconv_t cd = iconv_open_(toEncoding.BeginReading(), fromEncoding.BeginReading());
@@ -333,7 +334,7 @@ EnconvIconv::iconvImpl( nsACString const &toEncoding, nsACString const &fromEnco
 
   // DEBUG
   resultBuf[resultBufSize - outBytesLeft] = 0;
-  std::cout << "Result: '" << resultBuf << "'" << std::endl;
+  /*std::cout << "Result: '" << resultBuf << "'" << std::endl; // DEBUG */
 
   // Save result.
   nsresult rv = NS_CStringSetData(resultText, resultBuf,
