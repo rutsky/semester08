@@ -30,7 +30,7 @@
       <groupbox flex="3">
         <caption label="Input text"/>
         <checkbox label="Use document selection" checked="false" disabled="true"/>
-        <textbox id="input-text" multiline="true" flex="1"/>
+        <textbox id="input-text" multiline="true" oninput="updateConvertedText();" flex="1"/>
       </groupbox>
       <splitter/>
       <groupbox flex="1">
@@ -126,7 +126,7 @@
       <caption label="Result"/>
       <hbox flex="1">
         <hbox flex="3">
-          <textbox id="result-text" multiline="true" flex="1"/>
+          <textbox id="result-text" multiline="true" readonly="true" flex="1"/>
           </hbox>
           <splitter />
           <vbox flex="1">

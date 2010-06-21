@@ -72,7 +72,21 @@ function assert(expr)
 
 function updateConvertedText()
 {
-  resultText.value = inputText.value;
+  var inputStr = inputText.value;
+  var inputEnc = fromEncodingList.value;
+  var resultEnc = toEncodingList.value;
+
+  var resultStr = "";
+  try
+  {
+    resultStr = enconvIconv.iconv(resultEnc, inputEnc, inputStr);
+  }
+  catch (e)
+  {
+    resultStr = "Conversion not available.";
+  }
+
+  resultText.value = resultStr;
 }
 
 function onLoad()
@@ -135,9 +149,13 @@ function onLoad()
     viewEncodingList.selectItem(viewEncodingList.getItemAtIndex(utf8Idx));
 
     // Install event listeners.
-    fromEncodingList.addEventListener("select", updateConvertedText, false);
-    toEncodingList  .addEventListener("select", updateConvertedText, false);
-    viewEncodingList.addEventListener("select", updateConvertedText, false);
+    fromEncodingList.addEventListener("select",   updateConvertedText, false);
+    toEncodingList  .addEventListener("select",   updateConvertedText, false);
+    viewEncodingList.addEventListener("select",   updateConvertedText, false);
+    // TODO: Not work. Why?
+    //inputText       .addEventListener("oninput",  updateConvertedText, false);
+
+    updateConvertedText();
   }
   catch (e)
   {
