@@ -33,15 +33,15 @@ interface IEnconvIconv : nsISupports
   /**
    * Perform character encofing conversion.
    *
-   * @param fromEncoding
-   *        Source encoding.
    * @param toEncoding
    *        Target encoding.
+   * @param fromEncoding
+   *        Source encoding.
    * @param sourceText
    *        Text to convert.
    *
    * @returns Conversion result.
    */
-  AString iconv( in ACString fromEncoding, in ACString toEncoding,
+  AString iconv( in ACString toEncoding, in ACString fromEncoding,
                  in AString sourceText );
 };

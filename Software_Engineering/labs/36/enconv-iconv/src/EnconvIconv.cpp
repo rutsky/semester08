@@ -268,7 +268,7 @@ EnconvIconv::ListEncodings( nsACString &encodingsList )
 }
 
 nsresult
-EnconvIconv::iconvImpl( nsACString const &fromEncoding, nsACString const &toEncoding,
+EnconvIconv::iconvImpl( nsACString const &toEncoding, nsACString const &fromEncoding,
                         nsACString const &sourceText, nsACString &resultText )
 {
   // TODO: Return appropriate error state.
@@ -346,7 +346,7 @@ EnconvIconv::iconvImpl( nsACString const &fromEncoding, nsACString const &toEnco
 }
 
 NS_IMETHODIMP
-EnconvIconv::Iconv( nsACString const &fromEncoding, nsACString const &toEncoding,
+EnconvIconv::Iconv( nsACString const &toEncoding, nsACString const &fromEncoding,
                     nsAString const &sourceText, nsAString &resultText )
 {
   // TODO: Null-characters missed.
@@ -360,15 +360,15 @@ EnconvIconv::Iconv( nsACString const &fromEncoding, nsACString const &toEncoding
   nsCAutoString systemEnc("UTF-8"); // TODO: LE or BE?
   
   nsCAutoString conv1;
-  rv = iconvImpl(systemEnc, fromEncoding, csourceText, conv1);
+  rv = iconvImpl(fromEncoding, systemEnc, csourceText, conv1);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  nsCAutoString conv2;
-  rv = iconvImpl(fromEncoding, toEncoding, conv1, conv2);
-  NS_ENSURE_SUCCESS(rv, rv);
+  //nsCAutoString conv2;
+  //rv = iconvImpl(fromEncoding, toEncoding, conv1, conv2);
+  //NS_ENSURE_SUCCESS(rv, rv);
 
   nsCAutoString cresultText;
-  rv = iconvImpl(fromEncoding, systemEnc, conv2, cresultText);
+  rv = iconvImpl(systemEnc, toEncoding, conv1, cresultText);
   NS_ENSURE_SUCCESS(rv, rv);
 
   rv = NS_CStringToUTF16(cresultText, NS_CSTRING_ENCODING_UTF8, resultText);

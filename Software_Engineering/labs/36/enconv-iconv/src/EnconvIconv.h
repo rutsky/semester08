@@ -48,8 +48,8 @@ private:
   ~EnconvIconv();
 
 private:
-  nsresult iconvImpl( nsACString const &fromEncoding,
-                      nsACString const &toEncoding,
+  nsresult iconvImpl( nsACString const &toEncoding,
+                      nsACString const &fromEncoding,
                       nsACString const &sourceText, nsACString &resultText );
 
 private:
