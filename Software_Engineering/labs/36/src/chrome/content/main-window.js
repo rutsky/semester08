@@ -103,6 +103,11 @@ function onUseResultAsInput()
 function onDetectConversion()
 {
   dump("main-window.js::onDetectConversion()\n"); // DEBUG
+
+  var toEnc = {};
+  var fromEnc = {};
+  enconvCharDet.guessConversion(inputText.value, toEnc, fromEnc);
+  alert("to: " + toEnc.value + ", from: " + fromEnc.value);
 }
 
 function onLoad()
