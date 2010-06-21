@@ -114,6 +114,7 @@
       </vbox>
       <vbox>
         <button label="Use Result As Input" onclick="inputText.value = resultText.value; updateConvertedText();"/>
+        <button label="Load Frequencies Table" onclick="onLoadFreqTable();"/>
         <!--<button label="Add"/>
         <button label="Delete"/>-->
         <spacer flex="1"/>

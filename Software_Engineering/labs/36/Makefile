@@ -74,14 +74,17 @@ setup:
 
 iconv: setup
 	$(MAKE) -C enconv-iconv-component stage
+	$(MAKE) -C enconv-chardet-component stage
 
 # stage precompiled binaries
 iconv-binaries: setup
 	$(MAKE) -C enconv-iconv stage
+	$(MAKE) -C enconv-chardet stage
 
 # build from source
 iconv-build: setup
 	$(MAKE) -C enconv-iconv build
+	$(MAKE) -C enconv-chardet build
 
 chrome: setup
 	$(MAKE) -C src $(chrometarget)
@@ -102,11 +105,15 @@ onlyxpi:
 clean:
 	rm -rf $(objdir)
 	$(MAKE) -C enconv-iconv clean
+	$(MAKE) -C enconv-chardet clean
 	$(MAKE) -C enconv-iconv-component clean
+	$(MAKE) -C enconv-chardet-component clean
 
 buildall: setup
 	$(MAKE) -C enconv-iconv-component buildall
 	$(MAKE) -C enconv-iconv buildall
+	$(MAKE) -C enconv-chardet-component buildall
+	$(MAKE) -C enconv-chardet buildall
 	$(MAKE) -C src buildall
 
 help:

@@ -90,6 +90,26 @@ function updateConvertedText()
   resultText.value = resultStr;
 }
 
+function onLoadFreqTable()
+{
+  nsIFilePicker = Components.interfaces.nsIFilePicker;
+  var fp = Components.classes["@mozilla.org/filepicker;1"]
+    .createInstance(Components.interfaces.nsIFilePicker);
+    
+  fp.init(window, "Load Frequencies Table", nsIFilePicker.modeOpen);
+  fp.appendFilters(nsIFilePicker.filterAll | nsIFilePicker.filterText);
+
+  var rv = fp.show();
+  if (rv == nsIFilePicker.returnOK || rv == nsIFilePicker.returnReplace) {
+    var file = fp.file;
+    // Get the path as string. Note that you usually won't
+    // need to work with the string paths.
+    var path = fp.file.path;
+    // work with returned nsILocalFile...
+    alert(path);
+  }
+}
+
 function onLoad()
 {
   try

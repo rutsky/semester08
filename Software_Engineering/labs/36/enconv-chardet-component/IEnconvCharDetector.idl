@@ -1,0 +1,44 @@
+/*
+ *  This file is part of enconv---character encoding converter suite.
+ *
+ *  Copyright (C) 2010  Vladimir Rutsky
+ *
+ *  enconv is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  enconv is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with enconv.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "nsISupports.idl"
+#include "nsIFile.idl"
+
+[scriptable, uuid(3e4b17e3-09be-4290-b701-27e260531f56)]
+interface IEnconvCharDetector : nsISupports
+{
+  /**
+   * Loads characters frequency table from file.
+   *
+   * @param file
+   *        File name to use.
+   */
+  void loadFreqTable( in nsIFile file );
+
+  /**
+   * Guess text character encoding.
+   *
+   * @param text
+   *        Text to process.
+   *
+   * @returns iconv encoding name string.
+   *          Returns empty string if nothing appreciable found.
+   */
+  ACString guessEncoding( in AString text );
+};
