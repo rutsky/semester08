@@ -72,10 +72,12 @@ function assert(expr)
 
 function updateConvertedText()
 {
+  dump("main-window.js::updateConvertedText()\n"); // DEBUG
+  
   var inputStr = inputText.value;
-  var inputEnc = fromEncodingList.value.split("/")[0];
-  dump("toEncodingList:" + toEncodingList + "\n");
-  var resultEnc = toEncodingList.value.split("/")[0];
+  var inputEnc = encodings[fromEncodingList.selectedIndex].split("/")[0];
+  //dump("toEncodingList:" + toEncodingList + "\n");
+  var resultEnc = encodings[toEncodingList.selectedIndex].split("/")[0];
 
   var resultStr = "";
   try
@@ -92,6 +94,8 @@ function updateConvertedText()
 
 function onLoadFreqTable()
 {
+  dump("main-window.js::updateConvertedText()\n"); // DEBUG
+
   nsIFilePicker = Components.interfaces.nsIFilePicker;
   var fp = Components.classes["@mozilla.org/filepicker;1"]
     .createInstance(Components.interfaces.nsIFilePicker);
@@ -110,12 +114,22 @@ function onLoadFreqTable()
   }
 }
 
+function onUseResultAsInput()
+{
+  dump("main-window.js::onUseResultAsInput()\n"); // DEBUG
+
+  inputText.value = resultText.value;
+  updateConvertedText();
+}
+
 function onDetectConversion()
 {
+  dump("main-window.js::onDetectConversion()\n"); // DEBUG
 }
 
 function onLoad()
 {
+  dump("main-window.js::onLoad()\n"); // DEBUG
   try
   {
     inputText        = document.getElementById("input-text");
@@ -155,8 +169,11 @@ function onLoad()
     {
       fromEncodingList.appendItem(encodings[i], encodings[i]);
     }
-    fromEncodingList.scrollToIndex(utf8Idx);
-    fromEncodingList.selectItem(fromEncodingList.getItemAtIndex(utf8Idx));
+    fromEncodingList.selectedIndex = utf8Idx;
+    toEncodingList.ensureIndexIsVisible(utf8Idx);
+    //fromEncodingList.selectItem(fromEncodingList.getItemAtIndex(utf8Idx));
+    //dump(utf8Idx + ": utf8Idx\n");
+    //dump(fromEncodingList.value + ": fromEncodingList.value\n");
 
     // Converter "To" encodings list.
     //toEncodingList.removeAllItems();
@@ -166,8 +183,9 @@ function onLoad()
     {
       toEncodingList.appendItem(encodings[i], encodings[i]);
     }
-    toEncodingList.scrollToIndex(utf8Idx);
-    toEncodingList.selectItem(toEncodingList.getItemAtIndex(utf8Idx));
+    toEncodingList.selectedIndex = utf8Idx;
+    toEncodingList.ensureIndexIsVisible(utf8Idx);
+    //toEncodingList.selectItem(toEncodingList.getItemAtIndex(utf8Idx));
     
     // Fill view encodings list.
     /*
@@ -188,7 +206,7 @@ function onLoad()
     toEncodingList  .addEventListener("select",   updateConvertedText, false);
     //viewEncodingList.addEventListener("select",   updateConvertedText, false);
     // TODO: Not work. Why?
-    //inputText       .addEventListener("oninput",  updateConvertedText, false);
+    inputText       .addEventListener("input",  updateConvertedText, false);
 
     updateConvertedText();
   }

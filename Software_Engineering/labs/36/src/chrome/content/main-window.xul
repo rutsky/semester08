@@ -30,7 +30,7 @@
       <groupbox flex="3">
         <caption label="Input text"/>
         <checkbox label="Use document selection" checked="false" disabled="true"/>
-        <textbox id="input-text" multiline="true" oninput="updateConvertedText();" flex="1"/>
+        <textbox id="input-text" multiline="true" flex="1"/>
       </groupbox>
       <!--<splitter/>
       <groupbox flex="1">
@@ -113,10 +113,9 @@
         </hbox>-->
       </vbox>
       <vbox>
-        <!--<button label="Use Result As Input" onclick="inputText.value = resultText.value; updateConvertedText();"/>-->
-        <button id="3030" label="Load Frequencies Table" onclick="onLoadFreqTable();"/>
+        <button label="Use Result As Input" onclick="onUseResultAsInput();"/>
+        <button label="Load Frequencies Table" onclick="onLoadFreqTable();"/>
         <button label="Detect Conversion" onclick="onDetectConversion();"/>
-        <!--<button label="A"/>-->
         <!--<button label="Add"/>
         <button label="Delete"/>
         <spacer flex="1"/>
