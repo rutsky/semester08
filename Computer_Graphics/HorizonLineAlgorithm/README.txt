@@ -16,3 +16,9 @@ the functionality of C++.
 http://www.boost.org/
 Used under terms of Boost Software License v1.0 (see boost/LICENSE_1_0.txt).
 Only required part of this library was included.
+
+ * FLTK
+Crossplatform C++ GUI toolkit.
+http://www.fltk.org/
+Used under terms of GNU LGPL v2 (see fltk/README.txt).
+Only parts required for building on Windows platform included.
