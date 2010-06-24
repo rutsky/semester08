@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib wsock32.lib fltk\lib\fltk.lib fltk\lib\fltkforms.lib fltk\lib\fltkimages.lib fltk\lib\fltkz.lib"
+				AdditionalDependencies="comctl32.lib wsock32.lib fltk\lib\fltk.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -135,7 +135,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="comctl32.lib wsock32.lib fltk\lib\fltk.lib fltk\lib\fltkforms.lib fltk\lib\fltkimages.lib fltk\lib\fltkz.lib"
+				AdditionalDependencies="comctl32.lib wsock32.lib fltk\lib\fltk.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"
