@@ -70,7 +70,7 @@ namespace edge_gen
     typedef EdgeType edge_t;
 
   private:
-    typedef std::vector<edge_t> edges_t;
+    typedef std::vector<edge_t, Eigen::aligned_allocator<edge_t> > edges_t;
     
   public:
     typedef typename edges_t::const_iterator const_iterator;
