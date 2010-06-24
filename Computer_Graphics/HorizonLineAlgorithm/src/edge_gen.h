@@ -85,7 +85,7 @@ namespace edge_gen
     }
     
     template< class GridType >
-    EdgesGenerator( GridType grid, 
+    EdgesGenerator( GridType const &grid, 
                     color::color_t aboveHorizonColor,
                     color::color_t belowHorizonColor,
                     bool hEdges = true, bool vEdges = true )
@@ -94,7 +94,7 @@ namespace edge_gen
     }
     
     template< class GridType >
-    void addGridEdges( GridType grid, 
+    void addGridEdges( GridType const &grid, 
                        color::color_t aboveHorizonColor,
                        color::color_t belowHorizonColor,
                        color::color_t initHorizonColor,
