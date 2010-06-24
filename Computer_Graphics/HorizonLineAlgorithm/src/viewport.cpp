@@ -198,10 +198,11 @@ namespace viewport
           color::black(),
           color::crimsonGlory(),
           color::coquelicot(),
+          //color::black(),
           drawXEdges_, drawYEdges_,
           drawFakeEdges_);
         
-        std::cout << "sort dir: (" << sortDir.x() << ", " << sortDir.y() << ")\n";
+        //std::cout << "sort dir: (" << sortDir.x() << ", " << sortDir.y() << ")\n";
         edgesGen.orientBy(sortDir);
         edgesGen.sort(sortDir);
       }

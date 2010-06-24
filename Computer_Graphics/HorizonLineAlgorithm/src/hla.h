@@ -215,9 +215,10 @@ namespace hla
             // indices [0, 1]. After that, drawing of CD segment have been 
             // denies at cells (1,1), (1,2) (and (1,3), (1,4), (1,5)),
             // which leaded to "holes" in image.
-            if (!firstPoint && (!pNextIt || pNextIt->x() == p.x()))
-              continue;
-          
+            bool const initializeButNotUpdate = 
+                !firstPoint && 
+                (!pNextIt || pNextIt->x() == p.x());
+
             horizon_column_t &horizonColumn = horizon_[p.x()];
             if (!horizonColumn.initialized)
             {
@@ -230,32 +231,35 @@ namespace hla
                 horizonColumn.lo = p.y();
               }
             }
-            else if (p.y() > horizonColumn.hi)
+            else if (!initializeButNotUpdate)
             {
-              // Point above horizon.
-              edge::line_style_t const &ls = edge.aboveHorizon();
-              if (ls.updateHorizon)
+              if (p.y() > horizonColumn.hi)
               {
-                horizonColumn.hi = p.y();
+                // Point above horizon.
+                edge::line_style_t const &ls = edge.aboveHorizon();
+                if (ls.updateHorizon)
+                {
+                  horizonColumn.hi = p.y();
+                }
               }
-            }
-            else if (p.y() < horizonColumn.lo)
-            {
-              // Point below horizon.
-              edge::line_style_t const &ls = edge.belowHorizon();
-              if (ls.updateHorizon)
+              else if (p.y() < horizonColumn.lo)
               {
-                horizonColumn.lo = p.y();
-              }          
-            }
-            else
-            {
-              assert(p.y() >= horizonColumn.lo && p.y() <= horizonColumn.hi);
-              // Point inside horizon.
-              edge::line_style_t const &ls = edge.insideHorizon();
-              if (ls.updateHorizon)
+                // Point below horizon.
+                edge::line_style_t const &ls = edge.belowHorizon();
+                if (ls.updateHorizon)
+                {
+                  horizonColumn.lo = p.y();
+                }          
+              }
+              else
               {
-                // Nothing to do.
+                assert(p.y() >= horizonColumn.lo && p.y() <= horizonColumn.hi);
+                // Point inside horizon.
+                edge::line_style_t const &ls = edge.insideHorizon();
+                if (ls.updateHorizon)
+                {
+                  // Nothing to do.
+                }
               }
             }
           }
