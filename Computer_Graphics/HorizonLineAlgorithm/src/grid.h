@@ -59,6 +59,9 @@ namespace grid
       //std::cout << "FuncValuesGrid(" << x << "," << y << ") = (" << v.x() << ", " << v.y() << ", " << func_(v.x(), v.y()) << ")\n"; // debug
       return Vector3d(v.x(), v.y(), func_(v.x(), v.y()));
     }
+  
+  public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     
   private:
     function::func_t func_; 

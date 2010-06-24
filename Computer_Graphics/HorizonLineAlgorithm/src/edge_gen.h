@@ -58,6 +58,9 @@ namespace edge_gen
       return aMin < bMin;
     }
     
+  public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    
   private:
     Vector3d dir_;
   };
