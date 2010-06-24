@@ -130,14 +130,14 @@ viewport_->redraw();}
         } {
           Fl_Value_Input {} {
             label {by X:}
-            callback {viewport_->setXCells(o->value());
+            callback {viewport_->setXCells((size_t)o->value());
 viewport_->redraw();}
             xywh {110 52 35 26} minimum 1 maximum 128 step 1 value 16
             code0 {o->value(appconf::startXCells);}
           }
           Fl_Value_Input {} {
             label {by Y:}
-            callback {viewport_->setYCells(o->value());
+            callback {viewport_->setYCells((size_t)o->value());
 viewport_->redraw();}
             xywh {110 82 35 25} minimum 1 maximum 128 step 1 value 16
             code0 {o->value(appconf::startYCells);}
@@ -211,7 +211,7 @@ viewport_->redraw();}
   yViewVolume->deactivate();
 else
   yViewVolume->activate();
-viewport_->setKeepAspectRatio(o->value());
+viewport_->setKeepAspectRatio(!!o->value());
 updateYViewVolume();
 viewport_->redraw();}
             xywh {26 369 145 15} down_box DOWN_BOX value 1
@@ -246,28 +246,28 @@ viewport_->redraw();}
         } {
           Fl_Check_Button {} {
             label {draw X edges}
-            callback {viewport_->setDrawXEdges(o->value());
+            callback {viewport_->setDrawXEdges(!!o->value());
 viewport_->redraw();}
             xywh {37 426 120 15} down_box DOWN_BOX value 1
             code0 {o->value(appconf::startDrawXEdges);}
           }
           Fl_Check_Button {} {
             label {draw Y edges}
-            callback {viewport_->setDrawYEdges(o->value());
+            callback {viewport_->setDrawYEdges(!!o->value());
 viewport_->redraw();}
             xywh {37 446 120 15} down_box DOWN_BOX value 1
             code0 {o->value(appconf::startDrawXEdges);}
           }
           Fl_Check_Button {} {
             label {draw axes}
-            callback {viewport_->setDrawAxes(o->value());
+            callback {viewport_->setDrawAxes(!!o->value());
 viewport_->redraw();}
             xywh {37 465 120 15} down_box DOWN_BOX value 1
             code0 {o->value(appconf::startDrawAxes);}
           }
           Fl_Check_Button {} {
             label {use fake edges}
-            callback {viewport_->setDrawFakeEdges(o->value());
+            callback {viewport_->setDrawFakeEdges(!!o->value());
 viewport_->redraw();} selected
             xywh {37 481 131 17} down_box DOWN_BOX value 1
             code0 {o->value(appconf::startDrawFakeEdges);}
