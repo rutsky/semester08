@@ -6,4 +6,4 @@ TODO:
  + Update CImg version
  + Use precompiled header files
  * Use precompiled header files in Windows
-
+ * Looks like it is "Floating Horizon Algorithm", should be renamed.
