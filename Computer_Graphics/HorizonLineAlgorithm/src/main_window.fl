@@ -37,6 +37,7 @@ viewport_->redraw();}
           label label
           private xywh {282 57 420 391}
           code0 {\#include "viewport.h"}
+          code3 {keepAspectRatio = NULL; // TODO: Must be initialized!}
           class {viewport::Viewport}
         }
       }
