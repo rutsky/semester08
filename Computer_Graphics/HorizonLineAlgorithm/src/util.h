@@ -29,6 +29,15 @@ namespace util
     return (v >= 0) ? (v > 0 ? +1 : 0) : -1; 
   }
   
+  // NOTE! Looks like ::abs(x) converts x to integer type or something 
+  // like that, so using own abs().
+  template< class T >
+  inline
+  T abs( T v )
+  {
+    return v < 0 ? -v : v;
+  }
+  
   template< class T >
   inline
   T & make_max( T &v, T const &x )

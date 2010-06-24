@@ -30,6 +30,7 @@
 #include "function.h"
 #include "edge.h"
 #include "color.h"
+#include "util.h"
 
 namespace edge_gen
 {
@@ -213,16 +214,16 @@ namespace edge_gen
         Vector2d p0(edgeIt->p0().x(), edgeIt->p0().y());
         Vector2d p1(edgeIt->p1().x(), edgeIt->p1().y());
         
-        //double const eps = 1e-8;
-        if (sortDir2d.dot(p0) > sortDir2d.dot(p1))// + eps)
+        double const eps = 1e-10;
+        if (sortDir2d.dot(p0) > sortDir2d.dot(p1) + eps)
           edgeIt->swapEnds();
-        /*
-        else if (abs(sortDir2d.dot(p0) - sortDir2d.dot(p1)) <= eps)
+        else if (util::abs(sortDir2d.dot(p0) - sortDir2d.dot(p1)) <= eps)
         {
-          Vector2d r(-sortDir2d.y(), sortDir2d.x());
+          // TODO: Is it really near impossible?
+          Vector2d r(sortDir2d.y(), -sortDir2d.x());
           if (r.dot(p0) > r.dot(p1))
             edgeIt->swapEnds();
-        }*/
+        }
       }
     }
     
