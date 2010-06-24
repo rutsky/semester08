@@ -215,6 +215,7 @@ namespace hla
             // indices [0, 1]. After that, drawing of CD segment have been 
             // denies at cells (1,1), (1,2) (and (1,3), (1,4), (1,5)),
             // which leaded to "holes" in image.
+            // TODO: This comment probably wrong.
             bool const initializeButNotUpdate = 
                 !firstPoint && 
                 (!pNextIt || pNextIt->x() == p.x());
