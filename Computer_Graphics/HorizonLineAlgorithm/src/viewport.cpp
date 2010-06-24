@@ -201,6 +201,7 @@ namespace viewport
           drawXEdges_, drawYEdges_,
           drawFakeEdges_);
         
+        std::cout << "sort dir: (" << sortDir.x() << ", " << sortDir.y() << ")\n";
         edgesGen.orientBy(sortDir);
         edgesGen.sort(sortDir);
       }

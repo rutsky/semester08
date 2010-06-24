@@ -46,8 +46,15 @@ namespace edge_gen
     template< class EdgeType >
     bool operator () ( EdgeType const &a, EdgeType const &b )
     {
-      double const aMin = std::min(dir_.dot(a.p0()), dir_.dot(a.p1()));
-      double const bMin = std::min(dir_.dot(b.p0()), dir_.dot(b.p1()));
+      Vector2d const dir(dir_.x(), dir_.y());
+      Vector2d const ap0(a.p0().x(), a.p0().y());
+      Vector2d const ap1(a.p1().x(), a.p1().y());
+      Vector2d const bp0(b.p0().x(), b.p0().y());
+      Vector2d const bp1(b.p1().x(), b.p1().y());
+      
+      double const aMin = std::min(dir.dot(ap0), dir.dot(ap1));
+      double const bMin = std::min(dir.dot(bp0), dir.dot(bp1));
+      
       return aMin < bMin;
     }
     
@@ -196,12 +203,23 @@ namespace edge_gen
     
     void orientBy( Vector3d const &sortDir )
     {
-      EdgeLess lessComparator(sortDir);
+      Vector2d sortDir2d(sortDir.x(), sortDir.y());
       
       for (typename edges_t::iterator edgeIt = edges_.begin(); edgeIt != edges_.end(); ++edgeIt)
       {
-        if (sortDir.dot(edgeIt->p0()) > sortDir.dot(edgeIt->p1()))
+        Vector2d p0(edgeIt->p0().x(), edgeIt->p0().y());
+        Vector2d p1(edgeIt->p1().x(), edgeIt->p1().y());
+        
+        //double const eps = 1e-8;
+        if (sortDir2d.dot(p0) > sortDir2d.dot(p1))// + eps)
           edgeIt->swapEnds();
+        /*
+        else if (abs(sortDir2d.dot(p0) - sortDir2d.dot(p1)) <= eps)
+        {
+          Vector2d r(-sortDir2d.y(), sortDir2d.x());
+          if (r.dot(p0) > r.dot(p1))
+            edgeIt->swapEnds();
+        }*/
       }
     }
     

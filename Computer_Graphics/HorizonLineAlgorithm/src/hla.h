@@ -93,10 +93,25 @@ namespace hla
       // Draw current segment.
       if (edge.isDraw())
       {
+        // DEBUG
+        /*
+        size_t len = 0;
+        for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt, ++len)
+          ;
+        */
+        // END OF DEBUG
+        
         size_t idx = 0;
         Vector2i lastInitialized(-1, -1);
         for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt, ++idx)
         {
+          // DEBUG
+          /*
+          if (idx > len / 2.0)
+            break;
+          */
+          // END OF DEBUG
+          
           Vector2i const p = *pIt;
           if (isInsideRenderFrame(p))
           {
@@ -170,38 +185,39 @@ namespace hla
       // Update horizon.
       if (edge.isUpdateHorizon())
       {
-        for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt)
+        bool firstPoint(true);
+        for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt, firstPoint = false)
         {
           Vector2i const p = *pIt;
           
-          bresenham::PointsIterator pNextIt = pIt; // TODO: Use single iterator.
-          ++pNextIt;
-          
-          // Don't update horizon for last point. This fix bugs like this:
-          //   BC
-          //   12
-          //   12
-          // 1  2
-          // 1  2
-          // A    2
-          //      2
-          //      2
-          //      2
-          //      D
-          // ------ 
-          //  0 1 2  --- index of horizon column
-          // First segment AB (marked with "1", from (0,0) to (1,5)).
-          // After it (and further from us) segment CD (marked with "2", from
-          // (1,5) to (-4,2)). At point B=C they intersects.
-          // In old scheme, when AB has been drawed, it updated horizon at
-          // indices [0, 1]. After that, drawing of CD segment have been 
-          // denies at cells (1,1), (1,2) (and (1,3), (1,4), (1,5)),
-          // which leaded to "holes" in image.
-          if (!pNextIt || pNextIt->x() == p.x())
-            continue;
-          
           if (isXInsideRenderFrame(p.x()))
           {
+            bresenham::PointsIterator pNextIt = pIt; // TODO: Use single iterator.
+            ++pNextIt;
+            
+            // Don't update horizon for last point. This fix bugs like this:
+            //   BC
+            //   12
+            //   12
+            // 1  2
+            // 1  2
+            // A    2
+            //      2
+            //      2
+            //      2
+            //      D
+            // ------ 
+            //  0 1 2  --- index of horizon column
+            // First segment AB (marked with "1", from (0,0) to (1,5)).
+            // After it (and further from us) segment CD (marked with "2", from
+            // (1,5) to (-4,2)). At point B=C they intersects.
+            // In old scheme, when AB has been drawed, it updated horizon at
+            // indices [0, 1]. After that, drawing of CD segment have been 
+            // denies at cells (1,1), (1,2) (and (1,3), (1,4), (1,5)),
+            // which leaded to "holes" in image.
+            if (!firstPoint && (!pNextIt || pNextIt->x() == p.x()))
+              continue;
+          
             horizon_column_t &horizonColumn = horizon_[p.x()];
             if (!horizonColumn.initialized)
             {
