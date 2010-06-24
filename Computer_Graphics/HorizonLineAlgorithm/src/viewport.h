@@ -102,13 +102,17 @@ namespace viewport
       color_t & operator () ( size_t x, size_t y )
       {
         // Include correction to get around OY directed down.
-        return buffer_.at(w_ * (h_ - 1 - y) + x);
+        size_t const idx = w_ * (h_ - 1 - y) + x;
+        assert(idx < buffer_.size());
+        return buffer_[idx];
       }
       
       color_t const & operator () ( size_t x, size_t y ) const
       {
         // Include correction to get around OY directed down.
-        return buffer_.at(w_ * (h_ - 1 - y) + x);
+        size_t const idx = w_ * (h_ - 1 - y) + x;
+        assert(idx < buffer_.size());
+        return buffer_[idx];
       }
 
     private:

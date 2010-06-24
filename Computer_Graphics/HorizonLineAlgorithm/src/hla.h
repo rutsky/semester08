@@ -57,13 +57,19 @@ namespace hla
     {
       horizon_column_t()
         : initialized(false)
-        , lo(-1)
-        , hi(-1)
+        , edgeEnd(false)
       {
       }
       
       bool initialized;
+      int initializeRow;
       int lo, hi;
+
+      // True if some edge initialized this column with its last point 
+      // and no other edges updated this column.
+      bool edgeEnd;
+      int edgeEndRow;
+      int edgeEndLo, edgeEndHi;
     };
     
     typedef std::vector<horizon_column_t> horizon_t;
@@ -93,29 +99,26 @@ namespace hla
       // Draw current segment.
       if (edge.isDraw())
       {
-        // DEBUG
-        /*
-        size_t len = 0;
-        for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt, ++len)
-          ;
-        */
-        // END OF DEBUG
-        
         size_t idx = 0;
         Vector2i lastInitialized(-1, -1);
         for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt, ++idx)
         {
-          // DEBUG
-          /*
-          if (idx > len / 2.0)
-            break;
-          */
+          // DEBUG: Draw half-edges. Helps debug segments orientation.
+          if (0)
+          {
+            if (idx > bresenham::pointsCount(p0, p1) / 2.0)
+              break;
+          }
           // END OF DEBUG
           
           Vector2i const p = *pIt;
           if (isInsideRenderFrame(p))
           {
             horizon_column_t horizonColumn = horizon_[p.x()];
+            
+            //bool const isLastColumn = (p.x() == p1.x());
+            //bool const isFirstColumn = (p.x() == p0.x());
+            
             if (!horizonColumn.initialized)
             {
               if (lastInitialized.x() != p.x())
@@ -171,6 +174,26 @@ namespace hla
                 }
                 //assert(!color::getA(frame_.getPixel(p.x(), p.y())));
               }
+              /*else if (horizonColumn.edgeEnd && (isFirstColumn || isLastColumn))
+              {
+                // Edges ends can overlap.
+                if (p.y() > horizonColumn.initializeRow)
+                {
+                  // Point above initial horizon.
+                  edge::line_style_t const &ls = edge.aboveHorizon();
+                  drawLinePoint(p, ls.color, ls.style, idx);
+                }
+                else if (p.y() < horizonColumn.initializeRow)
+                {
+                  // Point below initial horizon.
+                  edge::line_style_t const &ls = edge.belowHorizon();
+                  drawLinePoint(p, ls.color, ls.style, idx);
+                }
+                else
+                {
+                  // Initialized point already drawed.
+                }
+              }*/
               else
               {
                 // Draw as point inside horizon.
@@ -185,58 +208,131 @@ namespace hla
       // Update horizon.
       if (edge.isUpdateHorizon())
       {
-        bool firstPoint(true);
-        for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt, firstPoint = false)
+        bool markAsEdgeEnd(false);
+        if (isXInsideRenderFrame(p1.x()))
+        {
+          if (horizon_[p1.x()].edgeEnd && horizon_[p1.x()].edgeEndRow == p1.y())
+            applyEdgeEnd(p1.x());
+          else
+          {
+            markAsEdgeEnd = true;
+            if (horizon_[p1.x()].initialized)
+            {
+              horizon_[p1.x()].edgeEnd = true;
+              horizon_[p1.x()].edgeEndRow = p1.y();
+              horizon_[p1.x()].edgeEndHi = horizon_[p1.x()].hi;
+              horizon_[p1.x()].edgeEndLo = horizon_[p1.x()].lo;
+            }
+          }
+        }
+        
+        for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt)
         {
           Vector2i const p = *pIt;
           
           if (isXInsideRenderFrame(p.x()))
           {
-            // For last column smartly update horizons.
-            bool const isLastColumn = (p.x() == p1.x());
-            bool const initializeButNotUpdate = 
-                !firstPoint && isLastColumn;
-
             horizon_column_t &horizonColumn = horizon_[p.x()];
-            if (!horizonColumn.initialized)
+
+            //bool const isLastPoint = (p == p1);
+            bool const isLastColumn = (p.x() == p1.x());
+            
+            if (!isLastColumn || !markAsEdgeEnd)
             {
-              // Uninitialized column.
-              edge::line_style_t const &ls = edge.initHorizon();
-              if (ls.updateHorizon)
+              applyEdgeEnd(p.x());
+            
+              if (!horizonColumn.initialized)
               {
-                horizonColumn.initialized = true;
-                horizonColumn.hi = p.y();
-                horizonColumn.lo = p.y();
-              }
-            }
-            else if (!initializeButNotUpdate)
-            {
-              if (p.y() > horizonColumn.hi)
-              {
-                // Point above horizon.
-                edge::line_style_t const &ls = edge.aboveHorizon();
+                // Uninitialized column.
+                edge::line_style_t const &ls = edge.initHorizon();
                 if (ls.updateHorizon)
                 {
+                  horizonColumn.initialized = true;
+                  horizonColumn.initializeRow = p.y();
                   horizonColumn.hi = p.y();
-                }
-              }
-              else if (p.y() < horizonColumn.lo)
-              {
-                // Point below horizon.
-                edge::line_style_t const &ls = edge.belowHorizon();
-                if (ls.updateHorizon)
-                {
                   horizonColumn.lo = p.y();
-                }          
+                }
               }
               else
               {
-                assert(p.y() >= horizonColumn.lo && p.y() <= horizonColumn.hi);
-                // Point inside horizon.
-                edge::line_style_t const &ls = edge.insideHorizon();
+                if (p.y() > horizonColumn.hi)
+                {
+                  // Point above horizon.
+                  edge::line_style_t const &ls = edge.aboveHorizon();
+                  if (ls.updateHorizon)
+                  {
+                    horizonColumn.hi = p.y();
+                  }
+                }
+                else if (p.y() < horizonColumn.lo)
+                {
+                  // Point below horizon.
+                  edge::line_style_t const &ls = edge.belowHorizon();
+                  if (ls.updateHorizon)
+                  {
+                    horizonColumn.lo = p.y();
+                  }          
+                }
+                else
+                {
+                  assert(p.y() >= horizonColumn.lo && p.y() <= horizonColumn.hi);
+                  // Point inside horizon.
+                  edge::line_style_t const &ls = edge.insideHorizon();
+                  if (ls.updateHorizon)
+                  {
+                    // Nothing to do.
+                  }
+                }
+              }
+            }
+            else
+            {
+              if (!horizonColumn.initialized)
+              {
+                // Uninitialized column.
+                edge::line_style_t const &ls = edge.initHorizon();
                 if (ls.updateHorizon)
                 {
-                  // Nothing to do.
+                  horizonColumn.initialized = true;
+                  horizonColumn.initializeRow = p.y();
+                  horizonColumn.hi = p.y();
+                  horizonColumn.lo = p.y();
+                  
+                  horizonColumn.edgeEnd = true;                  
+                  horizonColumn.edgeEndRow = p.y();
+                  horizonColumn.edgeEndHi = p.y();
+                  horizonColumn.edgeEndLo = p.y();
+                }
+              }
+              else
+              {
+                if (p.y() > horizonColumn.edgeEndHi)
+                {
+                  // Point above horizon.
+                  edge::line_style_t const &ls = edge.aboveHorizon();
+                  if (ls.updateHorizon)
+                  {
+                    horizonColumn.edgeEndHi = p.y();
+                  }
+                }
+                else if (p.y() < horizonColumn.edgeEndLo)
+                {
+                  // Point below horizon.
+                  edge::line_style_t const &ls = edge.belowHorizon();
+                  if (ls.updateHorizon)
+                  {
+                    horizonColumn.edgeEndLo = p.y();
+                  }          
+                }
+                else
+                {
+                  assert(p.y() >= horizonColumn.edgeEndLo && p.y() <= horizonColumn.edgeEndHi);
+                  // Point inside horizon.
+                  edge::line_style_t const &ls = edge.insideHorizon();
+                  if (ls.updateHorizon)
+                  {
+                    // Nothing to do.
+                  }
                 }
               }
             }
@@ -263,6 +359,17 @@ namespace hla
       return 
         (p.x() >= 0 && p.x() < static_cast<int>(frame_.width()) &&
          p.y() >= 0 && p.y() < static_cast<int>(frame_.height()));
+    }
+    
+    void applyEdgeEnd( size_t x )
+    {
+      if (horizon_[x].edgeEnd)
+      {
+        util::make_min(horizon_[x].lo, horizon_[x].edgeEndLo);
+        util::make_max(horizon_[x].hi, horizon_[x].edgeEndHi);
+        
+        horizon_[x].edgeEnd = false;
+      }
     }
     
     void drawLinePoint( Vector2i const &p, color::color_t c, edge::line_form_style_t const &formStyle, size_t idx )

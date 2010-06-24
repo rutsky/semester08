@@ -151,6 +151,15 @@ namespace bresenham
     double error_;          // current error
     double dError_;         // error increasing step
   };
+  
+  inline
+  size_t pointsCount( Vector2i const &p0, Vector2i const &p1 )
+  {
+    size_t count(0);
+    for (bresenham::PointsIterator pIt(p0, p1); pIt; ++pIt, ++count)
+      ;
+    return count;
+  }
 }
 
 #endif // BRESENHAM_H
