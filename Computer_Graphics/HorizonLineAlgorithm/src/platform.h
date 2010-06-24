@@ -26,6 +26,9 @@
 
 // TODO: Not needed because FLTK provides such wrapper.
 #if defined(WIN32)
+
+#include <windows.h>
+
 // Windows platform.
 #define MAIN_FUNCTION \
     int WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR, int )

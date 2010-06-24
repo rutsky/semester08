@@ -127,6 +127,8 @@ namespace edge
     {
       std::swap(p0_, p1_);
     }
+  public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     
   protected:
     Vector3d p0_, p1_;

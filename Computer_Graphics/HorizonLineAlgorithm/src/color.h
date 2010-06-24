@@ -25,7 +25,7 @@
 
 namespace color
 {
-  typedef uint32_t color_t;
+  typedef boost::uint32_t color_t;
   
   inline
   color_t makeRGB( int r, int g, int b, int a = 0 )
@@ -38,10 +38,10 @@ namespace color
       (static_cast<uint8_t>(a & 0xFF) <<  0);
 #elif (BOOST_BYTE_ORDER == 1234)
     return
-      (static_cast<uint8_t>(r & 0xFF) <<  0) |
-      (static_cast<uint8_t>(g & 0xFF) <<  8) |
-      (static_cast<uint8_t>(b & 0xFF) << 16) |
-      (static_cast<uint8_t>(a & 0xFF) << 24);
+      (static_cast<boost::uint8_t>(r & 0xFF) <<  0) |
+      (static_cast<boost::uint8_t>(g & 0xFF) <<  8) |
+      (static_cast<boost::uint8_t>(b & 0xFF) << 16) |
+      (static_cast<boost::uint8_t>(a & 0xFF) << 24);
 #else
 # error Unsupported byte order in color.h
 #endif
