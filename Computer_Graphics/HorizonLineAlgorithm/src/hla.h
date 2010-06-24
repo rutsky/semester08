@@ -160,7 +160,13 @@ namespace hla
               {
                 //std::cout << "a: " << color::getA(frame_.getPixel(p.x(), p.y())) << "\n";
                 // Found alpha label in "busy" horizon column, overwrite it.
-                if (p.y() == horizonColumn.hi)
+                if (p.y() == horizonColumn.initializeRow)
+                {
+                  // Near high horizon border.
+                  edge::line_style_t const &ls = edge.initHorizon();
+                  drawLinePoint(p, ls.color, ls.style, idx);
+                }
+                else if (p.y() == horizonColumn.hi)
                 {
                   // Near high horizon border.
                   edge::line_style_t const &ls = edge.aboveHorizon();
