@@ -1,0 +1,159 @@
+% report.tex
+% Report.
+% Copyright (C) 2010 Vladimir Rutsky <altsysrq@gmail.com>
+
+% TODO: Use styles according to GOST (it's hard).
+
+\documentclass[a4paper,10pt]{article}
+
+% Encoding support.
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+
+\usepackage{amsmath, amsthm, amssymb}
+
+% Indenting first paragraph.
+\usepackage{indentfirst}
+
+\usepackage{url}
+\usepackage[unicode]{hyperref}
+
+%\usepackage[final]{pdfpages}
+
+\usepackage[pdftex]{graphicx}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+% Spaces after commas.
+\frenchspacing
+% Minimal carrying number of characters,
+\righthyphenmin=2
+
+% From K.V.Voroncov Latex in samples, 2005.
+\textheight=24cm   % text height
+\textwidth=16cm    % text width.
+\oddsidemargin=0pt % left side indention
+\topmargin=-1.5cm  % top side indention.
+\parindent=24pt    % paragraph indent
+\parskip=0pt       % distance between paragraphs.
+\tolerance=2000
+%\flushbottom       % page height aligning
+%\hoffset=0cm
+%\pagestyle{empty}  % without numeration
+
+\begin{document}
+
+% Title page.
+\input{./title.tex}
+
+% Content
+
+
+\section{Задание}
+Требуется разработать программу, которая использует метод плавающего горизонта%
+\footnote{\textit{Floating Horizon Algorithm}, описан в~%
+\cite{rogers1989procelemsforcg, shikin1995cg, skala1985bresenhemmodif, ilyin2006task1}}
+для удаления невидимых линий при визуализации криволинейной поверхности в классе непрерывных линий.
+
+\subsection{Исходные данные}
+Даны значения функции в узлах равномерной прямоугольной сетки:
+$$ z_{ij} = F(x_i, y_j) $$
+$$ x_i = x_0 + i \cdot \Delta_x \quad 0 \leqslant i \leqslant N $$
+$$ y_j = y_0 + j \cdot \Delta_y \quad 0 \leqslant j \leqslant M $$
+
+Задан видовой объём и размер поля вывода~\cite{ilyin2006task1}.
+
+\subsection{Требуемый результат}
+Необходимо получить проекцию заданной сеткой функции в соответствии с данными видовым объемом и полем вывода.
+Невидимые линии должны быть удалены методом плавающего горизонта.
+
+Должна быть предусмотрена возможность рисования линий одного направления: 
+либо только линии вдоль оси $OX$ мировой системы координат, 
+либо только линии вдоль оси $OY$.
+
+\section{Детали реализации}
+В соответствии с заданием был реализован алгоритм плавающего горизонта 
+по описаниям из~\cite{rogers1989procelemsforcg, shikin1995cg, skala1985bresenhemmodif, ilyin2006task1}.
+
+Видовой объем фиксирован прямоугольным параллелепипедом. 
+
+Используется аксонометрическая проекция.
+
+При отрисовке линий одного направления используется метод коррекции с помощью всевдорёбер.
+
+\section{Интерфейс пользователя}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\linewidth]{./screenshots/ui_w-notes.png}
+  \caption{Графический интерфейс пользователя}
+  \label{fig:gui}
+\end{figure}
+
+Интерфейс пользователя приведён на рис. \ref{fig:gui}.
+Он состоит из следующих элементов:
+\begin{enumerate}
+  \item Выбор функции для отображения.
+  \item Выбор размерности сетки.
+  \item Выбор области определения функции. 
+    Область задаётся своим центром и величинами половин ширины и высоты.
+    Сетка $z_{ij}$ строится по области определения.
+  \item Выбор размера видового объёма.
+    Задаётся аналогично области определения.
+    Опция <<Keep aspect ratio>> включает коррекцию выводимого изображения, 
+    связанную с разными шагами по осям поля вывода.
+  \item Параметры отрисовки:
+    \begin{itemize}
+      \item <<draw X/Y edges>>~--- выбор линий для рисования,
+      \item <<draw axes>>~--- включение/выключение рисования осей координат
+        (оси рисуются в центре видового объёма),
+      \item <<use fake edges>>~--- включение/выключение использования псевдорёбер.
+    \end{itemize}
+  \item Задание преобразования поворота видового объёма.
+    <<yaw>>~--- угол рыскания (в диапазоне $[-180^{\circ}, 180^{\circ}]$),
+    <<pitch>>~--- угол тангажа (в диапазоне $[-90^{\circ}, 90^{\circ}]$).
+  \item Поле вывода.
+    Чёрным цветом рисуется верхняя часть поверхности, 
+    розовым~--- нижняя. 
+    Оси $OX$, $OY$ и $OZ$ рисуются красным, зелёным и синим соответственно.
+\end{enumerate}
+
+\section{Результат работы программы}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\linewidth]{./screenshots/result1.png}
+  \caption{Результат работы программы}
+  \label{fig:result1}
+\end{figure}
+
+
+\section{Среда разработки}
+Программа разработана на языке С++ с использованием сторонних свободных кроссплатформенных библиотек.
+
+Для сборки в среде GNU/Linux можно использовать средства \textit{GCC}%
+\footnote{\textit{GNU Compiler Collection}, \url{http://gcc.gnu.org/}} 
+(использовалась версия 4.4.1),
+для сборки в среде Windows~--- Microsoft Visual Studio%
+\footnote{\url{http://www.microsoft.com/visualstudio}}
+(использовалась версия Microsoft Visual C++ 2008 Express Edition c SP1).
+
+Графический интерфейс программы был реализован с использованием библиотеки \textit{FLTK}%
+\footnote{\textit{Fast Light Toolkit}, \url{http://www.fltk.org/}}.
+
+Работа с векторами, матрицами и афинными преобразованиями была реализована с использованием библиотеки \textit{Eigen}%
+\footnote{\url{http://eigen.tuxfamily.org}}.
+
+Для низкоуровневой работы с типами фиксированного размера была использована библиотека \textit{Boost}%
+\footnote{\url{http://www.boost.org/}}.
+
+краткое описание структуры программы, ее интерфейса и инструментальной среды разработки;
+
+текст отлаженной программы с подробными комментариями (можно представить отдельно в электронном виде);
+
+распечатки изображения криволинейной поверхности, иллюстрирующие возможности, предоставляемые разработанной программой. 
+
+\bibliographystyle{unsrt}
+\bibliography{references.bib}
+
+\end{document}
