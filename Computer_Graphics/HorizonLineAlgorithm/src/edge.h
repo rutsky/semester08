@@ -20,7 +20,6 @@
 #ifndef EDGE_H
 #define EDGE_H
 
-#include <vector>
 #include <cmath>
 #include <cassert>
 
