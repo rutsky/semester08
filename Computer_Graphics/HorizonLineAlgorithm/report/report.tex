@@ -81,7 +81,7 @@ $$ y_j = y_0 + j \cdot \Delta_y \quad 0 \leqslant j \leqslant M $$
 
 Используется аксонометрическая проекция.
 
-При отрисовке линий одного направления используется метод коррекции с помощью всевдорёбер.
+При отрисовке линий одного направления используется метод коррекции с помощью псевдорёбер.
 
 \section{Интерфейс пользователя}
 \begin{figure}[h!]
@@ -91,7 +91,7 @@ $$ y_j = y_0 + j \cdot \Delta_y \quad 0 \leqslant j \leqslant M $$
   \label{fig:gui}
 \end{figure}
 
-Интерфейс пользователя приведён на рис. \ref{fig:gui}.
+Интерфейс пользователя приведён на рис.~\ref{fig:gui}.
 Он состоит из следующих элементов:
 \begin{enumerate}
   \item Выбор функции для отображения.
@@ -107,7 +107,7 @@ $$ y_j = y_0 + j \cdot \Delta_y \quad 0 \leqslant j \leqslant M $$
     \begin{itemize}
       \item <<draw X/Y edges>>~--- выбор линий для рисования,
       \item <<draw axes>>~--- включение/выключение рисования осей координат
-        (оси рисуются в центре видового объёма),
+        (начало осей рисуется в центре видового объёма),
       \item <<use fake edges>>~--- включение/выключение использования псевдорёбер.
     \end{itemize}
   \item Задание преобразования поворота видового объёма.
@@ -120,13 +120,27 @@ $$ y_j = y_0 + j \cdot \Delta_y \quad 0 \leqslant j \leqslant M $$
 \end{enumerate}
 
 \section{Результат работы программы}
+Результат работы программы представлен на рис.~\ref{fig:result1}, \ref{fig:result1-hor}, \ref{fig:result1-vert}.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.8\linewidth]{./screenshots/result1.png}
-  \caption{Результат работы программы}
+  \caption{Результат работы программы. Общий случай}
   \label{fig:result1}
 \end{figure}
 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\linewidth]{./screenshots/result1_hor.png}
+  \caption{Результат работы программы. Линии параллельные оси $OX$}
+  \label{fig:result1-hor}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\linewidth]{./screenshots/result1_vert.png}
+  \caption{Результат работы программы. Линии параллельные оси $OY$}
+  \label{fig:result1-vert}
+\end{figure}
 
 \section{Среда разработки}
 Программа разработана на языке С++ с использованием сторонних свободных кроссплатформенных библиотек.
@@ -147,13 +161,8 @@ $$ y_j = y_0 + j \cdot \Delta_y \quad 0 \leqslant j \leqslant M $$
 Для низкоуровневой работы с типами фиксированного размера была использована библиотека \textit{Boost}%
 \footnote{\url{http://www.boost.org/}}.
 
-краткое описание структуры программы, ее интерфейса и инструментальной среды разработки;
-
-текст отлаженной программы с подробными комментариями (можно представить отдельно в электронном виде);
-
-распечатки изображения криволинейной поверхности, иллюстрирующие возможности, предоставляемые разработанной программой. 
-
 \bibliographystyle{unsrt}
+%\bibliographystyle{gost780u}
 \bibliography{references.bib}
 
 \end{document}
