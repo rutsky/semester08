@@ -197,8 +197,8 @@ namespace viewport
           funcGrid,
           color::black(),
           color::crimsonGlory(),
-          color::coquelicot(),
-          //color::black(),
+          //color::coquelicot(),
+          color::black(),
           drawXEdges_, drawYEdges_,
           drawFakeEdges_);
         
