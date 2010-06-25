@@ -1,4 +1,4 @@
-HLA - Horizon Line Algorithm implementation.
+FHA - Floating Horizon Algorithm implementation.
 
 Copyright (C) 2010  Vladimir Rutsky <altsysrq@gmail.com>
 
