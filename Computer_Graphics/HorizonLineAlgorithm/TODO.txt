@@ -7,3 +7,4 @@ TODO:
  + Use precompiled header files
  * Use precompiled header files in Windows
  * Looks like it is "Floating Horizon Algorithm", should be renamed.
+ * Resizing issue: when resized into too small window text and widget start to overlap (reported by Ilyin Y.P.)
