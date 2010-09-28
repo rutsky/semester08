@@ -23,6 +23,7 @@
 %\usepackage[final]{pdfpages}
 
 \usepackage[pdftex]{graphicx}
+\usepackage{subfig}
 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
@@ -122,22 +123,38 @@
 требуется, чтобы была освещаемая поверхность, для этого и была введена освещённая сфера $S$.
 
 Результат моделирования сцены в модифицированном пакете приведён на рис.~\ref{fig:prism-test-brt},
-а результат моделирования в \textit{Blender} на рис.~\ref{fig:prism-test-blender}.
-\footnote{Blender~---свободный пакет для создания трёхмерной компьютерной графики. \url{http://www.blender.org/}}.
-\begin{figure}[h!]
+а результат моделирования в \textit{Blender} на рис.~\ref{fig:prism-test-blender} 
+(в стандартной комплектации \textit{Blender} нет поддержки эффекта дисперсии света при преломлении).
+\begin{figure}
   \centering
-  \includegraphics[width=0.4\linewidth]{./screenshots/prism_test_brt.png}
-  \caption{Рендеринг тестовой сцены в пакете}
-  \label{fig:prism-test-brt}
-\end{figure}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.4\linewidth]{./screenshots/prism_test_blender.png}
-  \caption{Рендеринг тестовой сцены в \textit{Blender}}
-  \label{fig:prism-test-blender}
+  %\subfloat[Рендеринг в пакете]{\label{fig:prism-test-brt}\includegraphics[width=0.3\textwidth]{./screenshots/prism_test_brt.png}}
+  \subfloat[Рендеринг в пакете]{\label{fig:prism-test-brt}\includegraphics[height=5cm]{./screenshots/prism_test_brt.png}}
+  \quad
+  %\subfloat[Рендеринг в \textit{Blender}]{\label{fig:prism-test-blender}\includegraphics[width=0.3\textwidth]{./screenshots/prism_test_blender.png}}
+  \subfloat[Рендеринг в \textit{Blender}]{\label{fig:prism-test-blender}\includegraphics[height=5cm]{./screenshots/prism_test_blender.png}}
+  \caption{Рендеринг тестовой сцены}
+  \label{fig:prism-test-results}
 \end{figure}
 
+На изображениях видно, что преломлённая сфера находится примерно в одном месте, 
+что показывает корректность рассчета величины преломления.
+
+Так как наблюдается неточечный источник света через призму,
+а не результат разложения узкого пучка света в призме, 
+на результирующем изображении должна получиться <<радуга>> с обратным порядком цветов, 
+что наблюдается на рис.~\ref{fig:prism-test-brt}.
+
 \section{Результат работы}
+Рендеринг модели алмаза в пакете и \textit{Blender} приведён на рис.~\ref{fig:diamond-brt} и \ref{fig:diamond-blender} соответственно.
+
+\begin{figure}
+  \centering
+  \subfloat[Рендеринг в пакете]{\label{fig:diamond-brt}\includegraphics[height=5cm]{./screenshots/diamond_brt.png}}
+  \quad
+  \subfloat[Рендеринг в \textit{Blender}]{\label{fig:diamond-blender}\includegraphics[height=5cm]{./screenshots/diamond_blender.png}}
+  \caption{Рендеринг тестовой сцены}
+  \label{fig:prism-test-results}
+\end{figure}
 
 \bibliographystyle{unsrt}
 \bibliography{references.bib}
