@@ -44,13 +44,15 @@
 %\hoffset=0cm
 %\pagestyle{empty}  % without numeration
 
+\newcommand{\myemail}[1]{%
+\href{mailto:#1}{\nolinkurl{#1}}}
+
 \begin{document}
 
 % Title page.
 \input{./title.tex}
 
 % Content
-
 
 \section{Задание}
 Требуется модифицировать базовый пакет для создания фотореалистичных изображений трёхмерных сцен 
@@ -105,10 +107,53 @@
 Для увеличения реалистичности получаемых изображения был дополнительно реализован 
 эффект полного внутреннего отражения.
 
+\paragraph{Внесённые изменения}
+Исходный пакет был написан в 1995 году для ОС \textit{DOS} и для сборки в компиляторе \textit{Turbo C++}%
+%\footnote{\textit{Turbo C++} версии для \textit{DOS} и \textit{Microsoft Windows 3.11}~--- 
+%более не разрабатываемый компилятор и интегрированная среда разработки для C++ от компании \textit{Borland}}%
+.
+Для удобства разработки и отладки пакет был портирован в современные ОС.
+
+Для сборки в среде GNU/Linux использолись средства \textit{GCC}%
+\footnote{\textit{GNU Compiler Collection}, \url{http://gcc.gnu.org/}} 
+(использовалась версия 4.4.3) вместе с \textit{SCons}%
+\footnote{свободный инструмент для автоматизации сборки программных пакетов, \url{http://scons.org/}} 
+(версии 1.2.0) и
+\textit{Eclipse}%
+\footnote{свободная интегрированная среда разработки, \url{http://eclipse.org/}} 
+(версии 3.5.2) с плагином для разработки приложений на C++ \textit{Eclipse CDT}%
+\footnote{\textit{Eclipse CDT (C/C++ Development Tooling)}, \url{http://www.eclipse.org/cdt/}}
+(версии 6.0.2);
+для сборки в среде Windows~--- \textit{Microsoft Visual Studio}%
+\footnote{\url{http://www.microsoft.com/visualstudio}}
+(использовалась бесплатная версия \textit{Microsoft Visual C++ 2008 Express Edition} c SP1).
+
+Были внесены следующие существенные изменения:
+\begin{enumerate}
+  \item Удалён модуль, отвечающий за отрисовку изображения на экране во время построения изображения (\textit{draw.cpp}, \textit{draw.h}), 
+  ввиду отстутствия необходимости в нём и невозможности работы исходной версии для DOS в GNU/Linux.
+  \item Ввод/вывод изображений был переписан с использованием свободной библиотеки \textit{Boost.GIL}%
+\footnote{Generic Image Library, \url{http://www.boost.org/doc/libs/1_44_0/libs/gil/doc/index.html}} 
+(удалены модули \textit{bmp.cpp}, \textit{bmp.h}, \textit{targa.cpp}, \textit{targa.h}; 
+добавлены модули \textit{image.cpp}, \textit{image.h}, \textit{rgb.h})
+  \item Исправлены конструкции языка С++ недопустимые в новым стандарте языка.
+  \item Добавлен заголовочный файл для предварительной компиляции \textit{precompiled.h}.
+  \item Разбит модуль \textit{tracer.cpp} на несколько модулей согласно выполняемым функциям:
+  \textit{gobject.cpp}, \textit{gobject.h}, \textit{lightsource.h}, \textit{mapping.h}, 
+  \textit{medium.cpp}, \textit{medium.h}, \textit{surfacedata.h}.
+  \item Глобальные переменные, описывающие сцену, были инкапсулированы в класс \textit{Environment} (\textit{tracer.cpp}).
+  \item Обработка преломления света была вынесена в отдельную функцию \textit{Environment::handleRefraction} (\textit{tracer.cpp}).
+  \item В функцию вычисления освещённости точки \textit{shadeImpl} (в оригинальном пакете она называлась \textit{Shade}) 
+  были внесены описанные выше изменения по поддержке эффекта дисперсии света и эффекта полного внутреннего отражения.
+\end{enumerate}
+Полная история изменений доступна в виде лога системы контроля версий \textit{git}%
+\footnote{свободная распределённая система управления версиями файлов, \url{http://git-scm.com/}}
+на сайте проекта по адресу \url{http://sourceforge.net/p/braytracing/git/ref/master\%3A/log/}.
+
 \subsection{Проверка корректности}
 Для проверки корректности работы программы одна и та же сцена была построена в разрабатываемой программе и
 трёхмерном редакторе \textit{Blender}%
-\footnote{Blender~---свободный пакет для создания трёхмерной компьютерной графики. \url{http://www.blender.org/}}.
+\footnote{\textit{Blender}~--- свободный пакет для создания трёхмерной компьютерной графики, \url{http://www.blender.org/}}.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.8\linewidth]{./screenshots/prism_test_model.png}
@@ -148,13 +193,20 @@
 Рендеринг модели алмаза в пакете и \textit{Blender} приведён на рис.~\ref{fig:diamond-brt} и \ref{fig:diamond-blender} соответственно.
 На изображениях виден результат множественного внутреннего отражения и изменение цвета в результате эффекта дисперсии.
 
+С разрешения автора%
+\footnote{Алексей~В.\,Боресков \myemail{steps3d@narod.ru}, \myemail{steps3d@gmail.com}}
+оригинальные и модифицированные исходные коды пакета распространяются под свободной лицензией~--- GNU GPL%
+\footnote{GNU General Public License, \url{http://www.gnu.org/licenses/gpl.html}} версии 3. 
+Проект расположен на хостинге для открытого ПО SourceForge.net\footnote{\url{http://sourceforge.net}} по адресу
+\url{http://sourceforge.net/p/braytracing/}.
+
 \begin{figure}
   \centering
   \subfloat[Рендеринг в пакете]{\label{fig:diamond-brt}\includegraphics[width=0.8\textwidth]{./screenshots/diamond_brt.png}}
   \\
   \subfloat[Рендеринг в \textit{Blender}]{\label{fig:diamond-blender}\includegraphics[width=0.8\textwidth]{./screenshots/diamond_blender.png}}
   \caption{Рендеринг модели алмаза}
-  \label{fig:prism-test-results}
+  \label{fig:diamond-results}
 \end{figure}
 
 \bibliographystyle{unsrt}
